@@ -6,7 +6,7 @@ public class Parfem
     public string Slika { get; set; } = String.Empty;
     public string Naziv { get; set; }
     public int GodinaIzlaska { get; set; } = DateTime.Now.Year;
-    public char Pol { get; set; }
+    public char Pol { get; set; } = 'U';
     //lista gornjih nota
     //lista srednjih nota
     //lista donjih nota
