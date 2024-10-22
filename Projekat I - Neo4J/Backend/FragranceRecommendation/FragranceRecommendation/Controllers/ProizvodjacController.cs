@@ -1,6 +1,4 @@
-﻿using Microsoft.OpenApi.Validations;
-
-namespace FragranceRecommendation.Controllers;
+﻿namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -10,7 +8,7 @@ public class ProizvodjacController : ControllerBase
 
     public ProizvodjacController()
     {
-        _driver = GraphDatabase.Driver("1", AuthTokens.Basic("neo4j", "0"));
+        _driver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "12345678"));
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -41,7 +39,7 @@ public class ProizvodjacController : ControllerBase
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)] 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("GetProizvodjacByNaziv/{naziv}")]
     public async Task<IActionResult> GetProizvodjacByNaziv(string naziv)

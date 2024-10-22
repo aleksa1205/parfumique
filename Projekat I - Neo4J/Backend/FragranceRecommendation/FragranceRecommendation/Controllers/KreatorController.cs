@@ -1,6 +1,4 @@
-﻿using FragranceRecommendation.Models;
-
-namespace FragranceRecommendation.Controllers;
+﻿namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -10,7 +8,7 @@ public class KreatorController : ControllerBase
 
     public KreatorController()
     {
-        _driver = GraphDatabase.Driver("1", AuthTokens.Basic("neo4j", "0"));
+        _driver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "12345678"));
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
