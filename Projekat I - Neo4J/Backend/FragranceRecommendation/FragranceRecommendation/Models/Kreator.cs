@@ -8,7 +8,7 @@ public class Kreator
     public string Prezime { get; set; }
     public string Drzava { get; set; }
     public int GodinaRodjenja { get; set; } = 0;
-    //lista parfema koje je kreirao
+    public IList<Parfem> ListaParfema { get; set; } = new List<Parfem>();
 
     #region Constructors
     public Kreator(string ime, string prezime, string drzava)

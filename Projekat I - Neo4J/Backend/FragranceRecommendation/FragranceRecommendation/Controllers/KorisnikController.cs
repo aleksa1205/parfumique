@@ -1,7 +1,4 @@
-﻿using FragranceRecommendation.DTOs;
-using FragranceRecommendation.Models;
-
-namespace FragranceRecommendation.Controllers;
+﻿namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -11,7 +8,7 @@ public class KorisnikController : ControllerBase
 
     public KorisnikController()
     {
-        _driver = GraphDatabase.Driver("1", AuthTokens.Basic("neo4j", "0"));
+        _driver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "12345678"));
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -40,65 +37,47 @@ public class KorisnikController : ControllerBase
         }
     }
 
-    //refactor kasnije
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("GetKorisnikByUsername/{korisnickoIme}")]
     public async Task<IActionResult> GetKorisnikByUsername(string korisnickoIme)
     {
-        try
+        await using var session = _driver.AsyncSession();
+        var korisnik = await session.ExecuteReadAsync(async tx =>
         {
-            await using var session = _driver.AsyncSession();
-            var korisnik = await session.ExecuteReadAsync(async tx =>
+            var query = @"MATCH (k: KORISNIK) WHERE k.korisnicko_ime = $korisnickoIme OPTIONAL MATCH (k) -[:POSEDUJE] -> (p: PARFEM) RETURN k, COLLECT(p) AS parfemi";
+            var result = await tx.RunAsync(query, new { korisnickoIme });
+            var record = await result.PeekAsync();
+            if (record is null)
             {
-                var query = @"MATCH (k: KORISNIK) WHERE k.korisnicko_ime = $korisnickoIme OPTIONAL MATCH (k) -[:POSEDUJE] -> (p: PARFEM) RETURN k, p";
-                var result = await tx.RunAsync(query, new { korisnickoIme });
-                var listaParfema = new List<Parfem>();
-                Korisnik k = null;
-                await foreach(var record in result)
-                {
-                    var nodeKorisnik = record["k"].As<INode>();
-                    if(nodeKorisnik is null)
-                    {
-                        return null;
-                    }
-                    var ime = nodeKorisnik.Properties["ime"].As<string>();
-                    var prezime = nodeKorisnik.Properties["prezime"].As<string>();
-                    var korisnicko = nodeKorisnik.Properties["korisnicko_ime"].As<string>();
-                    var sifra = nodeKorisnik.Properties["sifra"].As<string>();
-                    var pol = nodeKorisnik.Properties["pol"].As<char>();
-                    if(k is null)
-                    {
-                        k = new Korisnik(ime, prezime, pol, korisnicko, sifra);
-                    }
-
-                    var nodeParfem = record["p"].As<INode>();
-                    if(nodeParfem is not null)
-                    {
-                        var naziv = nodeParfem.Properties["naziv"].As<string>();
-                        var godina = nodeParfem.Properties["godina_izlaska"].As<int>();
-                        var polZa = nodeParfem.Properties["za"].As<char>();
-                        Parfem p = new Parfem(naziv, godina, pol);
-                        listaParfema.Add(p);    
-                    }
-                }
-                if(k is not null)
-                {
-                    k.Kolekcija = listaParfema;
-                }
-                return k;
-            });
-            if(korisnik is null)
-            {
-                return NotFound($"Korisnik sa korisnickim imenom {korisnickoIme} nije pronadjen!");
+                return null;
             }
-            return Ok(korisnik);
-        }
-        catch (Exception ex)
+
+            var nodeKorisnik = record["k"].As<INode>();
+            var ime = nodeKorisnik.Properties["ime"].As<string>();
+            var prezime = nodeKorisnik.Properties["prezime"].As<string>();
+            var korisnicko = nodeKorisnik.Properties["korisnicko_ime"].As<string>();
+            var sifra = nodeKorisnik.Properties["sifra"].As<string>();
+            var pol = nodeKorisnik.Properties["pol"].As<char>();
+            Korisnik korisnik = new Korisnik(ime, prezime, pol, korisnicko, sifra);
+
+            var parfemi = record["parfemi"].As<List<INode>>();
+            foreach (var nodeParfem in parfemi)
+            {
+                var naziv = nodeParfem.Properties["naziv"].As<string>();
+                var godina = nodeParfem.Properties["godina_izlaska"].As<int>();
+                var polZa = nodeParfem.Properties["za"].As<char>();
+                Parfem p = new Parfem(naziv, godina, polZa);
+                korisnik.ListaParfema.Add(p);
+            }
+            return korisnik;
+        });
+        if(korisnik is null)
         {
-            return BadRequest(ex.Message);
+            return NotFound($"Korisnik {korisnickoIme} ne postoji!");
         }
+        return Ok(korisnik);
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -124,7 +103,7 @@ public class KorisnikController : ControllerBase
 
             await session.ExecuteWriteAsync(async tx =>
             {
-                var query = @"CREATE (n: KORISNIK {ime: $ime, prezime: $prezime, pol: $pol, korisnicko_ime: $korisnicko, sifra: $sifra})";
+                var query = @"CREATE (:KORISNIK {ime: $ime, prezime: $prezime, pol: $pol, korisnicko_ime: $korisnicko, sifra: $sifra})";
                 var parameters = new
                 {
                     ime = korisnik.Ime,
@@ -160,7 +139,7 @@ public class KorisnikController : ControllerBase
                 exists = await result.FetchAsync();
             });
 
-            if(exists is false)
+            if(!exists)
             {
                 return NotFound($"Korisnik sa korisničkim imenom {korisnickoIme} ne postoji!");
             }
