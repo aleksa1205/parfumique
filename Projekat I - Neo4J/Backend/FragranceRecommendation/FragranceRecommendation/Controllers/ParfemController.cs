@@ -1,7 +1,4 @@
-﻿using FragranceRecommendation.Models;
-using System.Runtime.InteropServices;
-
-namespace FragranceRecommendation.Controllers;
+﻿namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
