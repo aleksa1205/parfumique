@@ -9,7 +9,7 @@ public class Korisnik
     public char Pol { get; set; } = 'M';
     public string KorisnickoIme { get; set; }
     public string Sifra { get; set; }
-    public IList<Parfem> ListaParfema { get; set; } = new List<Parfem>();
+    public IList<Parfem> KolekcijaParfema { get; set; } = new List<Parfem>();
 
     #region Constructors
     public Korisnik() { }
