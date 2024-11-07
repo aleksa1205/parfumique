@@ -1,6 +1,6 @@
 ﻿namespace FragranceRecommendation.DTOs;
 
-public class RegisterKorisnikDTO
+public class DodajKorisnikaDTO
 {
     public required string Ime { get; set; }
     public required string Prezime { get; set; }

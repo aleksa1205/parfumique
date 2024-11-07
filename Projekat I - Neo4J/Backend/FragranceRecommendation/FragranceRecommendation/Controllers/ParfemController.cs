@@ -1,4 +1,7 @@
-﻿namespace FragranceRecommendation.Controllers;
+﻿using System.Runtime.InteropServices.ComTypes;
+using System.Text;
+
+namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -174,7 +177,7 @@ public class ParfemController : ControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [EndpointSummary("add fragrance")]
     [HttpPost]
-    public async Task<IActionResult> AddPafem(DodajParfemDTO Parfem) 
+    public async Task<IActionResult> AddPafem([FromBody]DodajParfemDTO Parfem) 
     {
         try
         {
@@ -201,6 +204,79 @@ public class ParfemController : ControllerBase
                 await tx.RunAsync(query, parameters);
             });
             return Ok($"Uspešno dodat parfem {Parfem.Naziv}!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    //trebalo bi da se napravi provera da li su te note već na tom sloju parfema
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointSummary("add notes to fragrance")]
+    [HttpPatch]
+    public async Task<IActionResult> AddNoteToParfem(string parfem, [FromBody] IList<NotaDTO> Note)
+    {
+        try
+        {
+            if (Note.Count == 0)
+            {
+                return BadRequest("Morate uneti bar jednu notu!");
+            }
+            await using var session = _driver.AsyncSession();
+            var parfemExists = await session.ExecuteReadAsync(async tx =>
+            {
+                var query = @"MATCH (p: PARFEM) WHERE p.naziv = $parfem RETURN p";
+                var result = await tx.RunAsync(query, new { parfem });
+                return await result.PeekAsync() is not null;
+            });
+            if (parfemExists is false)
+            {
+                return NotFound($"Parfem {parfem} nije pronađen!");
+            }
+
+            foreach (var nota in Note)
+            {
+                var notaExists = await session.ExecuteReadAsync(async tx =>
+                {
+                    var query = (@"MATCH (n:NOTA) WHERE n.naziv = $naziv RETURN n");
+                    var result = await tx.RunAsync(query, new { naziv = nota.Naziv });
+                    return await result.PeekAsync() is not null;
+                });
+                if (notaExists is false)
+                {
+                    return NotFound($"Nota {nota.Naziv} nije pronađena!");
+                }
+            }
+
+            await session.ExecuteWriteAsync(async tx =>
+            {
+                var query = new StringBuilder();
+                foreach (var nota in Note)
+                {
+                    query.Append(@"MATCH (p: PARFEM {naziv: $parfem}), (n: NOTA {naziv: $naziv}) ");
+                    switch (nota.GDS)
+                    {
+                        case 0:
+                            query.Append("CREATE (p) -[:GORNJA]-> (n)");
+                            break;
+                        case 1:
+                            query.Append("CREATE (p) -[:SREDNJA]-> (n)");
+                            break;
+                        case 2:
+                            query.Append("CREATE (p) -[:DONJA]-> (n)");
+                            break;
+                        default:
+                            throw new ArgumentException("GDS mora biti 1, 2 ili 3!");
+                    }
+
+                    await tx.RunAsync(query.ToString(), new { parfem, naziv = nota.Naziv });
+                    query.Clear();
+                }
+            });
+            return Ok($"Uspešno dodate note parfemu {parfem}!");
         }
         catch (Exception ex)
         {

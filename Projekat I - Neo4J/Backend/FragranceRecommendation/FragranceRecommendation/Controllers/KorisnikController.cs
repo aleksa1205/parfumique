@@ -1,4 +1,6 @@
-﻿namespace FragranceRecommendation.Controllers;
+﻿using System.Runtime.InteropServices.ComTypes;
+
+namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -82,7 +84,7 @@ public class KorisnikController : ControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [EndpointSummary("create user")]
     [HttpPost]
-    public async Task<IActionResult> AddKorisnik(RegisterKorisnikDTO korisnik)
+    public async Task<IActionResult> AddKorisnik([FromBody]DodajKorisnikaDTO Korisnik)
     {
         try
         {
@@ -90,12 +92,12 @@ public class KorisnikController : ControllerBase
             var korisnikExists = await session.ExecuteReadAsync(async tx =>
             {
                 var query = @"MATCH (k: KORISNIK) WHERE k.korisnicko_ime = $korisnickoIme RETURN k";
-                var result = await tx.RunAsync(query, new { korisnickoIme = korisnik.KorisnickoIme });
+                var result = await tx.RunAsync(query, new { korisnickoIme = Korisnik.KorisnickoIme });
                 return await result.PeekAsync() is not null;
             });
             if (korisnikExists)
             {
-                return Conflict($"Korisnik {korisnik.KorisnickoIme} već postoji!");
+                return Conflict($"Korisnik {Korisnik.KorisnickoIme} već postoji!");
             }
 
             await session.ExecuteWriteAsync(async tx =>
@@ -104,15 +106,57 @@ public class KorisnikController : ControllerBase
                     @"CREATE (:KORISNIK {ime: $ime, prezime: $prezime, pol: $pol, korisnicko_ime: $korisnicko, sifra: $sifra})";
                 var parameters = new
                 {
-                    ime = korisnik.Ime,
-                    prezime = korisnik.Prezime,
-                    pol = korisnik.Pol,
-                    korisnicko = korisnik.KorisnickoIme,
-                    sifra = korisnik.Sifra
+                    ime = Korisnik.Ime,
+                    prezime = Korisnik.Prezime,
+                    pol = Korisnik.Pol,
+                    korisnicko = Korisnik.KorisnickoIme,
+                    sifra = Korisnik.Sifra
                 };
                 await tx.RunAsync(query, parameters);
             });
-            return Ok($"Uspešno dodat korisnik {korisnik.KorisnickoIme}!");
+            return Ok($"Uspešno dodat korisnik {Korisnik.KorisnickoIme}!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointSummary("update user")]
+    [HttpPatch]
+    public async Task<IActionResult> UpdateKorisnik([FromBody] UpdateKorisnikDTO Korisnik)
+    {
+        try
+        {
+            await using var session = _driver.AsyncSession();
+            var korisnikExists = await session.ExecuteReadAsync(async tx =>
+            {
+                var query = @"MATCH (k:KORISNIK) WHERE k.korisnicko_ime=$korisnickoIme RETURN k";
+                var result = await tx.RunAsync(query, new { korisnickoIme = Korisnik.KorisnickoIme });
+                return await result.PeekAsync() is not null;
+            });
+            if (korisnikExists is false)
+            {
+                return NotFound($"Korisnik {Korisnik.KorisnickoIme} nije pronađen!");
+            }
+
+            await session.ExecuteWriteAsync(async tx =>
+            {
+                var query = @"MATCH (k:KORISNIK {korisnicko_ime: $korisnickoIme})
+                            SET k.ime = $ime, k.prezime = $prezime, k.pol = $pol";
+                var parameters = new
+                {
+                    korisnickoIme = Korisnik.KorisnickoIme,
+                    ime = Korisnik.Ime,
+                    prezime = Korisnik.Prezime,
+                    pol = Korisnik.Pol
+                };
+                await tx.RunAsync(query, parameters);
+            });
+            return Ok($"Uspešno ažuriran korisnik {Korisnik.KorisnickoIme}!");
         }
         catch (Exception ex)
         {

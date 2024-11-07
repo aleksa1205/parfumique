@@ -1,4 +1,6 @@
-﻿namespace FragranceRecommendation.Controllers;
+﻿using System.Text.RegularExpressions;
+
+namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -87,7 +89,7 @@ public class KreatorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [EndpointSummary("create perfumer")]
     [HttpPost]
-    public async Task<IActionResult> AddKreator(DodajKreatoraDTO kreator)
+    public async Task<IActionResult> AddKreator([FromBody]DodajKreatoraDTO Kreator)
     {
         try
         {
@@ -95,12 +97,12 @@ public class KreatorController : ControllerBase
             var kreatorExists = await session.ExecuteReadAsync(async tx =>
             {
                 var query = @"MATCH (k: KREATOR) WHERE k.ime = $ime AND k.prezime = $prezime RETURN k";
-                var result = await tx.RunAsync(query, new { ime = kreator.Ime, prezime = kreator.Prezime });
+                var result = await tx.RunAsync(query, new { ime = Kreator.Ime, prezime = Kreator.Prezime });
                 return await result.PeekAsync() is not null;
             });
             if (kreatorExists)
             {
-                return Conflict($"Kreator {kreator.Ime} {kreator.Prezime} već postoji!");
+                return Conflict($"Kreator {Kreator.Ime} {Kreator.Prezime} već postoji!");
             }
 
             await session.ExecuteWriteAsync(async tx =>
@@ -108,20 +110,61 @@ public class KreatorController : ControllerBase
                 var query = "CREATE (:KREATOR {ime: $ime, prezime: $prezime, drzava: $drzava, godina: $godina})";
                 var parameters = new
                 {
-                    ime = kreator.Ime,
-                    prezime = kreator.Prezime,
-                    drzava = kreator.Drzava,
-                    godina = kreator.GodinaRodjenja
+                    ime = Kreator.Ime,
+                    prezime = Kreator.Prezime,
+                    drzava = Kreator.Drzava,
+                    godina = Kreator.GodinaRodjenja
                 };
                 await tx.RunAsync(query, parameters);
             });
-            return Ok($"Uspešno dodat kreator {kreator.Ime} {kreator.Prezime}!");
+            return Ok($"Uspešno dodat kreator {Kreator.Ime} {Kreator.Prezime}!");
         }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }
     }
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointSummary("update perfumer")]
+    [HttpPatch]
+    public async Task<IActionResult> UpdateKreator([FromBody] UpdateKreatorDTO Kreator)
+    {
+        try
+        {
+            await using var session = _driver.AsyncSession();
+            var kreatorExists = await session.ExecuteReadAsync(async tx =>
+            {
+                var query = @"MATCH(k: KREATOR) WHERE k.ime = $ime AND k.prezime = $prezime RETURN k";
+                var result = await tx.RunAsync(query, new { ime = Kreator.Ime, prezime = Kreator.Prezime });
+                return await result.PeekAsync() is not null;
+            });
+            if (kreatorExists is false)
+            {
+                return NotFound($"Kreator {Kreator.Ime} {Kreator.Prezime} nije pronađen!");
+            }
+
+            await session.ExecuteWriteAsync(async tx =>
+            {
+                var query = @"MATCH(k: KREATOR {ime: $ime, prezime: $prezime})
+                            SET k.drzava = $drzava, k.godina = $godina";
+                await tx.RunAsync(query,
+                    new
+                    {
+                        ime = Kreator.Ime, prezime = Kreator.Prezime, drzava = Kreator.Drzava,
+                        godina = Kreator.GodinaRodjenja
+                    });
+            });
+            return Ok($"Kreator {Kreator.Ime} {Kreator.Prezime} je uspešno ažuriran!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

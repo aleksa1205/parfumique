@@ -107,7 +107,7 @@ public class NotaController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [EndpointDescription("delete nota")]
+    [EndpointSummary("delete nota")]
     [HttpDelete]
     public async Task<IActionResult> DeleteNota(string naziv)
     {
