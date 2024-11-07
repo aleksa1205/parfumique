@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices.ComTypes;
+﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
 namespace FragranceRecommendation.Controllers;
@@ -117,7 +118,7 @@ public class ParfemController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [EndpointDescription("get fragrances that are not associated with a perfumer as nodes")]
+    [EndpointSummary("get fragrances that are not associated with a perfumer as nodes")]
     [HttpGet("GetParfemWithouthKreator")]
     public async Task<IActionResult> GetParfemWithouthKreator()
     {
@@ -211,12 +212,47 @@ public class ParfemController : ControllerBase
         }
     }
 
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointSummary("update fragrance")]
+    [HttpPatch]
+    public async Task<IActionResult> UpdateParfem([FromBody] UpdateParfemDTO Parfem)
+    {
+        try
+        {
+            await using var session = _driver.AsyncSession();
+            var parfemExists = await session.ExecuteReadAsync(async tx =>
+            {
+                var query = @"MATCH (p: PARFEM) WHERE p.naziv = $parfem RETURN p";
+                var result = await tx.RunAsync(query, new { parfem = Parfem.Naziv });
+                return await result.PeekAsync() is not null;
+            });
+            if (parfemExists is false)
+            {
+                return NotFound($"Parfem {Parfem.Naziv} nije pronađen!");
+            }
+
+            await session.ExecuteWriteAsync(async tx =>
+            {
+                var query = "MATCH (p:PARFEM {naziv: $parfem}) SET p.za = $pol, p.godina_izlaska = $godina";
+                var result = await tx.RunAsync(query,
+                    new { parfem = Parfem.Naziv, pol = Parfem.Pol, godina = Parfem.GodinaIzlaska });
+            });
+            return Ok($"Parfem {Parfem.Naziv} uspešno ažuriran!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     //trebalo bi da se napravi provera da li su te note već na tom sloju parfema
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointSummary("add notes to fragrance")]
-    [HttpPatch]
+    [HttpPatch("{parfem}")]
     public async Task<IActionResult> AddNoteToParfem(string parfem, [FromBody] IList<NotaDTO> Note)
     {
         try
@@ -256,6 +292,31 @@ public class ParfemController : ControllerBase
                 var query = new StringBuilder();
                 foreach (var nota in Note)
                 {
+                    query.Clear();
+                    query.Append("MATCH (p:PARFEM {naziv: $parfem}) RETURN EXISTS((p)");
+                    switch (nota.GDS)
+                    {
+                        case 0:
+                            query.Append("-[:GORNJA]->");
+                            break;
+                        case 1:
+                            query.Append("-[:SREDNJA]->");
+                            break;
+                        case 2:
+                            query.Append("-[:DONJA]->");
+                            break;
+                        default:
+                            throw new ArgumentException("GDS mora biti 1, 2 ili 3!");
+                    }
+                    query.Append("(:NOTA {naziv: $naziv})) AS linkExists");
+                    var result = await tx.RunAsync(query.ToString(), new { parfem, naziv = nota.Naziv });
+                    var record = await result.SingleAsync();
+                    if (record["linkExists"].As<bool>())
+                    {
+                        continue;
+                    }
+                    query.Clear();
+                    
                     query.Append(@"MATCH (p: PARFEM {naziv: $parfem}), (n: NOTA {naziv: $naziv}) ");
                     switch (nota.GDS)
                     {
@@ -273,10 +334,94 @@ public class ParfemController : ControllerBase
                     }
 
                     await tx.RunAsync(query.ToString(), new { parfem, naziv = nota.Naziv });
-                    query.Clear();
                 }
             });
             return Ok($"Uspešno dodate note parfemu {parfem}!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointSummary("detach note from fragrance")]
+    [HttpDelete]
+    public async Task<IActionResult> DeleteNotaFromParfem([FromBody] DetachNotaDTO Nota)
+    {
+        try
+        {
+            await using var session = _driver.AsyncSession();
+            var result = await session.ExecuteReadAsync(async tx =>
+            {
+                var query = new StringBuilder();
+                query.Append(@"OPTIONAL MATCH (p: PARFEM) WHERE p.naziv = $parfem ");
+                query.Append(@"OPTIONAL MATCH (n: NOTA) WHERE n.naziv = $nota ");
+                switch (Nota.GDS)
+                {
+                    case 0:
+                        query.Append("OPTIONAL MATCH (p) -[r:GORNJA]-> (n) ");
+                        break;
+                    case 1:
+                        query.Append("OPTIONAL MATCH (p) -[r:SREDNJA]-> (n) ");
+                        break;
+                    case 2:
+                        query.Append("OPTIONAL MATCH (p) -[r:DONJA]-> (n) ");
+                        break;
+                    default:
+                        throw new ArgumentException("GDS mora biti 0, 1 ili 2!");
+                }
+
+                query.Append(
+                    "RETURN p IS NOT NULL AS parfemExists, " +
+                    "n IS NOT NULL AS notaExists, " +
+                    "r IS NOT NULL AS connectionExists");
+                var checkResult = await tx.RunAsync(query.ToString(), new { parfem = Nota.Parfem, nota = Nota.Naziv });
+                var record = await checkResult.SingleAsync();
+                bool parfemExists = record["parfemExists"].As<bool>();
+                bool notaExists = record["notaExists"].As<bool>();
+                bool connectionExists = record["connectionExists"].As<bool>();
+                return (parfemExists, notaExists, connectionExists);
+            });
+
+            var (parfemExists, notaExists, connectionExists) = result;
+            if (parfemExists is false)
+            {
+                return NotFound($"Parfem {Nota.Parfem} nije pronađen!");
+            }
+            if (notaExists is false)
+            {
+                return NotFound($"Nota {Nota.Naziv} nije pronađena!");
+            }
+            if (connectionExists is false)
+            {
+                return NotFound($"Nota {Nota.Naziv} nije povezana sa parfemom {Nota.Parfem}!");
+            }
+
+            await session.ExecuteWriteAsync(async tx =>
+            {
+                var query = new StringBuilder();
+                query.Append(@"MATCH (p:PARFEM {naziv: $parfem}), (n:NOTA {naziv: $naziv})");
+                switch (Nota.GDS)
+                {
+                    case 0:
+                        query.Append("MATCH (p) -[r:GORNJA]-> (n)");
+                        break;
+                    case 1:
+                        query.Append("MATCH (p) -[r:SREDNJA]-> (n)");
+                        break;
+                    case 2:
+                        query.Append("MATCH (p) -[r:DONJA]-> (n)");
+                        break;
+                    default:
+                        throw new ArgumentException("GDS mora biti 0, 1 ili 2!");
+                }
+                query.Append("DETACH DELETE r");
+                await tx.RunAsync(query.ToString(), new { parfem = Nota.Parfem, naziv = Nota.Naziv });
+            });
+            return Ok($"Uspešno raskinuta veza između parfema {Nota.Parfem} i note {Nota.Naziv}!");
         }
         catch (Exception ex)
         {

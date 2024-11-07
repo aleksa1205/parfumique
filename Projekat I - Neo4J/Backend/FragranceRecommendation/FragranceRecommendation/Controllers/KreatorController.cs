@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace FragranceRecommendation.Controllers;
+﻿namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -164,7 +162,6 @@ public class KreatorController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-    
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
