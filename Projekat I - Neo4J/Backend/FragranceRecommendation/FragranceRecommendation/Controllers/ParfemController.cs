@@ -4,16 +4,12 @@
 [Route("[controller]")]
 public class ParfemController : ControllerBase
 {
-    private readonly IDriver _driver;
-
-    public ParfemController()
-    {
-        _driver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "12345678"));
-    }
+    private readonly IDriver _driver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "12345678"));
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [HttpGet("GetAllParfem")]
+    [EndpointSummary("get all fragrances as nodes")]
+    [HttpGet]
     public async Task<IActionResult> GetAllParfem()
     {
         try
@@ -41,7 +37,8 @@ public class ParfemController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("GetParfemByNaziv/{naziv}")]
+    [EndpointSummary("get fragrance by name")]
+    [HttpGet("{naziv}")]
     public async Task<IActionResult> GetParfemByNaziv(string naziv)
     {
         try
@@ -116,35 +113,26 @@ public class ParfemController : ControllerBase
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
-    [HttpPost("DodajParfem")]
-    public async Task<IActionResult> PostParfem(DodajParfemDTO parfem) 
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointDescription("get fragrances that are not associated with a perfumer as nodes")]
+    [HttpGet("GetParfemWithouthKreator")]
+    public async Task<IActionResult> GetParfemWithouthKreator()
     {
         try
         {
             await using var session = _driver.AsyncSession();
-            bool exists = await session.ExecuteReadAsync(async tx =>
+            var listaParfema = await session.ExecuteReadAsync(async tx =>
             {
-                var query = @"MATCH (p: PARFEM) WHERE p.naziv = $naziv RETURN p";
-                var result = await tx.RunAsync(query, new { naziv = parfem.Naziv });
-                return await result.FetchAsync();
-            });
-            if (exists)
-            {
-                return Conflict($"Parfem {parfem.Naziv} već postoji!");
-            }
-            await session.ExecuteWriteAsync(async tx =>
-            {
-                var query = @"CREATE (:PARFEM {naziv: $naziv, godina_izlaska: $godina, za: $pol})";
-                var parameters = new
+                var result = await tx.RunAsync("MATCH (p:PARFEM) WHERE NOT (p) <-[:KREIRA]- (:KREATOR) RETURN p");
+                var nodes = new List<INode>();
+                await foreach (var record in result)
                 {
-                    naziv = parfem.Naziv,
-                    godina = parfem.GodinaIzlaska,
-                    pol = parfem.Pol
-                };
-                await tx.RunAsync(query, parameters);
+                    var node = record["n"].As<INode>();
+                    nodes.Add(node);
+                }
+                return nodes;
             });
-            return Ok("Uspešno dodat parfem!");
+            return Ok(listaParfema);
         }
         catch (Exception ex)
         {
@@ -155,19 +143,88 @@ public class ParfemController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpDelete("ObrisiParfem/{naziv}")]
+    [EndpointDescription("get fragrances that are not associated with a manufacturers as nodes")]
+    [HttpGet("GetParfemWithouthProizvodjac")]
+    public async Task<IActionResult> GetParfemWithouthProizvodjac()
+    {
+        try
+        {
+            await using var session = _driver.AsyncSession();
+            var listaParfema = await session.ExecuteReadAsync(async tx =>
+            {
+                var result = await tx.RunAsync("MATCH (p:PARFEM) WHERE NOT (p) <-[:PROIZVODI]- (:PROIZVODJAC) RETURN p");
+                var nodes = new List<INode>();
+                await foreach (var record in result)
+                {
+                    var node = record["n"].As<INode>();
+                    nodes.Add(node);
+                }
+                return nodes;
+            });
+            return Ok(listaParfema);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [EndpointSummary("add fragrance")]
+    [HttpPost]
+    public async Task<IActionResult> AddPafem(DodajParfemDTO Parfem) 
+    {
+        try
+        {
+            await using var session = _driver.AsyncSession();
+            var parfemExists = await session.ExecuteReadAsync(async tx =>
+            {
+                var query = @"MATCH (p: PARFEM) WHERE p.naziv = $naziv RETURN p";
+                var result = await tx.RunAsync(query, new { naziv = Parfem.Naziv });
+                return await result.PeekAsync() is not null;
+            });
+            if (parfemExists)
+            {
+                return Conflict($"Parfem {Parfem.Naziv} već postoji!");
+            }
+            await session.ExecuteWriteAsync(async tx =>
+            {
+                var query = @"CREATE (:PARFEM {naziv: $naziv, godina_izlaska: $godina, za: $pol})";
+                var parameters = new
+                {
+                    naziv = Parfem.Naziv,
+                    godina = Parfem.GodinaIzlaska,
+                    pol = Parfem.Pol
+                };
+                await tx.RunAsync(query, parameters);
+            });
+            return Ok($"Uspešno dodat parfem {Parfem.Naziv}!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointSummary("delete fragrance")]
+    [HttpDelete("{naziv}")]
     public async Task<IActionResult> DeleteParfem(string naziv)
     {
         try
         {
             await using var session = _driver.AsyncSession();
-            bool exists = await session.ExecuteReadAsync(async tx =>
+            var parfemExists = await session.ExecuteReadAsync(async tx =>
             {
                 var query = @"MATCH (p: PARFEM) WHERE p.naziv = $naziv RETURN p";
                 var result = await tx.RunAsync(query, new { naziv });
-                return await result.FetchAsync();
+                return await result.PeekAsync() is not null;
             });
-            if (!exists)
+            if (parfemExists is false)
             {
                 return NotFound($"Parfem {naziv} ne postoji!");
             }
@@ -176,7 +233,7 @@ public class ParfemController : ControllerBase
                 var query = @"MATCH (p: PARFEM) WHERE p.naziv = $naziv DETACH DELETE (p)";
                 await tx.RunAsync(query, new { naziv });
             });
-            return Ok("Uspešno obrisan parfem!");
+            return Ok($"Uspešno obrisan parfem {naziv}!");
         }
         catch (Exception ex)
         {

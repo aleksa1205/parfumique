@@ -1,18 +1,10 @@
-﻿using System.Runtime.InteropServices.ComTypes;
-using Exception = System.Exception;
-
-namespace FragranceRecommendation.Controllers;
+﻿namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class KorisnikController : ControllerBase
 {
-    private readonly IDriver _driver;
-
-    public KorisnikController()
-    {
-        _driver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "12345678"));
-    }
+    private readonly IDriver _driver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "12345678"));
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -94,39 +86,33 @@ public class KorisnikController : ControllerBase
     {
         try
         {
-            try
+            await using var session = _driver.AsyncSession();
+            var korisnikExists = await session.ExecuteReadAsync(async tx =>
             {
-                await using var session = _driver.AsyncSession();
-                var userExists = await session.ExecuteReadAsync(async tx =>
-                {
-                    var query = @"MATCH (k: KORISNIK) WHERE k.korisnicko_ime = $korisnickoIme RETURN k";
-                    var result = await tx.RunAsync(query, new { korisnickoIme = korisnik.KorisnickoIme });
-                    return result.PeekAsync() is not null;
-                });
-                if (userExists)
-                {
-                    return Conflict($"Korisnik {korisnik.KorisnickoIme} već postoji!");
-                }
+                var query = @"MATCH (k: KORISNIK) WHERE k.korisnicko_ime = $korisnickoIme RETURN k";
+                var result = await tx.RunAsync(query, new { korisnickoIme = korisnik.KorisnickoIme });
+                return await result.PeekAsync() is not null;
+            });
+            if (korisnikExists)
+            {
+                return Conflict($"Korisnik {korisnik.KorisnickoIme} već postoji!");
+            }
 
-                await session.ExecuteWriteAsync(async tx =>
-                {
-                    var query = @"CREATE (:KORISNIK {ime: $ime, prezime: $prezime, pol: $pol, korisnicko_ime: $korisnicko, sifra: $sifra})";
-                    var parameters = new
-                    {
-                        ime = korisnik.Ime,
-                        prezime = korisnik.Prezime,
-                        pol = korisnik.Pol,
-                        korisnicko = korisnik.KorisnickoIme,
-                        sifra = korisnik.Sifra
-                    };
-                    await tx.RunAsync(query, parameters);
-                });
-                return Ok($"Uspešno dodat korisnik {korisnik.KorisnickoIme}!");
-            }
-            catch (Exception ex)
+            await session.ExecuteWriteAsync(async tx =>
             {
-                return BadRequest(ex.Message);
-            }
+                var query =
+                    @"CREATE (:KORISNIK {ime: $ime, prezime: $prezime, pol: $pol, korisnicko_ime: $korisnicko, sifra: $sifra})";
+                var parameters = new
+                {
+                    ime = korisnik.Ime,
+                    prezime = korisnik.Prezime,
+                    pol = korisnik.Pol,
+                    korisnicko = korisnik.KorisnickoIme,
+                    sifra = korisnik.Sifra
+                };
+                await tx.RunAsync(query, parameters);
+            });
+            return Ok($"Uspešno dodat korisnik {korisnik.KorisnickoIme}!");
         }
         catch (Exception ex)
         {
@@ -150,22 +136,19 @@ public class KorisnikController : ControllerBase
                 var query = @"OPTIONAL MATCH (k:KORISNIK {korisnicko_ime: $korisnickoIme}) 
                               OPTIONAL MATCH(p: PARFEM {naziv: $parfem}) 
                               OPTIONAL MATCH(k) -[r:POSEDUJE]-> (p)
-                            RETURN k IS NOT NULL AS userExists,
-                                   p IS NOT NULL AS fragranceExists,
+                            RETURN k IS NOT NULL AS korisnikExists,
+                                   p IS NOT NULL AS parfemExists,
                                    r IS NOT NULL AS connectionExists";
                 var checkResult = await tx.RunAsync(query, new { korisnickoIme, parfem });
                 var record = await checkResult.SingleAsync();
-                if (record is null)
-                {
-                    return (false, false, false);
-                }
-                bool userExists = record["userExists"].As<bool>();
-                bool fragranceExists = record["fragranceExists"].As<bool>();
-                bool connectionExists= record["connectionExists"].As<bool>();
-                Console.WriteLine(userExists);
-                Console.WriteLine(fragranceExists);
-                Console.WriteLine(connectionExists);
-                return (userExists, fragranceExists, connectionExists);
+                // if (record is null)
+                // {
+                //     return (false, false, false);
+                // }
+                bool korisnikExists = record["korisnikExists"].As<bool>();
+                bool parfemExists = record["parfemExists"].As<bool>();
+                bool connectionExists = record["connectionExists"].As<bool>();
+                return (korisnikExists, parfemExists, connectionExists);
             });
             
             var (userExists, fragranceExists, connectionExists) = result;
@@ -185,7 +168,9 @@ public class KorisnikController : ControllerBase
             await session.ExecuteWriteAsync(async tx =>
             {
                 var query =
-                    @"MATCH(k:KORISNIK {korisnicko_ime: $korisnickoIme}), (p:PARFEM {naziv: $parfem}) CREATE (k) -[:POSEDUJE]-> (p);";
+                    @"MATCH(k:KORISNIK {korisnicko_ime: $korisnickoIme}), 
+                    (p:PARFEM {naziv: $parfem}) 
+                    CREATE (k) -[:POSEDUJE]-> (p);";
                 await tx.RunAsync(query, new { korisnickoIme, parfem });
             });
             return Ok($"Uspešno dodat parfem {parfem} korisniku {korisnickoIme}!");
@@ -206,14 +191,14 @@ public class KorisnikController : ControllerBase
         try
         {
             await using var session = _driver.AsyncSession();
-            var userExists = await session.ExecuteReadAsync(async tx =>
+            var korisnikExists = await session.ExecuteReadAsync(async tx =>
             {
                 var query = @"MATCH (k: KORISNIK) WHERE k.korisnicko_ime = $korisnickoIme RETURN k";
                 var result = await tx.RunAsync(query, new { korisnickoIme });
-                return result.PeekAsync() is not null;
+                return await result.PeekAsync() is not null;
             });
 
-            if(userExists is false)
+            if(korisnikExists is false)
             {
                 return NotFound($"Korisnik {korisnickoIme} ne postoji!");
             }

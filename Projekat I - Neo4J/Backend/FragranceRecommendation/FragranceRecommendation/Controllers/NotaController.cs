@@ -1,19 +1,17 @@
-﻿namespace FragranceRecommendation.Controllers;
+﻿using System.Runtime.InteropServices.ComTypes;
+
+namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class NotaController : ControllerBase
 {
-    private readonly IDriver _driver;
-
-    public NotaController()
-    {
-        _driver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "12345678"));
-    }
+    private readonly IDriver _driver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "12345678"));
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [HttpGet("GetAllNota")]
+    [EndpointSummary("get all notes as nodes")]
+    [HttpGet]
     public async Task<IActionResult> GetAllNota()
     {
         try
@@ -41,7 +39,8 @@ public class NotaController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("GetNotaByNaziv/{naziv}")]
+    [EndpointSummary("get note by name")]
+    [HttpGet("{naziv}")]
     public async Task<IActionResult> GetNotaByNaziv(string naziv)
     {
         try
@@ -70,5 +69,71 @@ public class NotaController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
-    } 
+    }
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [EndpointSummary("add nota")]
+    [HttpPost]
+    public async Task<IActionResult> AddNota(string naziv, string tip)
+    {
+        try
+        {
+            await using var session = _driver.AsyncSession();
+            var notaExists = await session.ExecuteReadAsync(async tx =>
+            {
+                var query=@"MATCH (n:NOTA) WHERE n.naziv = $naziv RETURN n";
+                var result = await tx.RunAsync(query, new { naziv });
+                return await result.PeekAsync() is not null;
+            });
+            if (notaExists)
+            {
+                return Conflict($"Nota {naziv} već postoji!");
+            }
+
+            await session.ExecuteWriteAsync(async tx =>
+            {
+                await tx.RunAsync(@"CREATE (n:NOTA {naziv: $naziv, tip: $tip})", new { naziv, tip });
+            });
+            return Ok($"Nota {naziv} uspešno dodata!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointDescription("delete nota")]
+    [HttpDelete]
+    public async Task<IActionResult> DeleteNota(string naziv)
+    {
+        try
+        {
+            await using var session = _driver.AsyncSession();
+            var notaExists = await session.ExecuteReadAsync(async tx =>
+            {
+                var query = @"MATCH (n:NOTA) WHERE n.naziv = $naziv RETURN n";
+                var result = await tx.RunAsync(query, new { naziv });
+                return await result.PeekAsync() is not null;
+            });
+            if (notaExists is false)
+            {
+                return NotFound($"Nota {naziv} nije pronađena!");
+            }
+
+            await session.ExecuteWriteAsync(async tx =>
+            {
+                await tx.RunAsync(@"MATCH (n:NOTA {naziv: $naziv}) DETACH DELETE n", new { naziv });
+            });
+            return Ok($"Nota {naziv} je obrisana!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
