@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.my-bg-brand {
+  background-color: #19e1bb;
+  color: #fff;
+}
+
+button.my-bg-brand:hover,
+.my-nav-active:hover {
+  background-color: #0bb091;
+  color: #000;
+}
+
+.my-text-black {
+  color: #000;
+}
+
+.my-text-gray {
+  color: #c1c6cd;
+}
+
+.my-nav-active {
+  background-color: #42f0cf;
+  color: #fff;
+}
+
+a.my-text-black:hover,
+a.my-text-gray:hover {
+  color: #19e1bb;
+}
