@@ -1,153 +1,153 @@
 //KREATOR
-CREATE (:KREATOR {ime: "Roja", prezime: "Dove", godina: 1956, drzava: "Ujedinjeno Kraljevstvo"})
-CREATE (:KREATOR {ime: "Olivier", prezime: "Gillotin", godina: 0, drzava: "Francuska"})
-CREATE (:KREATOR {ime: "Natalie", prezime: "Gracia-Cetto", godina: 0, drzava: "Francuska"})
-CREATE (:KREATOR {ime: "Quentin", prezime: "Bisch", godina: 0, drzava: "Francuska"})
-CREATE (:KREATOR {ime: "Carlos", prezime: "Benaim", godina: 0, drzava: "Maroko"})
+CREATE (:PERFUMER {name: "Roja", surname: "Dove", year: 1956, country: "Ujedinjeno Kraljevstvo"})
+CREATE (:PERFUMER {name: "Olivier", surname: "Gillotin", year: 0, country: "Francuska"})
+CREATE (:PERFUMER {name: "Natalie", surname: "Gracia-Cetto", year: 0, country: "Francuska"})
+CREATE (:PERFUMER {name: "Quentin", surname: "Bisch", year: 0, country: "Francuska"})
+CREATE (:PERFUMER {name: "Carlos", surname: "Benaim", year: 0, country: "Maroko"})
 
 //PROIZVOĐAČ
-CREATE (:PROIZVODJAC {naziv: "Gucci"})
-CREATE (:PROIZVODJAC {naziv: "Viktor&Rolf"})
-CREATE (:PROIZVODJAC {naziv: "Roja Parfums"})
-CREATE (:PROIZVODJAC {naziv: "Versace"})
-CREATE (:PROIZVODJAC {naziv: "Dior"})
+CREATE (:MANUFACTURER {name: "Gucci"})
+CREATE (:MANUFACTURER {name: "Viktor&Rolf"})
+CREATE (:MANUFACTURER {name: "Roja Parfums"})
+CREATE (:MANUFACTURER {name: "Versace"})
+CREATE (:MANUFACTURER {name: "Dior"})
 
 //KORISNIK
-CREATE (:KORISNIK {korisnicko_ime: "aleksa02", sifra: "tmp123", ime: "Aleksa", prezime: "Perić", pol: "M"})
-CREATE (:KORISNIK {korisnicko_ime: "jovanc", sifra: "sifra123", ime: "Jovan", prezime: "Cvetković", pol: "M"})
-CREATE (:KORISNIK {korisnicko_ime: "bigMilance", sifra: "milance123", ime: "Milan", prezime: "Ponjević", pol: "M"})
-CREATE (:KORISNIK {korisnicko_ime: "dragance", sifra: "dragance123", ime: "Dragan", prezime: "Milošević", pol: "M"})
-CREATE (:KORISNIK {korisnicko_ime: "milenica", sifra: "123456", ime: "Milena", prezime: "Novaković", pol: "Z"})
+CREATE (:USER {username: "aleksa02", password: "tmp123", name: "Aleksa", surname: "Perić", gender: "M"})
+CREATE (:USER {username: "jovanc", password: "sifra123", name: "Jovan", surname: "Cvetković", gender: "M"})
+CREATE (:USER {username: "bigMilance", password: "milance123", name: "Milan", surname: "Ponjević", gender: "M"})
+CREATE (:USER {username: "dragance", password: "dragance123", name: "Dragan", surname: "Milošević", gender: "M"})
+CREATE (:USER {username: "milenica", password: "123456", name: "Milena", surname: "Novaković", gender: "Z"})
 
 //PARFEM
-CREATE (:PARFEM {naziv: "Versace Pour Homme", godina_izlaska: 2008, za: "M"})
-CREATE (:PARFEM {naziv: "Spicebomb Extreme", godina_izlaska: 2015, za: "M"})
-CREATE (:PARFEM {naziv: "Elysium Pour Homme Parfum Cologne", godina_izlaska: 2017, za: "M"})
-CREATE (:PARFEM {naziv: "Sauvage Parfum", godina_izlaska: 2019, za: "M"})
-CREATE (:PARFEM {naziv: "Guilty Intense Pour Homme", godina_izlaska: 2011, za: "M"})
+CREATE (:FRAGRANCE {name: "Versace Pour Homme", year: 2008, for: "M"})
+CREATE (:FRAGRANCE {name: "Spicebomb Extreme", year: 2015, for: "M"})
+CREATE (:FRAGRANCE {name: "Elysium Pour Homme Parfum Cologne", year: 2017, for: "M"})
+CREATE (:FRAGRANCE {name: "Sauvage Parfum", year: 2019, for: "M"})
+CREATE (:FRAGRANCE {name: "Guilty Intense Pour Homme", year: 2011, for: "M"})
 
 //NOTA
-CREATE (:NOTA {naziv: "Citrus", tip: "topla"})
-CREATE (:NOTA {naziv: "Cvet", tip: "topla"})
-CREATE (:NOTA {naziv: "Aroma", tip: "neutralna"})
-CREATE (:NOTA {naziv: "Drvo", tip: "hladna"})
-CREATE (:NOTA {naziv: "Ćilibar", tip: "neutralna"})
-CREATE (:NOTA {naziv: "Koža", tip: "hladna"})
-CREATE (:NOTA {naziv: "Začin", tip: "neutralna"})
-CREATE (:NOTA {naziv: "Zeleno", tip: "neutralna"})
-CREATE (:NOTA {naziv: "Voće i orašasti plodovi", tip: "topla"})
-CREATE (:NOTA {naziv: "Smola", tip: "neutralna"})
-CREATE (:NOTA {naziv: "Duvan", tip: "hladna"})
-CREATE (:NOTA {naziv: "Piće", tip: "hladna"})
+CREATE (:NOTE {name: "Citrus", type: "topla"})
+CREATE (:NOTE {name: "Cvet", type: "topla"})
+CREATE (:NOTE {name: "Aroma", type: "neutralna"})
+CREATE (:NOTE {name: "Drvo", type: "hladna"})
+CREATE (:NOTE {name: "Ćilibar", type: "neutralna"})
+CREATE (:NOTE {name: "Koža", type: "hladna"})
+CREATE (:NOTE {name: "Začin", type: "neutralna"})
+CREATE (:NOTE {name: "Zeleno", type: "neutralna"})
+CREATE (:NOTE {name: "Voće i orašasti plodovi", type: "topla"})
+CREATE (:NOTE {name: "Smola", type: "neutralna"})
+CREATE (:NOTE {name: "Duvan", type: "hladna"})
+CREATE (:NOTE {name: "Piće", type: "hladna"})
 
 //VEZE
 //KREATOR-PARFEM
 //MATCH (k:KREATOR {ime: "Roja", prezime: "Dove"}), (p:PARFEM {naziv: "Elysium Pour Homme Parfum Cologne"})
 //Ovo izaziva Cartesian product
 
-MATCH (k:KREATOR {ime: "Roja", prezime: "Dove"})
-MATCH (p:PARFEM {naziv: "Elysium Pour Homme Parfum Cologne"})
-CREATE (k) -[:KREIRA]-> (p);
+MATCH (p:PERFUMER {name: "Roja", surname: "Dove"})
+MATCH (f:FRAGRANCE {name: "Elysium Pour Homme Parfum Cologne"})
+CREATE (p) -[:CREATES]-> (f);
 
-MATCH (k:KREATOR {ime: "Carlos", prezime: "Benaim"})
-MATCH (p:PARFEM {naziv: "Spicebomb Extreme"})
-CREATE (k) -[:KREIRA]-> (p);
+MATCH (p:PERFUMER {name: "Carlos", surname: "Benaim"})
+MATCH (f:FRAGRANCE {name: "Spicebomb Extreme"})
+CREATE (p) -[:CREATES]-> (f);
 
 //PROIZVODJAC - PARFEM
-MATCH (n:PROIZVODJAC {naziv: "Versace"})
-MATCH (p:PARFEM {naziv: "Versace Pour Homme"})
-CREATE (n) -[:PROIZVODI]-> (p);
+MATCH (m:MANUFACTURER {name: "Versace"})
+MATCH (f:FRAGRANCE {name: "Versace Pour Homme"})
+CREATE (m) -[:MANUFACTURES]-> (f);
 
-MATCH (n:PROIZVODJAC {naziv: "Dior"})
-MATCH (p:PARFEM {naziv: "Sauvage Parfum"})
-CREATE (n) -[:PROIZVODI]-> (p);
+MATCH (m:MANUFACTURER {name: "Dior"})
+MATCH (f:FRAGRANCE {name: "Sauvage Parfum"})
+CREATE (m) -[:MANUFACTURES]-> (f);
 
-MATCH (n:PROIZVODJAC {naziv: "Gucci"})
-MATCH (p:PARFEM {naziv: "Guilty Intense Pour Homme"})
-CREATE (n) -[:PROIZVODI]-> (p);
+MATCH (m:MANUFACTURER {name: "Gucci"})
+MATCH (f:FRAGRANCE {name: "Guilty Intense Pour Homme"})
+CREATE (m) -[:MANUFACTURES]-> (f);
 
-MATCH (n:PROIZVODJAC {naziv: "Roja Parfums"})
-MATCH (p:PARFEM {naziv: "Elysium Pour Homme Parfum Cologne"})
-CREATE (n) -[:PROIZVODI]-> (p);
+MATCH (m:MANUFACTURER {name: "Roja Parfums"})
+MATCH (f:FRAGRANCE {name: "Elysium Pour Homme Parfum Cologne"})
+CREATE (m) -[:MANUFACTURES]-> (f);
 
-MATCH (n:PROIZVODJAC {naziv: "Viktor&Rolf"})
-MATCH (p:PARFEM {naziv: "Spicebomb Extreme"})
-CREATE (n) -[:PROIZVODI]-> (p);
+MATCH (m:MANUFACTURER {name: "Viktor&Rolf"})
+MATCH (f:FRAGRANCE {name: "Spicebomb Extreme"})
+CREATE (m) -[:MANUFACTURES]-> (f);
 
 //PARFEM - NOTA
-MATCH (ci:NOTA {naziv: "Citrus"})
-MATCH (cv:NOTA {naziv: "Cvet"})
-MATCH (dr:NOTA {naziv: "Drvo"})
-MATCH (ze:NOTA {naziv: "Zeleno"})
-MATCH (za:NOTA {naziv: "Začin"})
-MATCH (cil:NOTA {naziv: "Ćilibar"})
-MATCH (p:PARFEM {naziv: "Versace Pour Homme"})
-CREATE (p) -[:GORNJA]-> (ci),
-    (p) -[:SREDNJA]-> (cv),
-    (p) -[:SREDNJA]-> (dr),
-    (p) -[:SREDNJA]-> (ze),
-    (p) -[:DONJA]-> (za),
-    (p) -[:DONJA]-> (cil);
+MATCH (ci:NOTE {name: "Citrus"})
+MATCH (cv:NOTE {name: "Cvet"})
+MATCH (dr:NOTE {name: "Drvo"})
+MATCH (ze:NOTE {name: "Zeleno"})
+MATCH (za:NOTE {name: "Začin"})
+MATCH (cil:NOTE {name: "Ćilibar"})
+MATCH (f:FRAGRANCE {name: "Versace Pour Homme"})
+CREATE (f) -[:TOP]-> (ci),
+    (f) -[:MIDDLE]-> (cv),
+    (f) -[:MIDDLE]-> (dr),
+    (f) -[:MIDDLE]-> (ze),
+    (f) -[:BASE]-> (za),
+    (f) -[:BASE]-> (cil);
 
-MATCH (cv:NOTA {naziv: "Cvet"})
-MATCH (ci:NOTA {naziv: "Citrus"})
-MATCH (za:NOTA {naziv: "Začin"})
-MATCH (cil:NOTA {naziv: "Ćilibar"})
-MATCH (dr:NOTA {naziv: "Drvo"})
-MATCH (p:PARFEM {naziv: "Guilty Intense Pour Homme"})
-CREATE (p) -[:GORNJA]-> (cv), 
-    (p) -[:GORNJA]-> (ci),
-    (p) -[:GORNJA]-> (za),
-    (p) -[:SREDNJA]-> (cv),
-    (p) -[:SREDNJA]-> (ci),
-    (p) -[:DONJA]-> (cil),
-    (p) -[:DONJA]-> (dr);
+MATCH (cv:NOTE {name: "Cvet"})
+MATCH (ci:NOTE {name: "Citrus"})
+MATCH (za:NOTE {name: "Začin"})
+MATCH (cil:NOTE {name: "Ćilibar"})
+MATCH (dr:NOTE {name: "Drvo"})
+MATCH (f:FRAGRANCE {name: "Guilty Intense Pour Homme"})
+CREATE (f) -[:TOP]-> (cv), 
+    (f) -[:TOP]-> (ci),
+    (f) -[:TOP]-> (za),
+    (f) -[:MIDDLE]-> (cv),
+    (f) -[:MIDDLE]-> (ci),
+    (f) -[:BASE]-> (cil),
+    (f) -[:BASE]-> (dr);
 	
-MATCH (ci:NOTA {naziv: "Citrus"})
-MATCH (cil:NOTA {naziv: "Ćilibar"})
-MATCH (ze:NOTA {naziv: "Zeleno"})
-MATCH (dr:NOTA {naziv: "Drvo"})
-MATCH (vo:NOTA {naziv: "Voće i orašasti plodovi"})
-MATCH (cv:NOTA {naziv: "Cvet"})
-MATCH (ko:NOTA {naziv: "Koža"})
-MATCH (za:NOTA {naziv: "Začin"})
-MATCH (sm:NOTA {naziv: "Smola"})
-MATCH (p:PARFEM {naziv: "Elysium Pour Homme Parfum Cologne"})
-CREATE (p) -[:GORNJA]-> (ci),
-    (p) -[:GORNJA]-> (ze),
-    (p) -[:SREDNJA]-> (ze),
-    (p) -[:SREDNJA]-> (dr),
-    (p) -[:SREDNJA]-> (vo),
-    (p) -[:SREDNJA]-> (cv),
-    (p) -[:DONJA]-> (cil),
-    (p) -[:DONJA]-> (ko),
-    (p) -[:DONJA]-> (za),
-    (p) -[:DONJA]-> (sm);
+MATCH (ci:NOTE {name: "Citrus"})
+MATCH (cil:NOTE {name: "Ćilibar"})
+MATCH (ze:NOTE {name: "Zeleno"})
+MATCH (dr:NOTE {name: "Drvo"})
+MATCH (vo:NOTE {name: "Voće i orašasti plodovi"})
+MATCH (cv:NOTE {name: "Cvet"})
+MATCH (ko:NOTE {name: "Koža"})
+MATCH (za:NOTE {name: "Začin"})
+MATCH (sm:NOTE {name: "Smola"})
+MATCH (f:FRAGRANCE {name: "Elysium Pour Homme Parfum Cologne"})
+CREATE (f) -[:TOP]-> (ci),
+    (f) -[:TOP]-> (ze),
+    (f) -[:MIDDLE]-> (ze),
+    (f) -[:MIDDLE]-> (dr),
+    (f) -[:MIDDLE]-> (vo),
+    (f) -[:MIDDLE]-> (cv),
+    (f) -[:BASE]-> (cil),
+    (f) -[:BASE]-> (ko),
+    (f) -[:BASE]-> (za),
+    (f) -[:BASE]-> (sm);
 	
-MATCH (ci:NOTA {naziv: "Citrus"})
-MATCH (sm:NOTA {naziv: "Smola"})
-MATCH (dr:NOTA {naziv: "Drvo"})
-MATCH (za:NOTA {naziv: "Začin"})
-MATCH (p:PARFEM {naziv: "Sauvage Parfum"})
-CREATE (p) -[:GORNJA]-> (ci),
-    (p) -[:GORNJA]-> (sm),
-    (p) -[:SREDNJA]-> (dr),
-    (p) -[:DONJA]-> (sm),
-    (p) -[:DONJA]-> (dr),
-    (p) -[:DONJA]-> (za); 
+MATCH (ci:NOTE {name: "Citrus"})
+MATCH (sm:NOTE {name: "Smola"})
+MATCH (dr:NOTE {name: "Drvo"})
+MATCH (za:NOTE {name: "Začin"})
+MATCH (f:FRAGRANCE {name: "Sauvage Parfum"})
+CREATE (f) -[:TOP]-> (ci),
+    (f) -[:TOP]-> (sm),
+    (f) -[:MIDDLE]-> (dr),
+    (f) -[:BASE]-> (sm),
+    (f) -[:BASE]-> (dr),
+    (f) -[:BASE]-> (za); 
 
 //KORISNIK - PARFEM
-MATCH (k:KORISNIK {korisnicko_ime: "aleksa02"})
-MATCH (p:PARFEM {naziv: "Guilty Intense Pour Homme"})
-CREATE (k) -[:POSEDUJE] -> (p);
+MATCH (u:USER {username: "aleksa02"})
+MATCH (f:FRAGRANCE {name: "Guilty Intense Pour Homme"})
+CREATE (u) -[:OWNS] -> (f);
 
-MATCH (k:KORISNIK {korisnicko_ime: "aleksa02"})
-MATCH (p:PARFEM {naziv: "Elysium Pour Homme Parfum Cologne"})
-CREATE (k) -[:POSEDUJE] -> (p);
+MATCH (u:USER {username: "aleksa02"})
+MATCH (f:FRAGRANCE {name: "Elysium Pour Homme Parfum Cologne"})
+CREATE (u) -[:OWNS] -> (f);
 
-MATCH (k:KORISNIK {korisnicko_ime: "jovanc"})
-MATCH (p:PARFEM {naziv: "Guilty Intense Pour Homme"})
-CREATE (k) -[:POSEDUJE] -> (p);
+MATCH (u:USER {username: "jovanc"})
+MATCH (f:FRAGRANCE {name: "Guilty Intense Pour Homme"})
+CREATE (u) -[:OWNS] -> (f);
 
-CREATE INDEX FOR (k:KORISNIK) on (k.korisnicko_ime);
-CREATE INDEX FOR (p:PARFEM) on (p.naziv);
+CREATE INDEX FOR (u:USER) on (u.username);
+CREATE INDEX FOR (f:FRAGRANCE) on (f.name);

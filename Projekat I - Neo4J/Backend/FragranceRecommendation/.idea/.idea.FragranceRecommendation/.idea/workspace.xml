@@ -10,40 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2d7acab-34fc-48e3-9083-48185e608bb1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/FragranceController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/ManufacturerController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/NoteController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DBSettings.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/AddFragranceDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/AddPerfumerDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/NoteDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UpdateFragranceDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UpdatePerfumerDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Helper.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Models/Fragrance.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Models/Manufacturer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Models/User.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/KorisnikController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/UserController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/KreatorController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/PerfumerController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/NotaController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/ParfemController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/ProizvodjacController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/DetachNotaDTO.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/DodajKorisnikaDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/AddUserDTO.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/DodajKreatoraDTO.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/DodajParfemDTO.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/NotaDTO.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UpdateKorisnikDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UpdateUserDTO.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UpdateKreatorDTO.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UpdateParfemDTO.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/FragranceRecommendation.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/FragranceRecommendation.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Implicit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Implicit.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Models/Korisnik.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Models/Kreator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Models/Perfumer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Models/Nota.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Models/Note.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Models/Parfem.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Models/Proizvodjac.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.FragranceRecommendation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FragranceRecommendation/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/NoteController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/NoteController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Models/Note.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Models/Note.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Projekat I - Punjenje baze.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../Projekat I - Punjenje baze.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -77,10 +46,10 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     ".NET Launch Settings Profile.FragranceRecommendation: IIS Express.executor": "Run",
-    ".NET Launch Settings Profile.FragranceRecommendation: https.executor": "Debug",
+    ".NET Launch Settings Profile.FragranceRecommendation: https.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "XThreadsFramesViewSplitterKey": "0.054517135",
+    "XThreadsFramesViewSplitterKey": "0.040498443",
     "git-widget-placeholder": "main",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -157,6 +126,7 @@
       <workItem from="1734359115416" duration="18274000" />
       <workItem from="1734386127150" duration="3416000" />
       <workItem from="1734426854029" duration="2313000" />
+      <workItem from="1734429873936" duration="17210000" />
     </task>
     <servers />
   </component>
