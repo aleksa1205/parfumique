@@ -2,15 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-.my-bg-brand {
-  background-color: #19e1bb;
+.my-bg-brand,
+.my-active {
+  background-color: #0bb091;
   color: #fff;
 }
 
 button.my-bg-brand:hover,
-.my-nav-active:hover {
-  background-color: #0bb091;
-  color: #000;
+.my-active:hover {
+  background-color: #015a48;
 }
 
 .my-text-black {
@@ -21,12 +21,24 @@ button.my-bg-brand:hover,
   color: #c1c6cd;
 }
 
-.my-nav-active {
-  background-color: #42f0cf;
-  color: #fff;
+.my-text-primary {
+  color: #015a48;
+}
+.my-text-primary:hover {
+  color: #0bb091;
+}
+
+.error {
+  margin-top: 5px;
+  color: #e5212c;
+  font-size: 14px;
+  position: absolute;
 }
 
 a.my-text-black:hover,
-a.my-text-gray:hover {
+a.my-text-gray:hover,
+svg.my-text-gray:hover,
+svg.my-text-black:hover {
   color: #19e1bb;
+  fill: #19e1bb;
 }

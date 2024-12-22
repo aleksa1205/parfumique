@@ -22,6 +22,7 @@ public class Fragrance
     public int BatchYear { get; set; } = DateTime.Now.Year;
     
     public Manufacturer? Manufacturer { get; set; } = null;
+    public IList<Perfumer> Perfumers { get; set; } = new List<Perfumer>();
     public IList<Note> Top { get; set; } = new List<Note>();
     public IList<Note> Middle { get; set; } = new List<Note>();
     public IList<Note> Base { get; set; } = new List<Note>();

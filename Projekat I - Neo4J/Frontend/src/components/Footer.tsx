@@ -4,7 +4,7 @@ import logo from "../assets/images/logo.jpg";
 
 const Footer = () => {
   return (
-    <footer className="bg-white">
+    <footer className="bg-white font-roboto">
       <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
@@ -25,9 +25,9 @@ const Footer = () => {
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
             <div>
               <h2 className="mb-6 text-sm font-semibold uppercase text-black">
-                Inspiracija
+                Inspiration
               </h2>
-              <ul className="text-gray-400 font-medium">
+              <ul className="font-medium">
                 <li className="mb-4">
                   <a
                     href="https://www.fragrantica.com/"
@@ -50,7 +50,7 @@ const Footer = () => {
             </div>
             <div>
               <h2 className="mb-6 text-sm font-semibold uppercase text-black">
-                Pratite nas
+                Follow us
               </h2>
               <a
                 href="https://github.com/aleksa1205/NapredneBazePodataka"
@@ -65,11 +65,15 @@ const Footer = () => {
                 Pravo
               </h2>
               <ul className="font-medium">
-                <li className="my-text-gray mb-4">
-                  <a href="#">Politika privatnosti</a>
+                <li className="mb-4">
+                  <a href="#" className="my-text-gray">
+                    Privacy policy
+                  </a>
                 </li>
-                <li className="my-text-gray">
-                  <a href="#">Uslovi korišćenja</a>
+                <li>
+                  <a href="#" className="my-text-gray">
+                    Terms and Conditions
+                  </a>
                 </li>
               </ul>
             </div>
@@ -77,9 +81,9 @@ const Footer = () => {
         </div>
         <hr className="my-6 border-gray-200 sm:mx-auto lg:my-8" />
         <div className="sm:flex sm:items-center sm:justify-between">
-          <span className="text-sm text-gray-500 sm:text-center">
-            © 2024 Aleksa Perić 18826 & Jovan Cvetković 18981. Sva prava
-            zadržana.
+          <span className="text-sm my-text-gray sm:text-center">
+            © 2024 Aleksa Perić 18826 & Jovan Cvetković 18981. All rights
+            retained.
           </span>
           <div className="flex mt-6 sm:justify-center sm:mt-0">
             <ul className="flex flex-row">

@@ -1,13 +1,5 @@
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-
 const HomePage = () => {
-  return (
-    <>
-      <Navbar />
-      <Footer />
-    </>
-  );
+  return <div>Homepage</div>;
 };
 
 export default HomePage;

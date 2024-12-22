@@ -8,7 +8,7 @@ namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class FragranceController(IDriver driver) : ControllerBase
+public class  FragranceController(IDriver driver) : ControllerBase
 {
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -54,10 +54,11 @@ public class FragranceController(IDriver driver) : ControllerBase
                 var query = @"MATCH (n:FRAGRANCE)
                               WHERE id(n) = $id
                               OPTIONAL MATCH (n) <-[:MANUFACTURES]- (m:MANUFACTURER)
+                              OPTIONAL MATCH (n) <-[:CREATES]- (p:PERFUMER)
                               OPTIONAL MATCH (n) -[:TOP]-> (t:NOTE)
                               OPTIONAL MATCH (n) -[:MIDDLE]-> (k:NOTE)
                               OPTIONAL MATCH (n) -[:BASE]-> (b:NOTE)
-                              RETURN n{.*, id: id(n)} AS fragrance, m AS manufacturer, COLLECT(t) AS topNotes, COLLECT(k) AS middleNotes, COLLECT(b) AS baseNotes";
+                              RETURN n{.*, id: id(n)} AS fragrance, m AS manufacturer, COLLECT(DISTINCT p{.*, id: id(p)}) AS perfumers, COLLECT(t) AS topNotes, COLLECT(k) AS middleNotes, COLLECT(b) AS baseNotes";
                 var result = await tx.RunAsync(query, new { id });
                 var record = await result.PeekAsync();
                 if (record is null)
@@ -67,6 +68,8 @@ public class FragranceController(IDriver driver) : ControllerBase
 
                 var manufacturer =
                     JsonConvert.DeserializeObject<Manufacturer>(Helper.GetJson(record["manufacturer"].As<INode>()));
+                var perfumers =
+                    JsonConvert.DeserializeObject<List<Perfumer>>(JsonConvert.SerializeObject(record["perfumers"]));
                 var topNotes = record["topNotes"].As<List<INode>>()
                     .Select(node => JsonConvert.DeserializeObject<Note>(Helper.GetJson(node))).ToList();
                 var middleNotes = record["middleNotes"].As<List<INode>>()
@@ -77,6 +80,7 @@ public class FragranceController(IDriver driver) : ControllerBase
                 var fragrance =
                     JsonConvert.DeserializeObject<Fragrance>(JsonConvert.SerializeObject(record["fragrance"]));
                 fragrance!.Manufacturer = manufacturer;
+                fragrance.Perfumers = perfumers;
                 fragrance.Top = topNotes;
                 fragrance.Middle = middleNotes;
                 fragrance.Base = baseNotes;

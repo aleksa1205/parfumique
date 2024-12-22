@@ -7,10 +7,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IDriver>(DbSettings.GetDbDriver());
+var AllowFrontendOrgin = "_allowFrontendOrigin";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(AllowFrontendOrgin, policy =>
+    {
+        policy.WithOrigins("http://localhost:8081")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 
 
 var app = builder.Build();
-
+app.UseCors(AllowFrontendOrgin);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -21,12 +32,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseRouting();
-
-app.UseAuthorization();
 
 //app.MapConrollerRoute(name: "name", pattern "{controller}/action=Index/id
-
+app.UseRouting();
 app.MapControllers();
 
 app.Run();
