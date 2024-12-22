@@ -17,6 +17,24 @@ interface Fragrance {
   manufacturer: {
     name: string;
   };
+  perfumers: {
+    id: number;
+    name: string;
+    surname: string;
+    image: string;
+  }[];
+  top: {
+    image: string;
+    name: string;
+  }[];
+  middle: {
+    image: string;
+    name: string;
+  }[];
+  base: {
+    image: string;
+    name: string;
+  }[];
 }
 
 export default function useFragranceController() {

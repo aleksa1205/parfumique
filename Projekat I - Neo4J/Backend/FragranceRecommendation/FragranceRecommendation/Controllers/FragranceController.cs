@@ -58,7 +58,7 @@ public class  FragranceController(IDriver driver) : ControllerBase
                               OPTIONAL MATCH (n) -[:TOP]-> (t:NOTE)
                               OPTIONAL MATCH (n) -[:MIDDLE]-> (k:NOTE)
                               OPTIONAL MATCH (n) -[:BASE]-> (b:NOTE)
-                              RETURN n{.*, id: id(n)} AS fragrance, m AS manufacturer, COLLECT(DISTINCT p{.*, id: id(p)}) AS perfumers, COLLECT(t) AS topNotes, COLLECT(k) AS middleNotes, COLLECT(b) AS baseNotes";
+                              RETURN n{.*, id: id(n)} AS fragrance, m AS manufacturer, COLLECT(DISTINCT p{.*, id: id(p)}) AS perfumers, COLLECT(DISTINCT t) AS topNotes, COLLECT(DISTINCT k) AS middleNotes, COLLECT(DISTINCT b) AS baseNotes";
                 var result = await tx.RunAsync(query, new { id });
                 var record = await result.PeekAsync();
                 if (record is null)
