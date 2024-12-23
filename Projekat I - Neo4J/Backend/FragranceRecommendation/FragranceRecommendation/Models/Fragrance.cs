@@ -1,14 +1,11 @@
-﻿using System.Text.Json.Serialization;
-using Newtonsoft.Json;
-
-namespace FragranceRecommendation.Models;
+﻿namespace FragranceRecommendation.Models;
 
 public class Fragrance
 {
     [JsonProperty("id")]
     public int? Id { get; set; } = null;
     
-    [JsonPropertyName("image")]
+    [JsonProperty("image")]
     public string Image { get; set; } = String.Empty;
     
     [JsonProperty("name")]

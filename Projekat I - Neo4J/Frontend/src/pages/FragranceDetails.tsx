@@ -12,13 +12,13 @@ const FragranceDetails = () => {
   const navigate = useNavigate();
   const fragranceId = parseInt(id ?? "", 10);
   const [notFound, setNotFound] = useState(false);
-  const { get } = useFragranceController();
+  const { getById } = useFragranceController();
   const {
     data: fragrance,
     isLoading,
     isError,
     error,
-  } = useQuery(["fragrance", fragranceId], () => get(fragranceId), {
+  } = useQuery(["fragrance", fragranceId], () => getById(fragranceId), {
     onError: (err: Error) => {
       if (err instanceof NotFoundError) {
         setNotFound(true);

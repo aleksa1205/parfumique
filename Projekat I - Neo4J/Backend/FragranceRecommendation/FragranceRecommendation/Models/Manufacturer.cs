@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace FragranceRecommendation.Models;
+﻿namespace FragranceRecommendation.Models;
 
 public class Manufacturer
 {

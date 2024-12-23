@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-
-namespace FragranceRecommendation.Controllers;
+﻿namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]

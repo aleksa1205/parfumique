@@ -10,25 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2d7acab-34fc-48e3-9083-48185e608bb1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.FragranceRecommendation/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Color Palette.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Frontend/src/layers/MainLayer.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Frontend/src/pages/Register.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FragranceRecommendation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FragranceRecommendation/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/FragranceController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/FragranceController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/ManufacturerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/ManufacturerController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Models/Fragrance.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Models/Fragrance.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/Footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/Footer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/Navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/Navbar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Models/Manufacturer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Models/Manufacturer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/api/controllers/useFragranceController.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/api/controllers/useFragranceController.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Frontend/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/main.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/pages/AboutUs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/pages/AboutUs.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/pages/Fragrances.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/pages/Fragrances.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/pages/HomePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/pages/HomePage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/pages/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/pages/Login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/pages/FragranceDetails.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/pages/FragranceDetails.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,23 +47,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.FragranceRecommendation: IIS Express.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Launch Settings Profile.FragranceRecommendation: https.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.040498443&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.FragranceRecommendation: IIS Express.executor": "Run",
+    ".NET Launch Settings Profile.FragranceRecommendation: https.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "XThreadsFramesViewSplitterKey": "0.040498443",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.FragranceRecommendation: https">
     <configuration name="FragranceRecommendation: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/FragranceRecommendation/FragranceRecommendation.csproj" />
@@ -149,6 +138,8 @@
       <workItem from="1734806137471" duration="1447000" />
       <workItem from="1734808763675" duration="975000" />
       <workItem from="1734862194476" duration="2988000" />
+      <workItem from="1734945985984" duration="2086000" />
+      <workItem from="1734960225547" duration="4550000" />
     </task>
     <servers />
   </component>

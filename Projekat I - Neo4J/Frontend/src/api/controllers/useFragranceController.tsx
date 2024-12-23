@@ -37,9 +37,31 @@ interface Fragrance {
   }[];
 }
 
+interface ApiResponse {
+  id: number;
+  properties: Omit<Fragrance, "id">;
+}
+
 export default function useFragranceController() {
   const FragranceController = {
-    get: async function (id: number): Promise<Fragrance> {
+    get: async function (): Promise<Array<Fragrance>> {
+      try {
+        const response = await client.get<Array<ApiResponse>>("/Fragrance");
+        return response.data.map((item) => ({
+          id: item.id,
+          ...item.properties,
+        }));
+      } catch (error) {
+        if (isAxiosError(error) && error.name === "CanceledError") {
+          throw error;
+        } else if (error instanceof Error) {
+          throw Error("General Error: " + error.message);
+        } else {
+          throw Error("Unexpected Error: " + error);
+        }
+      }
+    },
+    getById: async function (id: number): Promise<Fragrance> {
       try {
         const response = await client.get(`/Fragrance/${id}`);
         return response.data;
