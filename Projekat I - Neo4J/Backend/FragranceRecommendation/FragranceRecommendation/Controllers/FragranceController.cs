@@ -8,14 +8,24 @@ public class  FragranceController(IDriver driver) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [EndpointSummary("get all fragrances as nodes")]
     [HttpGet]
-    public async Task<IActionResult> GetAllFragrances()
+    public async Task<IActionResult> GetAllFragrances(int pageNumber = 1, int pageSize = 12)
     {
         try
         {
             await using var session = driver.AsyncSession();
+            int skip = (pageNumber - 1) * pageSize;
+            var totalCount = await session.ExecuteReadAsync(async tx =>
+            {
+                var result = await tx.RunAsync(@"MATCH (n:FRAGRANCE) RETURN COUNT(n) AS total");
+                var record = await result.SingleAsync();
+                return record["total"].As<int>();
+            });
+            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            
             var listOfFragrances = await session.ExecuteReadAsync(async tx =>
             {
-                var result = await tx.RunAsync("MATCH (n:FRAGRANCE) RETURN n");
+                var result = await tx.RunAsync("MATCH (n:FRAGRANCE) RETURN n SKIP $skip LIMIT $limit",
+                    new { skip, limit = pageSize });
                 var nodes = new List<INode>();
                 await foreach (var record in result)
                 {
@@ -25,7 +35,7 @@ public class  FragranceController(IDriver driver) : ControllerBase
 
                 return nodes;
             });
-            return Ok(listOfFragrances);
+            return Ok(new { page = pageNumber, size = pageSize, totalPages, listOfFragrances });
         }
         catch (Exception ex)
         {

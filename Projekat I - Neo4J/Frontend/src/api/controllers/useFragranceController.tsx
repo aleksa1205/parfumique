@@ -38,19 +38,24 @@ interface Fragrance {
 }
 
 interface ApiResponse {
-  id: number;
-  properties: Omit<Fragrance, "id">;
+  page: number;
+  size: number;
+  totalPages: number;
+  listOfFragrances: Array<{
+    id: number;
+    properties: Omit<Fragrance, "id">;
+  }>;
 }
 
 export default function useFragranceController() {
   const FragranceController = {
-    get: async function (): Promise<Array<Fragrance>> {
+    get: async function (page: number): Promise<ApiResponse> {
       try {
-        const response = await client.get<Array<ApiResponse>>("/Fragrance");
-        return response.data.map((item) => ({
-          id: item.id,
-          ...item.properties,
-        }));
+        const response = await client.get<ApiResponse>(
+          `/Fragrance?pageNumber=${page}&pageSize=${6}`
+        );
+        console.log(response.data);
+        return response.data;
       } catch (error) {
         if (isAxiosError(error) && error.name === "CanceledError") {
           throw error;
