@@ -1,8 +1,13 @@
-﻿namespace FragranceRecommendation.Controllers;
+﻿using BCrypt.Net;
+using FragranceRecommendation.Auth.JWT;
+using FragranceRecommendation.DTOs.UserDTOs;
+using FragranceRecommendation.Utils;
+
+namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UserController(IDriver driver) : ControllerBase
+public class UserController(IDriver driver, IConfiguration config) : ControllerBase
 {
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -68,26 +73,51 @@ public class UserController(IDriver driver) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    [EndpointSummary("create user")]
+    [EndpointSummary("create/register user")]
     [HttpPost]
     public async Task<IActionResult> AddUser([FromBody]AddUserDto user)
     {
         try
         {
+            var (isValid, errorMessage) = MyUtils.IsValidString(user.Name, "Name");
+            if (!isValid)
+                return BadRequest(errorMessage);
+
+            (isValid, errorMessage) = MyUtils.IsValidString(user.Surname, "Surname");
+            if (!isValid)
+                return BadRequest(errorMessage);
+
+            (isValid, errorMessage) = MyUtils.IsValidString(user.Username, "Surname");
+            if (!isValid)
+                return BadRequest(errorMessage);
+
+            (isValid, errorMessage) = MyUtils.IsValidPassword(user.Password);
+            if (!isValid)
+                return BadRequest(errorMessage);
+
+            (isValid, errorMessage) = MyUtils.IsValidGender(user.Gender);
+            if (!isValid)
+                return BadRequest(errorMessage);
+
+
             await using var session = driver.AsyncSession();
             var exists = await session.ExecuteWriteAsync(async tx =>
             {
                 var query = @"OPTIONAL MATCH (n:USER {username: $username})
                               CREATE (:USER {username: $username, name: $name, surname: $surname, gender: $gender, password: $password, image: ''})
                               RETURN n IS NOT NULL AS exists";
+
+                var hashedPass = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
                 var result = await tx.RunAsync(query, new
                 {
                     username = user.Username,
                     name = user.Name,
                     surname = user.Surname,
                     gender = user.Gender,
-                    password = user.Password,
+                    password = hashedPass
                 });
+
                 return await result.SingleAsync(record => record["exists"].As<bool>());
             });
             if (exists)
@@ -99,6 +129,51 @@ public class UserController(IDriver driver) : ControllerBase
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
+        }
+    }
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [EndpointSummary("Generate JWT for login credentials")]
+    [HttpPost("Login")]
+    public async Task<IActionResult> Login(LoginDto login)
+    {
+        try
+        {
+            var username  = login.Username;
+            var password = login.Password;
+
+            await using var session = driver.AsyncSession();
+            var user = await session.ExecuteReadAsync(async tx =>
+            {
+                var query = @"MATCH (n:USER)
+                             WHERE n.username = $username
+                             RETURN n";
+
+                var result = await tx.RunAsync(query, new { username });
+                var record  = await result.PeekAsync();
+
+                if (record is null)
+                    return null;
+
+                var user = JsonConvert.DeserializeObject<User>(JsonConvert.SerializeObject(record["user"]));
+                return user;
+            });
+
+            if (user is null)
+                return Unauthorized("Invalid username or password");
+            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
+                return Unauthorized("Invalid username or password");
+
+            var token = new JwtProvider(config).Generate(user);
+
+            return Ok(token);
+
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
         }
     }
 

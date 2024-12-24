@@ -10,25 +10,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2d7acab-34fc-48e3-9083-48185e608bb1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.FragranceRecommendation/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Color Palette.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Frontend/src/layers/MainLayer.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Frontend/src/pages/Register.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Auth/JWT/JwtOptions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Auth/JWT/JwtProvider.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Auth/Roles.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UserDTOs/LoginDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Swagger/ConfigureSwaggerOptions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Utils/MyUtils.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.FragranceRecommendation/.idea/misc.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FragranceRecommendation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FragranceRecommendation/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/FragranceController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/FragranceController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Models/Fragrance.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Models/Fragrance.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/UserController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/AddUserDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UserDTOs/AddUserDTO.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UpdateUserDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UserDTOs/UpdateUserDTO.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/FragranceRecommendation.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/FragranceRecommendation.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/Footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/Footer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/Navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/Navbar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/main.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/pages/AboutUs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/pages/AboutUs.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/pages/Fragrances.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/pages/Fragrances.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/pages/HomePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/pages/HomePage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/pages/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/pages/Login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,12 +37,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b288ff3f456c402c82c985a706c5413a8c600/d9/9ddf13bd/AsyncSession.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b288ff3f456c402c82c985a706c5413a8c600/e5/38abfebe/Record.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/294078ecfce6fdb942ecfee089f09717de7a6fcfe5efd9fdb6f4f93c0fb4813/ActionMethodExecutor.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/387238ef9c8f8c6b1dccf4dcba4eed0e459454919b2e4b9cad11a5071789df/Dictionary.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/74e4c72cd3922ed61496931f33baf4a9b5950edddb6b78bc296241285f25c3/TaskAwaiter.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/fb367341658aaedd7de424d4c9189db33c4387e268dcc4011918569442ab12/AsyncTaskMethodBuilderT.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b288ff3f456c402c82c985a706c5413a8c600/e2/e1c3e1b0/Driver.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/FragranceRecommendation/Auth/JWT/JwtProvider.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/FragranceRecommendation/Controllers/UserController.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -58,23 +50,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.FragranceRecommendation: IIS Express.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Launch Settings Profile.FragranceRecommendation: https.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.040498443&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.FragranceRecommendation: IIS Express.executor": "Run",
+    ".NET Launch Settings Profile.FragranceRecommendation: https.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "XThreadsFramesViewSplitterKey": "0.040498443",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "editor.preferences.smartKeys_rider",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.FragranceRecommendation: https">
     <configuration name="FragranceRecommendation: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/FragranceRecommendation/FragranceRecommendation.csproj" />
@@ -149,6 +142,12 @@
       <workItem from="1734806137471" duration="1447000" />
       <workItem from="1734808763675" duration="975000" />
       <workItem from="1734862194476" duration="2988000" />
+      <workItem from="1734877409262" duration="212000" />
+      <workItem from="1734878059812" duration="2164000" />
+      <workItem from="1734968285619" duration="7593000" />
+      <workItem from="1734987585801" duration="1100000" />
+      <workItem from="1735035897466" duration="3506000" />
+      <workItem from="1735053155134" duration="4002000" />
     </task>
     <servers />
   </component>
@@ -156,6 +155,17 @@
     <option name="version" value="3" />
   </component>
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
@@ -174,6 +184,19 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/FragranceRecommendation/Controllers/UserController.cs</url>
+          <line>143</line>
+          <properties documentPath="C:\Users\cvetk\OneDrive - Faculty of Electronic Engineering\Faks\4. Godina\NapredneBazePodataka\Projekat I - Neo4J\Backend\FragranceRecommendation\FragranceRecommendation\Controllers\UserController.cs" containingFunctionPresentation="Method 'Login'">
+            <startOffsets>
+              <option value="5307" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5338" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -1,4 +1,4 @@
-namespace FragranceRecommendation.DTOs;
+namespace FragranceRecommendation.DTOs.UserDTOs;
 
 public class UpdateUserDto
 {    
