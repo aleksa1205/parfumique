@@ -9,6 +9,7 @@ import Fragrances from "./pages/Fragrances";
 import FragranceDetails from "./pages/FragranceDetails";
 import AboutUs from "./pages/AboutUs";
 import Register from "./pages/Register";
+import NotFound from "./pages/NotFound";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
   {
     element: <MainLayer />,
     children: [
+      {
+        path: "/*",
+        element: <NotFound />,
+      },
       {
         path: "/",
         element: <HomePage />,
