@@ -27,9 +27,9 @@ public class JwtProvider
 
         // Potrebno za kasnije kad se dodaju admini
         // if (user.admin)
-        //     claims.Add(new("Role", Roles.Admin.ToString()));
+        //     claims.Add(new("Role",  ((int)Roles.Admin).ToString())
         // else
-        //     claims.Add(new("Role", Roles.User.ToString()));
+        //     claims.Add(new("Role", ((int)Roles.User).ToString());
 
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(
