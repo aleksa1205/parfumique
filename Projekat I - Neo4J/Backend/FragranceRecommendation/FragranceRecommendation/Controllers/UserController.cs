@@ -1,9 +1,14 @@
-﻿namespace FragranceRecommendation.Controllers;
+﻿using FragranceRecommendation.Auth;
+using Microsoft.AspNetCore.Authorization;
+
+namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class UserController(IDriver driver, IUserService userService, IFragranceService fragranceService, IConfiguration config) : ControllerBase
 {
+    // [Authorize]
+    // [RequiresRole(Roles.User)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [EndpointSummary("get all users as nodes")]
@@ -13,6 +18,8 @@ public class UserController(IDriver driver, IUserService userService, IFragrance
         return Ok(await userService.GetUsersAsync());
     }
 
+    // [Authorize]
+    // [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -122,34 +129,17 @@ public class UserController(IDriver driver, IUserService userService, IFragrance
     [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginDto login)
     {
-
-
         try
         {
             var username = login.Username;
             var password = login.Password;
 
-            await using var session = driver.AsyncSession();
-            var user = await session.ExecuteReadAsync(async tx =>
-            {
-                var query = @"MATCH (n:USER)
-                             WHERE n.username = $username
-                             RETURN n";
-
-                var result = await tx.RunAsync(query, new { username });
-                var record = await result.PeekAsync();
-
-                if (record is null)
-                    return null;
-
-                var user = JsonConvert.DeserializeObject<User>(JsonConvert.SerializeObject(record["user"]));
-                return user;
-            });
+            var user = await userService.GetUserWithoutFragrancesAsync(username);
 
             if (user is null)
-                return Unauthorized("Invalid username or password");
+                return Unauthorized("Invalid username");
             if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
-                return Unauthorized("Invalid username or password");
+                return Unauthorized("Invalid password");
 
             var token = new JwtProvider(config).Generate(user);
 

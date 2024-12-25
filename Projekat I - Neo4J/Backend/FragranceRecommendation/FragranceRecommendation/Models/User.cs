@@ -28,7 +28,7 @@ public class User
 
     #region Constructors
     public User() {}
-    
+
     public User(string name, string surname, char gender, string username, string password)
     {
         Name = name;

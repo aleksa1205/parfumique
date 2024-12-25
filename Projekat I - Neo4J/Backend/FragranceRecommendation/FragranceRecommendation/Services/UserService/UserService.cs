@@ -63,6 +63,25 @@ public class UserService(IDriver driver) : IUserService
         });
     }
 
+    public async Task<User?> GetUserWithoutFragrancesAsync(string username)
+    {
+        await using var session = driver.AsyncSession();
+        return await session.ExecuteReadAsync(async tx =>
+        {
+            var query = @"MATCH (n:USER {username: $username})
+                          RETURN n{.*, id: id(n)} AS user";
+
+            var cursor = await tx.RunAsync(query, new { username });
+            var record = await cursor.PeekAsync();
+
+            if (record is null)
+                return null;
+
+            var user = JsonConvert.DeserializeObject<User>(JsonConvert.SerializeObject(record["user"]));
+            return user;
+        });
+    }
+
     public async Task AddUserAsync(AddUserDto user)
     {
         await using var session = driver.AsyncSession();

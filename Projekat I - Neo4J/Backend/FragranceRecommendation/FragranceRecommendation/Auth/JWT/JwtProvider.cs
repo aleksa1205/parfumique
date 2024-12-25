@@ -22,7 +22,7 @@ public class JwtProvider
             new("username", user.Username),
             new("userId", user.Id.ToString()!),
             // Ovo da se obrise kasnije kad se dodaju admini
-            new("Roles", Roles.User.ToString())
+            new("Role", ((int)Roles.User).ToString())
         };
 
         // Potrebno za kasnije kad se dodaju admini
