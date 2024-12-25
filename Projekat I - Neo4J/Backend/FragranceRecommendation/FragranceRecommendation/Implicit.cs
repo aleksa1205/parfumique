@@ -1,6 +1,23 @@
-﻿global using Microsoft.AspNetCore.Mvc;
+﻿global using System.Text;
+global using FragranceRecommendation;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.Extensions.Options;
+global using Microsoft.IdentityModel.Tokens;
+global using Swashbuckle.AspNetCore.SwaggerGen;
+global using Microsoft.AspNetCore.Mvc;
 global using Neo4j.Driver;
 global using Newtonsoft.Json;
+global using System.ComponentModel.DataAnnotations;
 
 global using FragranceRecommendation.Models;
+global using FragranceRecommendation.Utils;
+global using FragranceRecommendation.Auth.JWT;
 global using FragranceRecommendation.DTOs;
+global using FragranceRecommendation.DTOs.UserDTOs;
+global using FragranceRecommendation.DTOs.FragranceDTOs;
+global using FragranceRecommendation.DTOs.PerfumerDTOs;
+global using FragranceRecommendation.DTOs.NoteDTOs;
+global using FragranceRecommendation.Swagger;
+global using FragranceRecommendation.Services.UserService;
+global using FragranceRecommendation.Services.FragranceService;
+global using FragranceRecommendation.Services.PerfumerService;

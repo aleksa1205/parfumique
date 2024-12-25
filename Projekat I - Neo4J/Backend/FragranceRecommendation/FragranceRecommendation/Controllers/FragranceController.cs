@@ -2,45 +2,39 @@
 
 [ApiController]
 [Route("[controller]")]
-public class  FragranceController(IDriver driver) : ControllerBase
+public class  FragranceController(IFragranceService fragranceService) : ControllerBase
 {
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [EndpointSummary("get all fragrances as nodes")]
     [HttpGet]
-    public async Task<IActionResult> GetAllFragrances(int pageNumber = 1, int pageSize = 12)
+    public async Task<IActionResult> GetAllFragrances()
     {
-        try
-        {
-            await using var session = driver.AsyncSession();
-            int skip = (pageNumber - 1) * pageSize;
-            var totalCount = await session.ExecuteReadAsync(async tx =>
-            {
-                var result = await tx.RunAsync(@"MATCH (n:FRAGRANCE) RETURN COUNT(n) AS total");
-                var record = await result.SingleAsync();
-                return record["total"].As<int>();
-            });
-            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-            
-            var listOfFragrances = await session.ExecuteReadAsync(async tx =>
-            {
-                var result = await tx.RunAsync("MATCH (n:FRAGRANCE) RETURN n SKIP $skip LIMIT $limit",
-                    new { skip, limit = pageSize });
-                var nodes = new List<INode>();
-                await foreach (var record in result)
-                {
-                    var node = record["n"].As<INode>();
-                    nodes.Add(node);
-                }
+        return Ok(await fragranceService.GetFragrancesAsync());
+    }
 
-                return nodes;
-            });
-            return Ok(new { page = pageNumber, size = pageSize, totalPages, listOfFragrances });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+    //will change after test on frontend
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [EndpointSummary("get all fragrances as nodes with pagination")]
+    [HttpGet("{pageNumber}/{pageSize}")]
+    public async Task<IActionResult> GetAllFragrancesWithPagination(int pageNumber, int pageSize)
+    {
+        if (pageNumber < 1)
+            return BadRequest("Page number has to be greater than 1!");
+        if(pageSize < 1)
+            return BadRequest("Page size has to be greater than 1!");
+
+        var (skip, totalCount, totalPages, fragrances) =
+            await fragranceService.GetFragrancesAsyncPagination(pageNumber, pageSize);
+        return Ok(new { skip, totalCount, totalPages, fragrances });
+    }
+    
+    [ProducesResponseType((StatusCodes.Status200OK))]
+    [EndpointSummary("get all fragrances without manufacturer")]
+    [HttpGet("without-manufacturer")]
+    public async Task<IActionResult> GetAllFragrancesWithoutManufacturer()
+    {
+        return Ok(await fragranceService.GetFragrancesWithouthManufacturerAsync());
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -50,112 +44,27 @@ public class  FragranceController(IDriver driver) : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetFragranceById(int id)
     {
-        try
-        {
-            await using var session = driver.AsyncSession();
-            var fragrance = await session.ExecuteReadAsync(async tx =>
-            {
-                var query = @"MATCH (n:FRAGRANCE)
-                              WHERE id(n) = $id
-                              OPTIONAL MATCH (n) <-[:MANUFACTURES]- (m:MANUFACTURER)
-                              OPTIONAL MATCH (n) <-[:CREATES]- (p:PERFUMER)
-                              OPTIONAL MATCH (n) -[:TOP]-> (t:NOTE)
-                              OPTIONAL MATCH (n) -[:MIDDLE]-> (k:NOTE)
-                              OPTIONAL MATCH (n) -[:BASE]-> (b:NOTE)
-                              RETURN n{.*, id: id(n)} AS fragrance, m AS manufacturer, COLLECT(DISTINCT p{.*, id: id(p)}) AS perfumers, COLLECT(DISTINCT t) AS topNotes, COLLECT(DISTINCT k) AS middleNotes, COLLECT(DISTINCT b) AS baseNotes";
-                var result = await tx.RunAsync(query, new { id });
-                var record = await result.PeekAsync();
-                if (record is null)
-                {
-                    return null;
-                }
-
-                var manufacturer =
-                    JsonConvert.DeserializeObject<Manufacturer>(Helper.GetJson(record["manufacturer"].As<INode>()));
-                var perfumers =
-                    JsonConvert.DeserializeObject<List<Perfumer>>(JsonConvert.SerializeObject(record["perfumers"]));
-                var topNotes = record["topNotes"].As<List<INode>>()
-                    .Select(node => JsonConvert.DeserializeObject<Note>(Helper.GetJson(node))).ToList();
-                var middleNotes = record["middleNotes"].As<List<INode>>()
-                    .Select(node => JsonConvert.DeserializeObject<Note>(Helper.GetJson(node))).ToList();
-                var baseNotes = record["baseNotes"].As<List<INode>>()
-                    .Select(node => JsonConvert.DeserializeObject<Note>(Helper.GetJson(node))).ToList();
-
-                var fragrance =
-                    JsonConvert.DeserializeObject<Fragrance>(JsonConvert.SerializeObject(record["fragrance"]));
-                fragrance!.Manufacturer = manufacturer;
-                fragrance.Perfumers = perfumers;
-                fragrance.Top = topNotes;
-                fragrance.Middle = middleNotes;
-                fragrance.Base = baseNotes;
-                return fragrance;
-            });
-            if (fragrance is null)
-            {
-                return NotFound($"Fragrance with id {id} not found!");
-            }
-
-            return Ok(fragrance);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-
-    [ProducesResponseType((StatusCodes.Status200OK))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [EndpointSummary("get all fragrances without manufacturer")]
-    [HttpGet("without manufacturer")]
-    public async Task<IActionResult> GetAllFragrancesWithoutManufacturer()
-    {
-        try
-        {
-            await using var session = driver.AsyncSession();
-            var list = await session.ExecuteReadAsync(async tx =>
-            {
-                var result =
-                    await tx.RunAsync(
-                        "MATCH (n:FRAGRANCE) WHERE NOT (n) <-[:MANUFACTURES]- (:MANUFACTURER)  RETURN n{.*, id: id(n)} AS fragrance");
-                var records = await result.ToListAsync();
-                return records.Select(record =>
-                        JsonConvert.DeserializeObject<Fragrance>(JsonConvert.SerializeObject(record["fragrance"])))
-                    .ToList();
-            });
-            return Ok(list);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        if (id < 0)
+            return BadRequest("Fragrance ID must be a positive integer!");
+        
+        if (!await fragranceService.FragranceExistsAsync(id))
+            return NotFound($"Fragrance with id {id} not found!");
+        
+        return Ok(await fragranceService.GetFragranceAsync(id));
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [EndpointSummary("add fragrance")]
     [HttpPost]
     public async Task<IActionResult> AddFragrance([FromBody] AddFragranceDto fragrance)
     {
-        try
-        {
-            await using var session = driver.AsyncSession();
-            await session.ExecuteWriteAsync(async tx =>
-            {
-                var query = @"CREATE (:FRAGRANCE {name: $name, for: $gender, year: $year})";
-                var result = await tx.RunAsync(query, new
-                {
-                    name = fragrance.Name,
-                    gender = fragrance.Gender,
-                    year = fragrance.BatchYear
-                });
-            });
-            return Ok($"Fragrance {fragrance.Name} ({fragrance.BatchYear}) for {fragrance.Gender} added!");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var (isValid, errorMessage) = fragrance.Validate();
+        if (!isValid)
+            return BadRequest(errorMessage);
+        
+        await fragranceService.AddFragranceAsync(fragrance);
+        return Ok($"Fragrance {fragrance.Name} ({fragrance.BatchYear}) for {fragrance.Gender} successfully added!");
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -165,65 +74,32 @@ public class  FragranceController(IDriver driver) : ControllerBase
     [HttpPatch]
     public async Task<IActionResult> UpdateFragrance([FromBody] UpdateFragranceDto fragrance)
     {
-        try
-        {
-            await using var session = driver.AsyncSession();
-            var updated = await session.ExecuteWriteAsync(async tx =>
-            {
-                var query = @"OPTIONAL MATCH (n:FRAGRANCE)
-                              WHERE id(n) = $id
-                              SET n.name = $name, n.for = $gender, n.year = $year
-                              RETURN n IS NOT NULL AS fragranceUpdated";
-                var result = await tx.RunAsync(query, new
-                {
-                    id = fragrance.Id,
-                    name = fragrance.Name,
-                    gender = fragrance.Gender,
-                    year = fragrance.BatchYear
-                });
-                return await result.SingleAsync(record => record["fragranceUpdated"].As<bool>());
-            });
-            if (updated)
-            {
-                return Ok($"Fragrance with id {fragrance.Id} updated!");
-            }
-
+        var (isValid, errorMessage) = fragrance.Validate();
+        if (!isValid)
+            return BadRequest(errorMessage);
+        
+        if (!await fragranceService.FragranceExistsAsync(fragrance.Id))
             return NotFound($"Fragrance with id {fragrance.Id} not found!");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+
+        await fragranceService.UpdateFragranceAsync(fragrance);
+        return Ok($"Fragrance {fragrance.Id} updated!");
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointSummary("delete fragrance")]
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUser(int id)
+    [HttpDelete]
+    public async Task<IActionResult> DeleteUser([FromBody] DeleteFragranceDto fragrance)
     {
-        try
-        {
-            await using var session = driver.AsyncSession();
-            var deleted = await session.ExecuteWriteAsync(async tx =>
-            {
-                var query = @"OPTIONAL MATCH (n:FRAGRANCE)
-                              WHERE id(n) = $id
-                              DETACH DELETE n
-                              RETURN n IS NOT NULL AS deleted";
-                var result = await tx.RunAsync(query, new { id });
-                return await result.SingleAsync(record => record["deleted"].As<bool>());
-            });
-            if (deleted)
-            {
-                return Ok($"Fragrance with id {id} deleted!");
-            }
-            return NotFound($"Fragrance with id {id} doesn't exist!");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var(isValid, errorMessage) = fragrance.Validate();
+        if (!isValid)
+            return BadRequest(errorMessage);
+        
+        if (!await fragranceService.FragranceExistsAsync(fragrance.Id))
+            return NotFound($"Fragrance with id {fragrance.Id} not found!");
+        
+        await fragranceService.DeleteFragranceAsync(fragrance);
+        return Ok($"Fragrance with id {fragrance.Id} deleted!");
     }
 }

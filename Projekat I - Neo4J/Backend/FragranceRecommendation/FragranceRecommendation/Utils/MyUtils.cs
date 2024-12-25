@@ -51,16 +51,22 @@ public static class MyUtils
 
     public static (bool IsValid, string ErrorMessage) IsValidGender(char gender)
     {
-        switch (gender)
+        return gender switch
         {
-            case 'M':
-                return (true, string.Empty);
-            case 'F':
-                return (true, string.Empty);
-            case 'U':
-                return (true, string.Empty);
-            default:
-                return (false, $"{gender} is not a valid gender. It must be either 'M', 'F', 'U'.");
-        }
+            'M' => (true, string.Empty),
+            'F' => (true, string.Empty),
+            _ => (false, $"{gender} is not a valid gender. It must be either 'M' or 'F'.")
+        };
+    }
+
+    public static (bool isValid, string errorMessage) IsValidGenderFragrance(char gender)
+    {
+        return gender switch
+        {
+            'M' => (true, string.Empty),
+            'F' => (true, string.Empty),
+            'U' => (true, string.Empty),
+            _ => (false, $"{gender} is not a valid gender. It must be either 'M', 'F' or 'U'.")
+        };
     }
 }

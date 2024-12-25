@@ -1,10 +1,8 @@
-using System.Text;
-using FragranceRecommendation;
-using FragranceRecommendation.Swagger;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using FragranceRecommendation.Services.FragranceService;
+using FragranceRecommendation.Services.NoteService;
+using FragranceRecommendation.Services.PerfumerService;
+
+;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -44,6 +42,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 builder.Services.AddControllers();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFragranceService, FragranceService>();
+builder.Services.AddScoped<IPerfumerService, PerfumerService>();
+builder.Services.AddScoped<INoteService, NoteService>();
 
 //builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();

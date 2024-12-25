@@ -2,34 +2,14 @@
 
 [ApiController]
 [Route("[controller]")]
-public class PerfumerController(IDriver driver) : ControllerBase
+public class PerfumerController(IPerfumerService perfumerService, IFragranceService fragranceService) : ControllerBase
 {
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [EndpointSummary("get all perfumers as nodes")]
     [HttpGet]
     public async Task<IActionResult> GetAllPerfumers()
     {
-        try
-        {
-            await using var session = driver.AsyncSession();
-            var listOfCreators = await session.ExecuteReadAsync(async tx =>
-            {
-                var result = await tx.RunAsync("MATCH (n:PERFUMER) RETURN n");
-                var nodes = new List<INode>();
-                await foreach (var record in result)
-                {
-                    var node = record["n"].As<INode>();
-                    nodes.Add(node);
-                }
-                return nodes;
-            });
-            return Ok(listOfCreators);
-        }
-        catch(Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return Ok(await perfumerService.GetPerfumersAsync());
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -39,38 +19,13 @@ public class PerfumerController(IDriver driver) : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPerfumerById(int id)
     {
-        try
-        {
-            await using var session = driver.AsyncSession();
-            var perfumer = await session.ExecuteReadAsync(async tx =>
-            {
-                var query = @"MATCH (n:PERFUMER)
-                              WHERE id(n) = $id
-                              OPTIONAL MATCH (n) -[:CREATES]-> (f:FRAGRANCE)
-                              RETURN n{.*, id: id(n)} AS perfumer, COLLECT (f{.*, id: id(f)}) AS fragrances";
-                var result = await tx.RunAsync(query, new { id });
-                var record = await result.PeekAsync();
-                if (record is null)
-                {
-                    return null;
-                }
-
-                var fragrances =
-                    JsonConvert.DeserializeObject<List<Fragrance>>(JsonConvert.SerializeObject(record["fragrances"]));
-                var perfumer = JsonConvert.DeserializeObject<Perfumer>(JsonConvert.SerializeObject(record["perfumer"]));
-                perfumer.CreatedFragrances = fragrances;
-                return perfumer;
-            });
-            if (perfumer is null)
-            {
-                return NotFound($"Perfumer with id {id} not found!");
-            }
-            return Ok(perfumer);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        if (id < 0)
+            return BadRequest("Perfumer ID must be a positive integer!");
+        
+        if (!await perfumerService.PerfumerExistsAsync(id))
+            return NotFound($"Perfumer with id {id} not found!");
+        
+        return Ok(await perfumerService.GetPerfumerAsync(id));
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -79,26 +34,12 @@ public class PerfumerController(IDriver driver) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddPerfumer([FromBody]AddPerfumerDto perfumer)
     {
-        try
-        {
-            await using var session = driver.AsyncSession();
-            await session.ExecuteWriteAsync(async tx =>
-            {
-                var query = @"CREATE (:PERFUMER {name: $name, surname: $surname, country: $country, gender: $gender, image: ''})";
-                await tx.RunAsync(query, new
-                {
-                    name = perfumer.Name,
-                    surname = perfumer.Surname,
-                    gender = perfumer.Gender,
-                    country = perfumer.Country,
-                });
-            });
-            return Ok($"Perfumer {perfumer.Name} {perfumer.Surname} was successfully created!");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var (isValid, errorMessage) = perfumer.Validate();
+        if (!isValid)
+            return BadRequest(errorMessage);
+        
+        await perfumerService.AddPerfumerAsync(perfumer);
+        return Ok($"Perfumer {perfumer.Name} {perfumer.Surname} {perfumer.Gender} from {perfumer.Country} has been added!");
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -108,121 +49,57 @@ public class PerfumerController(IDriver driver) : ControllerBase
     [HttpPatch]
     public async Task<IActionResult> UpdatePerfumer([FromBody] UpdatePerfumerDto perfumer)
     {
-        try
-        {
-            await using var session = driver.AsyncSession();
-            var perfumerExists = await session.ExecuteWriteAsync(async tx =>
-            {
-                var query = @"OPTIONAL MATCH (n:PERFUMER)
-                              WHERE id(n) = $id
-                              SET n.name = $name, n.surname = $surname, n.gender = $gender, n.country = $country
-                              RETURN n IS NOT NULL AS perfumerUpdated";
-                var result = await tx.RunAsync(query, new
-                {
-                    id = perfumer.Id,
-                    name = perfumer.Name,
-                    surname = perfumer.Surname,
-                    gender = perfumer.Gender,
-                    country = perfumer.Country,
-                });
-                return await result.SingleAsync(record => record["perfumerUpdated"].As<bool>());
-            });
-            if (perfumerExists is false)
-            {
-                return NotFound($"Perfumer with id {perfumer.Id} was not found!");
-            }
-
-            return Ok($"Perfumer with id {perfumer.Id} was successfully updated!");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var (isValid, errorMessage) = perfumer.Validate();
+        if (!isValid)
+            return BadRequest(errorMessage);
+        
+        if (!await perfumerService.PerfumerExistsAsync(perfumer.Id))
+            return NotFound($"Perfumer with id {perfumer.Id} was not found!");
+        
+        await perfumerService.UpdatePerfumerAsync(perfumer);
+        return Ok($"Perfumer with id {perfumer.Id} was successfully updated!");
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [EndpointSummary("add fragrance to perfumer")]
-    [HttpPatch("{perfumerId}/{fragranceId}")]
-    public async Task<IActionResult> AddFragranceAToPerfumer(int perfumerId, int fragranceId)
+    [HttpPatch("add-fragrance-to-perfumer")]
+    public async Task<IActionResult> AddFragranceAToPerfumer([FromBody] AddFragranceToPerfumer dto)
     {
-        try
-        {
-            await using var session = driver.AsyncSession();
-            var result = await session.ExecuteReadAsync(async tx =>
-            {
-                var query = @"OPTIONAL MATCH (n:PERFUMER) WHERE id(n) = $perfumerId
-                              OPTIONAL MATCH (m:FRAGRANCE) WHERE id(m) = $fragranceId
-                              OPTIONAL MATCH (n) -[r:CREATES]-> (m)
-                              RETURN n IS NOT NULL AS perfumerExists,
-                                     m IS NOT NULL AS fragranceExists,
-                                     r IS NOT NULL AS connectionExists";
-                var result = await tx.RunAsync(query, new { perfumerId, fragranceId });
-                var record = await result.SingleAsync();
-                return (record["perfumerExists"].As<bool>(), record["fragranceExists"].As<bool>(),
-                    record["connectionExists"].As<bool>());
-            });
-            var (perfumerExists, fragranceExists, connectionExists) = result;
-            if (perfumerExists is false)
-            {
-                return NotFound($"Perfumer with id {perfumerId} was not found!");
-            }
-            if (fragranceExists is false)
-            {
-                return NotFound($"Fragrance with id {fragranceId} was not found!");
-            }
+        var (isValid, errorMessage) = dto.Validate();
+        if (!isValid)
+            return BadRequest(errorMessage);
+        
+        if(!await perfumerService.PerfumerExistsAsync(dto.PerfumerId))
+            return NotFound($"Perfumer with id {dto.PerfumerId} was not found!");
 
-            if (connectionExists)
-            {
-                return Conflict($"Perfumer with id {perfumerId} is already connected to fragrance with id {fragranceId}!");
-            }
+        if (!await fragranceService.FragranceExistsAsync(dto.FragranceId))
+            return NotFound($"Fragrance with id {dto.FragranceId} was not found!");
+        
+        if(await perfumerService.IsFragranceCreatedByPerfumer(dto.PerfumerId,dto.FragranceId))
+            return Conflict($"Perfumer with id {dto.PerfumerId} is already a creator of fragrance with id {dto.FragranceId}!");
 
-            await session.ExecuteWriteAsync(async tx =>
-            {
-                var query = @"MATCH (n:PERFUMER) WHERE id(n) = $perfumerId
-                              MATCH (m:FRAGRANCE) WHERE id(m) = $fragranceId
-                              CREATE (n) -[:CREATES]-> (m)";
-                await tx.RunAsync(query, new { perfumerId, fragranceId });
-            });
-            return Ok($"Perfumer with id {perfumerId} is connected to fragrance with id {fragranceId}!");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        await perfumerService.AddFragranceToPerfumerAsync(dto);
+        return Ok(
+            $"Perfumer with id {dto.PerfumerId} has been successfully added as a creator for fragrance with id {dto.FragranceId}!");
     }
-    
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointSummary("delete perfumer")]
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletePerfumer(int id)
+    [HttpDelete]
+    public async Task<IActionResult> DeletePerfumer([FromBody] DeletePerfumerDto perfumer)
     {
-        try
-        {
-            await using var session = driver.AsyncSession();
-            var perfumerDeleted = await session.ExecuteWriteAsync(async tx =>
-            {
-                var query = @"OPTIONAL MATCH (n:PERFUMER)
-                              WHERE id(n) = $id
-                              DETACH DELETE n
-                              RETURN n IS NOT NULL AS deleted";
-                var result = await tx.RunAsync(query, new { id });
-                return await result.SingleAsync(record => record["deleted"].As<bool>());
-            });
-            if (perfumerDeleted)
-            {
-                return Ok($"Perfumer with id {id} deleted!");
-            }
-
-            return NotFound($"Perfumer with id {id} not found!");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var (isValid, errorMessage) = perfumer.Validate();
+        if(!isValid)
+            return BadRequest(errorMessage);
+        
+        if (!await perfumerService.PerfumerExistsAsync(perfumer.Id))
+            return NotFound($"Perfumer with id {perfumer.Id} not found!");
+        
+        await perfumerService.DeletePerfumerAsync(perfumer);
+        return Ok($"Perfumer with id {perfumer.Id} deleted!");
     }
 }

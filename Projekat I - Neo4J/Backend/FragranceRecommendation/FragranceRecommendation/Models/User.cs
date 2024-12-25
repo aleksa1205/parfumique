@@ -24,7 +24,7 @@ public class User
     public required string Password { get; set; }
     
     //doesn't have to be property because get is not used anywhere
-    public IList<Fragrance> Collection = new List<Fragrance>();
+    public IList<Fragrance> Collection { get; set; } = new List<Fragrance>();
 
     #region Constructors
     public User() {}

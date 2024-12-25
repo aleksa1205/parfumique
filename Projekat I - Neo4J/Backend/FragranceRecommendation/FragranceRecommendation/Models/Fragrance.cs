@@ -6,17 +6,17 @@ public class Fragrance
     public int? Id { get; set; } = null;
     
     [JsonProperty("image")]
-    public string Image { get; set; } = String.Empty;
+    public string Image { get; set; }
     
     [JsonProperty("name")]
     public string Name { get; set; }
     //tip eau de toilet, eau de parfum, parfum ,extract
     
-    [JsonProperty("for")]
+    [JsonProperty("gender")]
     public char Gender { get; set; }
     
     [JsonProperty("year")]
-    public int BatchYear { get; set; } = DateTime.Now.Year;
+    public int BatchYear { get; set; }
     
     public Manufacturer? Manufacturer { get; set; } = null;
     public IList<Perfumer> Perfumers { get; set; } = new List<Perfumer>();

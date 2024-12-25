@@ -20,9 +20,6 @@ public class Perfumer
     [JsonProperty("country")]
     public string? Country { get; set; }
     
-    [JsonProperty("year")]
-    public int BirthYear { get; set; }
-    
     public IList<Fragrance> CreatedFragrances  = new List<Fragrance>();
 
     #region Constructors
@@ -33,16 +30,6 @@ public class Perfumer
         Surname = surname;
         Gender = gender;
         Country = country;
-        BirthYear = 0;
-    }
-
-    public Perfumer(string name, string surname, char gender, string country, int birthYear)
-    {
-        Name = name;
-        Surname = surname;
-        Gender = gender;
-        Country = country;
-        BirthYear = birthYear;
     }
     #endregion
 }
