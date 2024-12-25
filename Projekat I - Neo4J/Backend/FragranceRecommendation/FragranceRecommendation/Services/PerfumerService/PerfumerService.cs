@@ -48,7 +48,7 @@ public class PerfumerService(IDriver driver) : IPerfumerService
         });
     }
 
-    public async Task<Perfumer> GetPerfumerAsync(int id)
+    public async Task<Perfumer?> GetPerfumerAsync(int id)
     {
         await using var session = driver.AsyncSession();
         return await session.ExecuteReadAsync(async tx =>
@@ -59,6 +59,9 @@ public class PerfumerService(IDriver driver) : IPerfumerService
                           RETURN n{.*, id: id(n)} AS perfumer, COLLECT (f{.*, id: id(f)}) AS fragrances";
             var result = await tx.RunAsync(query, new { id });
             var record = await result.PeekAsync();
+            if(record is null)
+                return null;
+            
             var fragrances =
                 JsonConvert.DeserializeObject<List<Fragrance>>(JsonConvert.SerializeObject(record["fragrances"]));
             var perfumer = JsonConvert.DeserializeObject<Perfumer>(JsonConvert.SerializeObject(record["perfumer"]));

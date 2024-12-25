@@ -10,44 +10,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2d7acab-34fc-48e3-9083-48185e608bb1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/FragranceDTOs/AddFragranceDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/FragranceDTOs/AddFragranceToPerfumer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/FragranceDTOs/DeleteFragranceDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/NoteDTOs/AddNoteDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/NoteDTOs/DeleteNoteDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/NoteDTOs/UpdateNoteDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/PerfumerDTOs/DeletePerfumerDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/PerfumerDTOs/UpdatePerfumerDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UserDTOs/AddFragranceToUser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UserDTOs/DeleteUserDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/FragranceService/FragranceService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/FragranceService/IFragranceService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/ManufacturerService/IManufacturerService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/ManufacturerService/ManufacturerService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/NoteService/INoteService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/NoteService/NoteService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/PerfumerService/IPerfumerService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/PerfumerService/PerfumerService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/UserService/IUserService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/UserService/UserService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/NoteDTOs/NotesToFragranceDto.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FragranceRecommendation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FragranceRecommendation/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/FragranceController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/FragranceController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/NoteController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/NoteController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/PerfumerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/PerfumerController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/UserController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/AddFragranceDto.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/AddPerfumerDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/PerfumerDTOs/AddPerfumerDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UpdateFragranceDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/FragranceDTOs/UpdateFragranceDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UpdatePerfumerDto.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UserDTOs/AddUserDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UserDTOs/AddUserDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UserDTOs/UpdateUserDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UserDTOs/UpdateUserDto.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/NoteDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/NoteDTOs/NoteDto.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UserDTOs/LoginDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UserDTOs/LoginDto.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Implicit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Implicit.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Models/Fragrance.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Models/Fragrance.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Models/Perfumer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Models/Perfumer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Models/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Models/User.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Utils/MyUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Utils/MyUtils.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Projekat I - Punjenje baze.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../Projekat I - Punjenje baze.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/FragranceService/FragranceService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/FragranceService/FragranceService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/FragranceService/IFragranceService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/FragranceService/IFragranceService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/NoteService/INoteService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/NoteService/INoteService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/NoteService/NoteService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/NoteService/NoteService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/PerfumerService/IPerfumerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/PerfumerService/IPerfumerService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/PerfumerService/PerfumerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/PerfumerService/PerfumerService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/UserService/IUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/UserService/IUserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/UserService/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/UserService/UserService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,24 +61,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.FragranceRecommendation: IIS Express.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Launch Settings Profile.FragranceRecommendation: https.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.057268724&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.smartKeys_rider&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.FragranceRecommendation: IIS Express.executor": "Run",
+    ".NET Launch Settings Profile.FragranceRecommendation: https.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "XThreadsFramesViewSplitterKey": "0.057268724",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "editor.preferences.smartKeys_rider",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.FragranceRecommendation: https">
     <configuration name="FragranceRecommendation: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/FragranceRecommendation/FragranceRecommendation.csproj" />
@@ -183,6 +163,9 @@
       <workItem from="1735068582277" duration="4649000" />
       <workItem from="1735073799936" duration="16663000" />
       <workItem from="1735091339385" duration="43000" />
+      <workItem from="1735118767962" duration="3339000" />
+      <workItem from="1735146328237" duration="7000" />
+      <workItem from="1735150589578" duration="8159000" />
     </task>
     <servers />
   </component>

@@ -1,26 +1,28 @@
-﻿namespace FragranceRecommendation.Models;
+﻿using Neo4j.Driver.Mapping;
+
+namespace FragranceRecommendation.Models;
 
 public class User
 {
-    [JsonProperty("id")]
+    [MappingSource("id")]
     public int? Id { get; set; }
     
-    [JsonProperty("image")]
+    [MappingSource("image")]
     public string? Image { get; set; } = String.Empty;
     
-    [JsonProperty("name")]
+    [MappingSource("name")]
     public required string Name { get; set; }
     
-    [JsonProperty("surname")]
+    [MappingSource("surname")]
     public required string Surname { get; set; }
     
-    [JsonProperty("gender")]
+    [MappingSource("gender")]
     public char Gender { get; set; }
     
-    [JsonProperty("username")]
+    [MappingSource("username")]
     public required string Username { get; set; }
     
-    [JsonProperty("password")]
+    [MappingSource("password")]
     public required string Password { get; set; }
     
     //doesn't have to be property because get is not used anywhere

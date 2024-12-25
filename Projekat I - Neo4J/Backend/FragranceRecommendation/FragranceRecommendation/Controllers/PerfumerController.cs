@@ -22,10 +22,11 @@ public class PerfumerController(IPerfumerService perfumerService, IFragranceServ
         if (id < 0)
             return BadRequest("Perfumer ID must be a positive integer!");
         
-        if (!await perfumerService.PerfumerExistsAsync(id))
+        var perfumer = await perfumerService.GetPerfumerAsync(id);
+        if (perfumer is null)
             return NotFound($"Perfumer with id {id} not found!");
         
-        return Ok(await perfumerService.GetPerfumerAsync(id));
+        return Ok(perfumer);
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
