@@ -14,19 +14,18 @@ public class NoteService(IDriver driver) : INoteService
         });
     }
 
-    public async Task<IList<INode>> GetNotesAsync()
+    public async Task<IList<Note>> GetNotesAsync()
     {
         await using var session = driver.AsyncSession();
         return await session.ExecuteReadAsync(async tx =>
         {
             var result = await tx.RunAsync("MATCH (n:NOTE) RETURN n");
-            var nodes = new List<INode>();
+            var list = new List<Note>();
             await foreach (var record in result)
             {
-                var node = record["n"].As<INode>();
-                nodes.Add(node);
+                list.Add(MyUtils.DeserializeNode<Note>(record["n"].As<INode>()));
             }
-            return nodes;
+            return list;
         });
     }
 
@@ -37,7 +36,7 @@ public class NoteService(IDriver driver) : INoteService
         {
             var result = await tx.RunAsync(@"MATCH (n:NOTE {name: $name}) RETURN n", new { name });
             var record = await result.PeekAsync();
-            return record is null ? null : JsonConvert.DeserializeObject<Note>(Helper.GetJson(record["n"].As<INode>()));
+            return record is null ? null : MyUtils.DeserializeNode<Note>(record["n"].As<INode>());
         });
     }
 

@@ -20,7 +20,7 @@ public class JwtProvider
         {
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new("username", user.Username),
-            new("userId", user.Id.ToString()!),
+            //new("userId", user.Id.ToString()!),
             // Ovo da se obrise kasnije kad se dodaju admini
             new("Role", ((int)Roles.User).ToString())
         };

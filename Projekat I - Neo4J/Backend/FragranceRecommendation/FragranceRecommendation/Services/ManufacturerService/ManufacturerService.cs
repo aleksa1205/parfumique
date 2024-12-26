@@ -15,8 +15,8 @@ public class ManufacturerService(IDriver driver) : IManufacturerService
             while (await cursor.FetchAsync())
             {
                 var record = cursor.Current;
-                    var manufacturer = JsonConvert.DeserializeObject<Manufacturer>(Helper.GetJson(record["n"].As<INode>()));
-                    manufacturers.Add(manufacturer!);
+                var manufacturer = MyUtils.DeserializeNode<Manufacturer>(record["n"].As<INode>());
+                manufacturers.Add(manufacturer!);
             }
 
             return manufacturers;
@@ -61,9 +61,8 @@ public class ManufacturerService(IDriver driver) : IManufacturerService
                 return null;
             }
 
-            var fragrances =
-                JsonConvert.DeserializeObject<List<Fragrance>>(JsonConvert.SerializeObject(record["fragrances"]));
-            var manufacturer = JsonConvert.DeserializeObject<Manufacturer>(Helper.GetJson(record["n"].As<INode>()));
+            var fragrances = MyUtils.DeserializeMap<List<Fragrance>>(record["fragrances"]);
+            var manufacturer = MyUtils.DeserializeNode<Manufacturer>(record["n"].As<INode>());
             manufacturer!.Fragrances = fragrances!;
             return manufacturer;
         });

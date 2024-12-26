@@ -28,20 +28,18 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
         });
     }
     
-    //fix later
-    public async Task<IList<INode>> GetUsersAsync()
+    public async Task<IList<User>> GetUsersAsync()
     {
         await using var session = driver.AsyncSession();
         return await session.ExecuteReadAsync(async tx =>
         {
             var result = await tx.RunAsync("MATCH (n:USER) RETURN n");
-            var nodes = new List<INode>();
+            var list = new List<User>();
             await foreach (var record in result)
             {
-                var node = record["n"].As<INode>();
-                nodes.Add(node);
+                list.Add(MyUtils.DeserializeNode<User>(record["n"].As<INode>()));
             }
-            return nodes;
+            return list;
         });
     }
 
@@ -52,18 +50,17 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
         {
             var query = @"MATCH (n:USER {username: $username})
                           OPTIONAL MATCH (n) -[:OWNS]-> (f:FRAGRANCE)
-                          RETURN n{.*, id: id(n)} AS user, COLLECT(f{.*, id: id(f)}) AS fragrances";
+                          RETURN n AS user, COLLECT(f{.*, id: id(f)}) AS fragrances";
             var result = await tx.RunAsync(query, new { username });
             var record = await result.PeekAsync();
             if (record is null)
                 return null;
             
-            var fragrances =
-                JsonConvert.DeserializeObject<List<Fragrance>>(JsonConvert.SerializeObject(record["fragrances"]));
-            var foundUser = JsonConvert.DeserializeObject<User>(JsonConvert.SerializeObject(record["user"]));
+            var fragrances = MyUtils.DeserializeMap<List<Fragrance>>(record["fragrances"]);
+            var user = MyUtils.DeserializeNode<User>(record["user"].As<INode>());
 
-            foundUser!.Collection = fragrances!;
-            return foundUser;
+            user!.Collection = fragrances!;
+            return user;
         });
     }
 
@@ -73,7 +70,7 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
         return await session.ExecuteReadAsync(async tx =>
         {
             var query = @"MATCH (n:USER {username: $username})
-                          RETURN n{.*, id: id(n)} AS user";
+                          RETURN n AS user";
 
             var cursor = await tx.RunAsync(query, new { username });
             var record = await cursor.PeekAsync();
@@ -81,7 +78,7 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
             if (record is null)
                 return null;
 
-            var user = JsonConvert.DeserializeObject<User>(JsonConvert.SerializeObject(record["user"]));
+            var user = MyUtils.DeserializeNode<User>(record["user"].As<INode>());
             return user;
         });
     }

@@ -7,7 +7,7 @@ namespace FragranceRecommendation.Controllers;
 public class  FragranceController(IFragranceService fragranceService, INoteService noteService) : ControllerBase
 {
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [EndpointSummary("get all fragrances as nodes")]
+    [EndpointSummary("get all fragrances")]
     [HttpGet]
     public async Task<IActionResult> GetAllFragrances()
     {
@@ -17,7 +17,7 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
     //will change after test on frontend
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [EndpointSummary("get all fragrances as nodes with pagination")]
+    [EndpointSummary("get all fragrances pagination")]
     [HttpGet("{pageNumber}/{pageSize}")]
     public async Task<IActionResult> GetAllFragrancesWithPagination(int pageNumber, int pageSize)
     {
@@ -25,10 +25,8 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
             return BadRequest("Page number has to be greater than 1!");
         if(pageSize < 1)
             return BadRequest("Page size has to be greater than 1!");
-
-        var (skip, totalCount, totalPages, fragrances) =
-            await fragranceService.GetFragrancesAsyncPagination(pageNumber, pageSize);
-        return Ok(new { skip, totalCount, totalPages, fragrances });
+        
+        return Ok(await fragranceService.GetFragrancesAsyncPagination(pageNumber, pageSize));
     }
     
     [ProducesResponseType((StatusCodes.Status200OK))]

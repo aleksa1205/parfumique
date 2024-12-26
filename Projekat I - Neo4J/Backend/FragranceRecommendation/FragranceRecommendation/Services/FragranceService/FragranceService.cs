@@ -15,23 +15,22 @@ public class FragranceService(IDriver driver) : IFragranceService
         });
     }
 
-    public async Task<IList<INode>> GetFragrancesAsync()
+    public async Task<IList<Fragrance>> GetFragrancesAsync()
     {
         await using var session = driver.AsyncSession();
         return await session.ExecuteReadAsync(async tx =>
         {
-            var result = await tx.RunAsync("MATCH (n:FRAGRANCE) RETURN n");
-            var nodes = new List<INode>();
+            var result = await tx.RunAsync("MATCH (n:FRAGRANCE) RETURN n{.*, id:id(n)}");
+            var list = new List<Fragrance>();
             await foreach (var record in result)
             {
-                var node = record["n"].As<INode>();
-                nodes.Add(node);
-            }
-            return nodes;
+                list.Add(MyUtils.DeserializeMap<Fragrance>(record["n"]));
+            } 
+            return list;
         });
     }
     
-    public async Task<(int, int, int, IList<INode>)> GetFragrancesAsyncPagination(int pageNumber, int pageSize)
+    public async Task<PagintaionResponseDto> GetFragrancesAsyncPagination(int pageNumber, int pageSize)
     {
         await using var session = driver.AsyncSession();
         int skip = pageSize * (pageNumber - 1);
@@ -40,17 +39,16 @@ public class FragranceService(IDriver driver) : IFragranceService
 
         var fragrances = await session.ExecuteReadAsync(async tx =>
         {
-            var result = await tx.RunAsync("MATCH (n:FRAGRANCE) RETURN n SKIP $skip LIMIT $limit",
+            var result = await tx.RunAsync("MATCH (n:FRAGRANCE) RETURN n{.*, id:id(n)} SKIP $skip LIMIT $limit",
                 new { skip, limit = pageSize });
-            var nodes = new List<INode>();
+            var list = new List<Fragrance>();
             await foreach (var record in result)
             {
-                var node = record["n"].As<INode>();
-                nodes.Add(node);
+                list.Add(MyUtils.DeserializeMap<Fragrance>(record["n"]));
             }
-            return nodes;
+            return list;
         });
-        return (skip, totalCount, totalPages, fragrances);
+        return new(skip, totalCount, totalPages, fragrances);
     }
 
     public async Task<IList<Fragrance>> GetFragrancesWithouthManufacturerAsync()
@@ -63,9 +61,7 @@ public class FragranceService(IDriver driver) : IFragranceService
                           RETURN n{.*, id: id(n)} AS fragrance";
             var result = await tx.RunAsync(query);
             var records = await result.ToListAsync();
-            return records.Select(record =>
-                    JsonConvert.DeserializeObject<Fragrance>(JsonConvert.SerializeObject(record["fragrance"])))
-                .Cast<Fragrance>()
+            return records.Select(record => MyUtils.DeserializeMap<Fragrance>(record["fragrance"]))
                 .ToList();
         });
     }
@@ -90,17 +86,17 @@ public class FragranceService(IDriver driver) : IFragranceService
             
             var manufacturerNode = record["manufacturer"].As<INode>();
             var manufacturer = manufacturerNode != null
-                ? JsonConvert.DeserializeObject<Manufacturer>(Helper.GetJson(manufacturerNode))
+                ? MyUtils.DeserializeNode<Manufacturer>(manufacturerNode)
                 : null;
-            
-            var perfumers =
-                JsonConvert.DeserializeObject<List<Perfumer>>(JsonConvert.SerializeObject(record["perfumers"]));
+
+            var perfumers = MyUtils.DeserializeMap<List<Perfumer>>(record["perfumers"]);
+                //JsonConvert.DeserializeObject<List<Perfumer>>(JsonConvert.SerializeObject(record["perfumers"]));
             var topNotes = record["topNotes"].As<List<INode>>()
-                .Select(node => JsonConvert.DeserializeObject<Note>(Helper.GetJson(node))).ToList();
+                .Select(MyUtils.DeserializeNode<Note>).ToList();
             var middleNotes = record["middleNotes"].As<List<INode>>()
-                .Select(node => JsonConvert.DeserializeObject<Note>(Helper.GetJson(node))).ToList();
+                .Select(MyUtils.DeserializeNode<Note>).ToList();
             var baseNotes = record["baseNotes"].As<List<INode>>()
-                .Select(node => JsonConvert.DeserializeObject<Note>(Helper.GetJson(node))).ToList();
+                .Select(MyUtils.DeserializeNode<Note>).ToList();
 
             var fragrance =
                 JsonConvert.DeserializeObject<Fragrance>(JsonConvert.SerializeObject(record["fragrance"]));

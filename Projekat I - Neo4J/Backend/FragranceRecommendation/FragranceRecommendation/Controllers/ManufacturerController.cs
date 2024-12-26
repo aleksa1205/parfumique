@@ -12,7 +12,7 @@ public class ManufacturerController(
 {
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [EndpointSummary("get all manufacturers as nodes")]
+    [EndpointSummary("get all manufacturers")]
     [HttpGet]
     public async Task<IActionResult> GetAllManufacturers()
     {

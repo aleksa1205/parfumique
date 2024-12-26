@@ -2,9 +2,6 @@ namespace FragranceRecommendation.Models;
 
 public class User
 {
-    [JsonProperty("id")]
-    public int? Id { get; set; }
-    
     [JsonProperty("image")]
     public string? Image { get; set; } = String.Empty;
     
@@ -38,10 +35,8 @@ public class User
         Password = password;
     }
 
-    [MappingConstructor]
     public User(int id, string image, string name, string surname, char gender, string username, string password)
     {
-        Id = id;
         Image = image;
         Name = name;
         Surname = surname;

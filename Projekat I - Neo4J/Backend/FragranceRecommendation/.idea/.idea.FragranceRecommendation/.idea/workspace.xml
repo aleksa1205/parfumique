@@ -10,24 +10,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2d7acab-34fc-48e3-9083-48185e608bb1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/NoteDTOs/NotesToFragranceDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/PagintaionResponseDto.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FragranceRecommendation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FragranceRecommendation/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Auth/JWT/JwtProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Auth/JWT/JwtProvider.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/FragranceController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/FragranceController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/ManufacturerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/ManufacturerController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/NoteController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/NoteController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/PerfumerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/PerfumerController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Controllers/UserController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/NoteDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/NoteDTOs/NoteDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UserDTOs/LoginDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/DTOs/UserDTOs/LoginDto.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Helper.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Implicit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Implicit.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Models/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Models/User.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/FragranceService/FragranceService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/FragranceService/FragranceService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/FragranceService/IFragranceService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/FragranceService/IFragranceService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/ManufacturerService/ManufacturerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/ManufacturerService/ManufacturerService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/NoteService/INoteService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/NoteService/INoteService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/NoteService/NoteService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/NoteService/NoteService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/PerfumerService/IPerfumerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/PerfumerService/IPerfumerService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/PerfumerService/PerfumerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/PerfumerService/PerfumerService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/UserService/IUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/UserService/IUserService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Services/UserService/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Services/UserService/UserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FragranceRecommendation/Utils/MyUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FragranceRecommendation/Utils/MyUtils.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/api/controllers/useFragranceController.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/api/controllers/useFragranceController.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/Pagination.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/Pagination.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/pages/FragranceDetails.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/pages/FragranceDetails.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/pages/Fragrances.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/pages/Fragrances.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +74,7 @@
     ".NET Launch Settings Profile.FragranceRecommendation: https.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "XThreadsFramesViewSplitterKey": "0.057268724",
+    "XThreadsFramesViewSplitterKey": "0.057632398",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
@@ -166,6 +173,7 @@
       <workItem from="1735118767962" duration="3339000" />
       <workItem from="1735146328237" duration="7000" />
       <workItem from="1735150589578" duration="8159000" />
+      <workItem from="1735220262965" duration="7554000" />
     </task>
     <servers />
   </component>

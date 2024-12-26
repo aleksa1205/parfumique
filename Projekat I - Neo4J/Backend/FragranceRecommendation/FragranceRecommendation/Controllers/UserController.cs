@@ -11,7 +11,7 @@ public class UserController(IDriver driver, IUserService userService, IFragrance
     // [RequiresRole(Roles.User)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [EndpointSummary("get all users as nodes")]
+    [EndpointSummary("get all users")]
     [HttpGet]
     public async Task<IActionResult> GetAllUsers()
     {

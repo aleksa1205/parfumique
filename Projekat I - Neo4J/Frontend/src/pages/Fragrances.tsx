@@ -32,20 +32,19 @@ const Fragrances = () => {
   console.log(page);
   return (
     <section className="bg-gray-50 antialiased py-12">
+      {" "}
       <div className="mx-auto max-w-screen-xl px-4">
         <div className="mb-4 grid gap-4 sm:grid-cols-2 md:mb-8 lg:grid-cols-3 xl:grid-cols-4 w-full">
-          {response?.listOfFragrances.map((fragrance) => (
+          {response?.fragrances.map((fragrance) => (
             <div
               key={fragrance.id}
               className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm "
             >
               <FragranceCard
                 id={fragrance.id.toString()}
-                image={
-                  fragrance.properties.image ? fragrance.properties.image : ""
-                }
-                name={fragrance.properties.name}
-                gender={fragrance.properties.gender}
+                image={fragrance.image ? fragrance.image : ""}
+                name={fragrance.name}
+                gender={fragrance.gender}
               />
             </div>
           ))}

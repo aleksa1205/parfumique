@@ -6,7 +6,7 @@ public class NoteController(IDriver driver, INoteService noteService, IFragrance
 {
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [EndpointSummary("get all notes as nodes")]
+    [EndpointSummary("get all notes")]
     [HttpGet]
     public async Task<IActionResult> GetAllNotes()
     {
@@ -16,7 +16,7 @@ public class NoteController(IDriver driver, INoteService noteService, IFragrance
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [EndpointSummary("get note by id")]
+    [EndpointSummary("get note by name")]
     [HttpGet("{name}")]
     public async Task<IActionResult> GetNoteByName(string name)
     {

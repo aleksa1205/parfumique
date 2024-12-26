@@ -2,6 +2,18 @@
 
 public static class MyUtils
 {
+    public static T DeserializeMap<T>(Object obj)
+    {
+        return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj))!;
+    }
+
+    public static T DeserializeNode<T>(INode node)
+    {
+        var properties = node.Properties;
+        var json = JsonConvert.SerializeObject(properties);
+        return JsonConvert.DeserializeObject<T>(json)!;
+    }
+    
     public static (bool IsValid, string ErrorMessage) IsValidPassword(string str)
     {
         if (string.IsNullOrWhiteSpace(str))

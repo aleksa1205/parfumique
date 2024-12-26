@@ -37,14 +37,17 @@ interface Fragrance {
   }[];
 }
 
+interface BaseFragrance
+  extends Omit<
+    Fragrance,
+    "manufacturer" | "perfumers" | "top" | "middle" | "base"
+  > {}
+
 interface ApiResponse {
   page: number;
   size: number;
   totalPages: number;
-  listOfFragrances: Array<{
-    id: number;
-    properties: Omit<Fragrance, "id">;
-  }>;
+  fragrances: Array<BaseFragrance>;
 }
 
 export default function useFragranceController() {
@@ -52,8 +55,9 @@ export default function useFragranceController() {
     get: async function (page: number): Promise<ApiResponse> {
       try {
         const response = await client.get<ApiResponse>(
-          `/Fragrance?pageNumber=${page}&pageSize=${6}`
+          `/Fragrance/${page}/${1}`
         );
+        console.log("mersh");
         console.log(response.data);
         return response.data;
       } catch (error) {

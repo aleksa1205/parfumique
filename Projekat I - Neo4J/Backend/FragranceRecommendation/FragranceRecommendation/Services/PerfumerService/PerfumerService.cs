@@ -31,20 +31,18 @@ public class PerfumerService(IDriver driver) : IPerfumerService
         });
     }
 
-    public async Task<IList<INode>> GetPerfumersAsync()
+    public async Task<IList<Perfumer>> GetPerfumersAsync()
     {
         await using var session = driver.AsyncSession();
         return await session.ExecuteReadAsync(async tx =>
         {
-            var result = await tx.RunAsync("MATCH (n:PERFUMER) RETURN n");
-            var nodes = new List<INode>();
+            var result = await tx.RunAsync("MATCH (n:PERFUMER) RETURN n{.*, id: id(n)}");
+            var list = new List<Perfumer>();
             await foreach (var record in result)
             {
-                var node = record["n"].As<INode>();
-                nodes.Add(node);
+                list.Add(MyUtils.DeserializeMap<Perfumer>(record["n"]));
             }
-
-            return nodes;
+            return list;
         });
     }
 

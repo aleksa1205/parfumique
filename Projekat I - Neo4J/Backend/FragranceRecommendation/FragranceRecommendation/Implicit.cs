@@ -12,6 +12,7 @@ global using System.ComponentModel.DataAnnotations;
 global using FragranceRecommendation.Models;
 global using FragranceRecommendation.Utils;
 global using FragranceRecommendation.Auth.JWT;
+global using FragranceRecommendation.DTOs;
 global using FragranceRecommendation.DTOs.UserDTOs;
 global using FragranceRecommendation.DTOs.FragranceDTOs;
 global using FragranceRecommendation.DTOs.PerfumerDTOs;

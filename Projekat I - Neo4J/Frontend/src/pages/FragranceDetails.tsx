@@ -94,7 +94,7 @@ const FragranceDetails = () => {
                 <div key={note.name} className="flex flex-col">
                   <img
                     src={base64ToUrl(note.image)}
-                    alt={`${note.name} image`}
+                    alt={`image`}
                     className="h-12 w-12"
                   />
                   {note.name}
@@ -107,7 +107,7 @@ const FragranceDetails = () => {
                 <div key={note.name} className="flex flex-col">
                   <img
                     src={base64ToUrl(note.image)}
-                    alt={`${note.name} image`}
+                    alt={`image`}
                     className="h-12 w-12"
                   />
                   {note.name}
@@ -120,7 +120,7 @@ const FragranceDetails = () => {
                 <div key={note.name} className="flex flex-col">
                   <img
                     src={base64ToUrl(note.image)}
-                    alt={`${note.name} image`}
+                    alt={`image`}
                     className="h-12 w-12"
                   />
                   {note.name}

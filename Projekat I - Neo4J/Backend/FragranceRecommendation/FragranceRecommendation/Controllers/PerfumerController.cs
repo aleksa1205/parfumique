@@ -5,7 +5,7 @@
 public class PerfumerController(IPerfumerService perfumerService, IFragranceService fragranceService) : ControllerBase
 {
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [EndpointSummary("get all perfumers as nodes")]
+    [EndpointSummary("get all perfumers")]
     [HttpGet]
     public async Task<IActionResult> GetAllPerfumers()
     {

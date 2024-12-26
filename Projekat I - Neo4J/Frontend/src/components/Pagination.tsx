@@ -17,7 +17,7 @@ const Pagination: React.FC<PaginationProps> = ({
     } else if (page === 1 && numberOfPages > 3) {
       return [1, 2, 3];
     } else if (page === numberOfPages) {
-      return [numberOfPages - 1, numberOfPages];
+      return [numberOfPages - 2, numberOfPages - 1, numberOfPages];
     }
     return [page - 1, page, page + 1];
   };
@@ -57,7 +57,7 @@ const Pagination: React.FC<PaginationProps> = ({
             </button>
           </li>
           {/* First page and ... */}
-          {page > 2 && (
+          {page > 2 && numberOfPages > 3 && (
             <>
               <li>
                 <button
@@ -90,7 +90,7 @@ const Pagination: React.FC<PaginationProps> = ({
           ))}
 
           {/* Last page and ... */}
-          {page < numberOfPages - 1 && (
+          {page < numberOfPages - 1 && numberOfPages > 3 && (
             <>
               {page < numberOfPages - 2 && (
                 <li className="flex items-center justify-center px-2 h-10 ms-0 leading-tight bg-white border border-gray-300 my-text-primary">
@@ -99,7 +99,7 @@ const Pagination: React.FC<PaginationProps> = ({
               )}
               <li>
                 <button
-                  onClick={() => setPage(page - 1)}
+                  onClick={() => setPage(numberOfPages)}
                   disabled={page === numberOfPages}
                   className="items-center justify-center px-4 h-10 ms-0 leading-tight bg-white border border-gray-300 my-text-primary"
                 >
