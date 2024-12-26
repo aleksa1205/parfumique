@@ -1,28 +1,26 @@
-﻿using Neo4j.Driver.Mapping;
-
 namespace FragranceRecommendation.Models;
 
 public class User
 {
-    [MappingSource("id")]
+    [JsonProperty("id")]
     public int? Id { get; set; }
     
-    [MappingSource("image")]
+    [JsonProperty("image")]
     public string? Image { get; set; } = String.Empty;
     
-    [MappingSource("name")]
+    [JsonProperty("name")]
     public required string Name { get; set; }
     
-    [MappingSource("surname")]
+    [JsonProperty("surname")]
     public required string Surname { get; set; }
     
-    [MappingSource("gender")]
+    [JsonProperty("gender")]
     public char Gender { get; set; }
     
-    [MappingSource("username")]
+    [JsonProperty("username")]
     public required string Username { get; set; }
     
-    [MappingSource("password")]
+    [JsonProperty("password")]
     public required string Password { get; set; }
     
     //doesn't have to be property because get is not used anywhere
@@ -30,7 +28,7 @@ public class User
 
     #region Constructors
     public User() {}
-    
+
     public User(string name, string surname, char gender, string username, string password)
     {
         Name = name;
@@ -40,6 +38,7 @@ public class User
         Password = password;
     }
 
+    [MappingConstructor]
     public User(int id, string image, string name, string surname, char gender, string username, string password)
     {
         Id = id;

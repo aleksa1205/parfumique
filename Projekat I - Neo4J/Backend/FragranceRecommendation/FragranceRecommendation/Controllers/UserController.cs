@@ -1,9 +1,14 @@
-﻿namespace FragranceRecommendation.Controllers;
+﻿using FragranceRecommendation.Auth;
+using Microsoft.AspNetCore.Authorization;
+
+namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class UserController(IDriver driver, IUserService userService, IFragranceService fragranceService, IConfiguration config) : ControllerBase
 {
+    // [Authorize]
+    // [RequiresRole(Roles.User)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [EndpointSummary("get all users as nodes")]
@@ -13,6 +18,8 @@ public class UserController(IDriver driver, IUserService userService, IFragrance
         return Ok(await userService.GetUsersAsync());
     }
 
+    // [Authorize]
+    // [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -137,5 +144,4 @@ public class UserController(IDriver driver, IUserService userService, IFragrance
         await userService.DeleteUserAsync(user);
         return Ok($"User {user.Username} successfully deleted!");
     }
-    
 }
