@@ -1,5 +1,3 @@
-﻿using Neo4j.Driver.Mapping;
-
 namespace FragranceRecommendation.Models;
 
 public class User
@@ -20,7 +18,6 @@ public class User
     public char Gender { get; set; }
     
     [JsonProperty("username")]
-    [MappingSource("username")]
     public required string Username { get; set; }
     
     [JsonProperty("password")]

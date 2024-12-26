@@ -30,17 +30,14 @@ public class NoteService(IDriver driver) : INoteService
         });
     }
 
-    //fix asap it can return null!!!
-    public async Task<Note> GetNoteAsync(string name)
+    public async Task<Note?> GetNoteAsync(string name)
     {
         await using var session = driver.AsyncSession();
         return await session.ExecuteReadAsync(async tx =>
         {
             var result = await tx.RunAsync(@"MATCH (n:NOTE {name: $name}) RETURN n", new { name });
             var record = await result.PeekAsync();
-            return record == null
-                ? null
-                : JsonConvert.DeserializeObject<Note>(record["n"].As<string>());
+            return record is null ? null : JsonConvert.DeserializeObject<Note>(Helper.GetJson(record["n"].As<INode>()));
         });
     }
 

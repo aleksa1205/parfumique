@@ -1,6 +1,6 @@
 ﻿namespace FragranceRecommendation.Services.UserService;
 
-public class UserService(IDriver driver) : IUserService
+public class UserService(IDriver driver, IConfiguration config) : IUserService
 {
     public async Task<bool> UserExistsAsync(string username)
     {
@@ -55,6 +55,9 @@ public class UserService(IDriver driver) : IUserService
                           RETURN n{.*, id: id(n)} AS user, COLLECT(f{.*, id: id(f)}) AS fragrances";
             var result = await tx.RunAsync(query, new { username });
             var record = await result.PeekAsync();
+            if (record is null)
+                return null;
+            
             var fragrances =
                 JsonConvert.DeserializeObject<List<Fragrance>>(JsonConvert.SerializeObject(record["fragrances"]));
             var foundUser = JsonConvert.DeserializeObject<User>(JsonConvert.SerializeObject(record["user"]));

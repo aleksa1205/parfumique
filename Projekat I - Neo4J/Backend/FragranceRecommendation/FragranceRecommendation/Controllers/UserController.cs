@@ -33,12 +33,13 @@ public class UserController(IDriver driver, IUserService userService, IFragrance
             return BadRequest(errorMessage);
         }
         
-        if (!await userService.UserExistsAsync(username))
+        var user = await userService.GetUserAsync(username);
+        if (user is null)
         {
             return NotFound($"User {username} doesn't exists!");
         }
         
-        return Ok(await userService.GetUserAsync(username));
+        return Ok(user);
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -62,7 +63,29 @@ public class UserController(IDriver driver, IUserService userService, IFragrance
         await userService.AddUserAsync(user);
         return Ok($"User {user.Username} added!");
     }
-    
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [EndpointSummary("generate JWT for login credentials")]
+    [HttpPost("Login")]
+    public async Task<IActionResult> Login(LoginDto login)
+    {
+        var (isValid, errorMessage) = login.Validate();
+        if (!isValid)
+            return BadRequest(errorMessage);
+        
+        var user = await userService.GetUserAsync(login.Username);
+        if (user is null)
+            return Unauthorized("Invalid username or password");
+
+        if (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
+            return Unauthorized("Invalid username or password");
+        
+        var token = new JwtProvider(config).Generate(user);
+        return Ok(token);
+    }
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -120,35 +143,5 @@ public class UserController(IDriver driver, IUserService userService, IFragrance
         
         await userService.DeleteUserAsync(user);
         return Ok($"User {user.Username} successfully deleted!");
-    }
-
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [EndpointSummary("generate JWT for login credentials")]
-    [HttpPost("Login")]
-    public async Task<IActionResult> Login(LoginDto login)
-    {
-        try
-        {
-            var username = login.Username;
-            var password = login.Password;
-
-            var user = await userService.GetUserWithoutFragrancesAsync(username);
-
-            if (user is null)
-                return Unauthorized("Invalid username");
-            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
-                return Unauthorized("Invalid password");
-
-            var token = new JwtProvider(config).Generate(user);
-
-            return Ok(token);
-
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
     }
 }

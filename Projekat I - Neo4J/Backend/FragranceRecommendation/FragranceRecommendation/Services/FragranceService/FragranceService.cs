@@ -70,7 +70,7 @@ public class FragranceService(IDriver driver) : IFragranceService
         });
     }
 
-    public async Task<Fragrance> GetFragranceAsync(int id)
+    public async Task<Fragrance?> GetFragranceAsync(int id)
     {
         await using var session = driver.AsyncSession();
         return await session.ExecuteWriteAsync(async tx =>
@@ -85,6 +85,9 @@ public class FragranceService(IDriver driver) : IFragranceService
                               RETURN n{.*, id: id(n)} AS fragrance, m AS manufacturer, COLLECT(DISTINCT p{.*, id: id(p)}) AS perfumers, COLLECT(DISTINCT t) AS topNotes, COLLECT(DISTINCT k) AS middleNotes, COLLECT(DISTINCT b) AS baseNotes";
             var result = await tx.RunAsync(query, new { id });
             var record = await result.PeekAsync();
+            if (record is null)
+                return null;
+            
             var manufacturerNode = record["manufacturer"].As<INode>();
             var manufacturer = manufacturerNode != null
                 ? JsonConvert.DeserializeObject<Manufacturer>(Helper.GetJson(manufacturerNode))
@@ -131,6 +134,41 @@ public class FragranceService(IDriver driver) : IFragranceService
                           SET n.name = $name, n.year = $year, n.gender = $gender";
             await tx.RunAsync(query,
                 new { id=fragrance.Id, name = fragrance.Name, year = fragrance.BatchYear, gender = fragrance.Gender });
+        });
+    }
+    
+    public async Task AddNotesToFragrance(NotesToFragranceDto dto)
+    {
+        await using var session = driver.AsyncSession();
+        await session.ExecuteWriteAsync(async tx =>
+        {
+            var query = @"MATCH (f:FRAGRANCE) WHERE id(f) = $id
+                              UNWIND $notes AS note
+                              MATCH (n:NOTE {name: note.Name})
+                              FOREACH (_ IN CASE WHEN note.TMB = 0 THEN [1] ELSE [] END |
+                                MERGE (f)-[:TOP]->(n))
+                              FOREACH (_ IN CASE WHEN note.TMB = 1 THEN [1] ELSE [] END |
+                                MERGE (f)-[:MIDDLE]->(n))
+                              FOREACH (_ IN CASE WHEN note.TMB = 2 THEN [1] ELSE [] END |
+                                MERGE (f)-[:BASE]->(n))";
+            await tx.RunAsync(query, new { notes = dto.Notes, id = dto.Id });
+        });
+    }
+
+    public async Task DeleteNotesFromFragrance(NotesToFragranceDto dto)
+    {
+        await using var session = driver.AsyncSession();
+        await session.ExecuteWriteAsync(async tx =>
+        {
+            var query = @"UNWIND $notes AS note
+                              MATCH (f:FRAGRANCE) WHERE id(f) = $id
+                              MATCH (n:NOTE {name: note.Name})
+                              OPTIONAL MATCH (f) -[r:TOP]-> (n) WHERE note.TMB = 0 DELETE r
+                              WITH f, n, note
+                              OPTIONAL MATCH (f) -[r:MIDDLE]-> (n) WHERE note.TMB = 1 DELETE r
+                              WITH f, n, note
+                              OPTIONAL MATCH (f) -[r:BASE]-> (n) WHERE note.TMB = 2 DELETE r";
+            await tx.RunAsync(query, new { notes = dto.Notes, id = dto.Id });
         });
     }
 
