@@ -45,7 +45,7 @@ public class UserService(IDriver driver) : IUserService
         });
     }
 
-    public async Task<User> GetUserAsync(string username)
+    public async Task<User?> GetUserAsync(string username)
     {
         await using var session = driver.AsyncSession();
         return await session.ExecuteReadAsync(async tx =>
@@ -58,6 +58,7 @@ public class UserService(IDriver driver) : IUserService
             var fragrances =
                 JsonConvert.DeserializeObject<List<Fragrance>>(JsonConvert.SerializeObject(record["fragrances"]));
             var foundUser = JsonConvert.DeserializeObject<User>(JsonConvert.SerializeObject(record["user"]));
+
             foundUser!.Collection = fragrances!;
             return foundUser;
         });

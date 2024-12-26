@@ -1,6 +1,5 @@
-using FragranceRecommendation.Services.FragranceService;
+using FragranceRecommendation.Services.ManufacturerService;
 using FragranceRecommendation.Services.NoteService;
-using FragranceRecommendation.Services.PerfumerService;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -45,7 +44,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFragranceService, FragranceService>();
 builder.Services.AddScoped<IPerfumerService, PerfumerService>();
 builder.Services.AddScoped<INoteService, NoteService>();
-// Manufacturer
+builder.Services.AddScoped<IManufacturerService, ManufacturerService>();
 
 //builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
@@ -57,7 +56,6 @@ app.UseCors(allowFrontendOrigin);
 
 app.UseAuthentication();
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -68,8 +66,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-
 
 //app.MapConrollerRoute(name: "name", pattern "{controller}/action=Index/id
 app.UseRouting();

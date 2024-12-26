@@ -1,8 +1,14 @@
-﻿namespace FragranceRecommendation.Controllers;
+﻿using FragranceRecommendation.Services.ManufacturerService;
+
+namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ManufacturerController(IDriver driver) : ControllerBase
+public class ManufacturerController(
+    IDriver driver,
+    IManufacturerService manufacturerService,
+    IFragranceService fragranceService,
+    IPerfumerService perfumerService) : ControllerBase
 {
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -12,19 +18,9 @@ public class ManufacturerController(IDriver driver) : ControllerBase
     {
         try
         {
-            await using var session = driver.AsyncSession();
-            var manufacturerList = await session.ExecuteReadAsync(async tx =>
-            {
-                var result = await tx.RunAsync("MATCH (n:MANUFACTURER) RETURN n");
-                var nodes = new List<INode>();
-                await foreach (var record in result)
-                {
-                    var node = record["n"].As<INode>();
-                    nodes.Add(node);
-                }
-                return nodes;
-            });
-            return Ok(manufacturerList);
+            var manufacturers = await manufacturerService.GetAllManufacturers();
+
+            return Ok(manufacturers);
         }
         catch (Exception ex)
         {
@@ -41,29 +37,11 @@ public class ManufacturerController(IDriver driver) : ControllerBase
     {
         try
         {
-            await using var session = driver.AsyncSession();
-            var manufacturer = await session.ExecuteReadAsync(async tx =>
-            {
-                var query = @"MATCH (n:MANUFACTURER {name: $name})
-                              OPTIONAL MATCH (n) -[:MANUFACTURES]-> (f:FRAGRANCE) 
-                              RETURN n, COLLECT(DISTINCT f{.*, id: id(f)}) AS fragrances";
-                var result = await tx.RunAsync(query, new { name });
-                var record = await result.PeekAsync();
-                if (record is null)
-                {
-                    return null;
-                }
+            if (!await manufacturerService.ManufacturerExistsAsync(name))
+                return NotFound($"Manufacturer {name} does not exist");
 
-                var fragrances =
-                    JsonConvert.DeserializeObject<List<Fragrance>>(JsonConvert.SerializeObject(record["fragrances"]));
-                var manufacturer = JsonConvert.DeserializeObject<Manufacturer>(Helper.GetJson(record["n"].As<INode>()));
-                manufacturer.Fragrances = fragrances;
-                return manufacturer;
-            });
-            if (manufacturer is null)
-            {
-                return NotFound($"Manufacturer {name} not found!");
-            }
+            var manufacturer = await manufacturerService.GetManufacturer(name);
+
             return Ok(manufacturer);
         }
         catch (Exception ex)
@@ -71,8 +49,8 @@ public class ManufacturerController(IDriver driver) : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-    
-    
+
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -82,19 +60,10 @@ public class ManufacturerController(IDriver driver) : ControllerBase
     {
         try
         {
-            await using var session = driver.AsyncSession();
-            var exists = await session.ExecuteWriteAsync(async tx =>
-            {
-                var query = @"OPTIONAL MATCH (n:MANUFACTURER {name: $name})
-                              CREATE (:MANUFACTURER {name: $name, image: ''})
-                              RETURN n IS NOT NULL AS exists";
-                var result = await tx.RunAsync(query, new { name });
-                return await result.SingleAsync(record => record["exists"].As<bool>());
-            });
-            if (exists)
-            {
-                return Conflict($"Manufacturer {name} already exists!");
-            }
+            if (await manufacturerService.ManufacturerExistsAsync(name))
+                return NotFound($"Manufacturer {name} already exists.");
+
+            await manufacturerService.AddManufacturer(name);
             return Ok($"Manufacturer {name} successfully added!");
         }
         catch (Exception ex)
@@ -112,41 +81,23 @@ public class ManufacturerController(IDriver driver) : ControllerBase
     {
         try
         {
-            await using var session = driver.AsyncSession();
-            var result = await session.ExecuteReadAsync(async tx =>
-            {
-                var query = @"OPTIONAL MATCH (m:MANUFACTURER {name: $manufacturerName})
-                              OPTIONAL MATCH (f:FRAGRANCE) WHERE id(f) = $fragranceId
-                              OPTIONAL MATCH (f) <-[r:MANUFACTURES]- (:MANUFACTURER)
-                              RETURN m IS NOT NULL AS manufacturerExists,
-                                     f IS NOT NULL AS fragranceExists,
-                                     r IS NOT NULL AS connectionExists";
-                var result = await tx.RunAsync(query, new { manufacturerName, fragranceId });
-                var record = await result.SingleAsync();
-                return (record["manufacturerExists"].As<bool>(), record["fragranceExists"].As<bool>(),
-                    record["connectionExists"].As<bool>());
-            });
-            var (manufacturerExists, fragranceExists, connectionExists) = result;
-            if (manufacturerExists is false)
-            {
+            if (!await manufacturerService.ManufacturerExistsAsync(manufacturerName))
                 return NotFound($"Manufacturer {manufacturerName} doesn't exist!");
-            }
-            if (fragranceExists is false)
-            {
-                return NotFound($"Fragrance with id {fragranceId} doesn't exist!");
-            }
-            if (connectionExists)
-            {
-                return Conflict($"Fragrance with id {fragranceId} already has a manufacturer!");
-            }
 
-            await session.ExecuteWriteAsync(async tx =>
-            {
-                var query = @"MATCH (m:MANUFACTURER {name: $manufacturerName})
-                              MATCH (n:FRAGRANCE) WHERE id(n) = $fragranceId
-                              CREATE (m) -[:MANUFACTURES]-> (n)";
-                await tx.RunAsync(query, new { manufacturerName, fragranceId });
-            });
+            if (!await fragranceService.FragranceExistsAsync(fragranceId))
+                return NotFound($"Fragrance with id {fragranceId} doesn't exist!");
+
+            if (!await manufacturerService.IsFragranceCreatedByManufacturerAsync(fragranceId, manufacturerName))
+                return Conflict($"Fragrance with id {fragranceId} already has a manufacturer!");
+
+            // await session.ExecuteWriteAsync(async tx =>
+            // {
+            //     var query = @"MATCH (m:MANUFACTURER {name: $manufacturerName})
+            //                   MATCH (n:FRAGRANCE) WHERE id(n) = $fragranceId
+            //                   CREATE (m) -[:MANUFACTURES]-> (n)";
+            //     await tx.RunAsync(query, new { manufacturerName, fragranceId });
+            // });
+            
             return Ok($"Successfully added fragrance with the id {fragranceId} to manufacturer {manufacturerName}!");
         }
         catch (Exception ex)

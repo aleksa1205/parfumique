@@ -1,6 +1,4 @@
-﻿using FragranceRecommendation.DTOs.NoteDTOs;
-
-namespace FragranceRecommendation.Services.NoteService;
+﻿namespace FragranceRecommendation.Services.NoteService;
 
 public interface INoteService
 {

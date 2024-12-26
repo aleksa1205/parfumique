@@ -5,7 +5,7 @@ public interface IUserService
     public Task<bool> UserExistsAsync(string username);
     public Task<bool> UserOwnsFragranceAsync(string username, int id);
     public Task<IList<INode>> GetUsersAsync();
-    public Task<User> GetUserAsync(string username);
+    public Task<User?> GetUserAsync(string username);
     public Task<User?> GetUserWithoutFragrancesAsync(string username);
     public Task AddUserAsync(AddUserDto user);
     public Task UpdateUserAsync(UpdateUserDto user);
