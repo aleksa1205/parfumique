@@ -15,6 +15,19 @@ public class FragranceService(IDriver driver) : IFragranceService
         });
     }
 
+    public async Task<bool> FragranceHasManufacturerAsync(int id)
+    {
+        await using var session = driver.AsyncSession();
+        return await session.ExecuteReadAsync(async tx =>
+        {
+            var query = @"OPTIONAL MATCH (n:FRAGRANCE) WHERE id(n) = $id
+                          OPTIONAL MATCH (:MANUFACTURER)-[r:MANUFACTURES]->(n)
+                          RETURN r IS NOT NULL AS exists";
+            var cursor = await tx.RunAsync(query, new { id });
+            return (await cursor.SingleAsync())["exists"].As<bool>();
+        });
+    }
+
     public async Task<IList<Fragrance>> GetFragrancesAsync()
     {
         await using var session = driver.AsyncSession();

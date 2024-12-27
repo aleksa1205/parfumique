@@ -46,7 +46,7 @@ public class ManufacturerService(IDriver driver) : IManufacturerService
             return (await result.SingleAsync())["exists"].As<bool>();
         });
     }
-    public async Task<Manufacturer?> GetManufacturer(string name)
+    public async Task<Manufacturer?> GetManufacturerAsync(string name)
     {
         await using var session = driver.AsyncSession();
         return await session.ExecuteReadAsync(async tx =>
@@ -67,12 +67,36 @@ public class ManufacturerService(IDriver driver) : IManufacturerService
             return manufacturer;
         });
     }
-    public async Task AddManufacturer(string name)
+    public async Task AddManufacturerAsync(string name)
     {
         await using var session = driver.AsyncSession();
         await session.ExecuteWriteAsync(async tx =>
         {
             var query = @"CREATE (:MANUFACTURER {name: $name, image: ''})";
+            await tx.RunAsync(query, new { name });
+        });
+    }
+
+    public async Task AddFragranceToManufacturerAsync(int fragranceId, string name)
+    {
+        await using var session = driver.AsyncSession();
+        await session.ExecuteWriteAsync(async tx =>
+        {
+            var query = @"MATCH (m:MANUFACTURER) WHERE m.name = $name
+                          MATCH (f:FRAGRANCE) WHERE id(f) = $fragranceId
+                          CREATE (m) -[:MANUFACTURES]-> (f)";
+
+            await tx.RunAsync(query, new { name, fragranceId });
+        });
+    }
+
+    public async Task DeleteManufacturerAsync(string name)
+    {
+        await using var session = driver.AsyncSession();
+        await session.ExecuteWriteAsync(async tx =>
+        {
+            var query = @"MATCH (m:MANUFACTURER) WHERE m.name = $name
+                          DETACH DELETE m";
             await tx.RunAsync(query, new { name });
         });
     }
