@@ -2,19 +2,11 @@
 
 public class AddNoteDto
 {
-    public string Name { get; set; }
-    public string Type { get; set; }
-    
-    public (bool isValid, string errorMessage) Validate()
-    {
-        var (isValid, errorMessage) = MyUtils.IsValidString(Name, "Name");
-        if(!isValid)
-            return (false, errorMessage);
-        
-        (isValid, errorMessage) = MyUtils.IsValidString(Type, "Type");
-        if(!isValid)
-            return (false, errorMessage);
+    [Required]
+    [StringLength(30, MinimumLength = 3)]
+    public string? Name { get; set; }
 
-        return (true, string.Empty);
-    }
+    [Required]
+    [StringLength(30, MinimumLength = 3)]
+    public string? Type { get; set; }
 }

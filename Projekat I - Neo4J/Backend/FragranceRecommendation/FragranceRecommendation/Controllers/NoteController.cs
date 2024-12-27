@@ -2,7 +2,7 @@
 
 [ApiController]
 [Route("[controller]")]
-public class NoteController(IDriver driver, INoteService noteService, IFragranceService fragranceService) : ControllerBase
+public class NoteController(INoteService noteService) : ControllerBase
 {
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -10,7 +10,14 @@ public class NoteController(IDriver driver, INoteService noteService, IFragrance
     [HttpGet]
     public async Task<IActionResult> GetAllNotes()
     {
-        return Ok(await noteService.GetNotesAsync());
+        try
+        {
+            return Ok(await noteService.GetNotesAsync());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -20,15 +27,18 @@ public class NoteController(IDriver driver, INoteService noteService, IFragrance
     [HttpGet("{name}")]
     public async Task<IActionResult> GetNoteByName(string name)
     {
-        var (isValid, errorMessage) = MyUtils.IsValidString(name, "Name");
-        if (!isValid)
-            return BadRequest(errorMessage);
+        try
+        {
+            var note = await noteService.GetNoteAsync(name);
+            if(note is null)
+                return NotFound($"Note {name} not found!");
 
-        var note = await noteService.GetNoteAsync(name);
-        if(note is null)
-            return NotFound($"Note {name} not found!");
-        
-        return Ok(note);
+            return Ok(note);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -38,15 +48,18 @@ public class NoteController(IDriver driver, INoteService noteService, IFragrance
     [HttpPost]
     public async Task<IActionResult> AddNote([FromBody] AddNoteDto note)
     {
-        var (isValid, errorMessage) = note.Validate();
-        if (!isValid)
-            return BadRequest(errorMessage);
-        
-        if (await noteService.NoteExistsAsync(note.Name))
-            return Conflict($"Note {note.Name} already exists!");
-        
-        await noteService.AddNoteAsync(note);
-        return Ok($"Note {note.Name} {note.Type} added!");
+        try
+        {
+            if (await noteService.NoteExistsAsync(note.Name!))
+                return Conflict($"Note {note.Name} already exists!");
+
+            await noteService.AddNoteAsync(note);
+            return Ok($"Note {note.Name} {note.Type} added!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -56,15 +69,18 @@ public class NoteController(IDriver driver, INoteService noteService, IFragrance
     [HttpPatch]
     public async Task<IActionResult> UpdateNote([FromBody] UpdateNoteDto note)
     {
-        var (isValid, errorMessage) = note.Validate();
-        if (!isValid)
-            return BadRequest(errorMessage);
-        
-        if(!await noteService.NoteExistsAsync(note.Name))
-            return NotFound($"Note {note.Name} does not exist!");
-        
-        await noteService.UpdateNoteAsync(note);
-        return Ok($"Note {note.Name} {note.Type} updated!");
+        try
+        {
+            if(!await noteService.NoteExistsAsync(note.Name!))
+                return NotFound($"Note {note.Name} does not exist!");
+
+            await noteService.UpdateNoteAsync(note);
+            return Ok($"Note {note.Name} {note.Type} updated!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
     
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -74,14 +90,17 @@ public class NoteController(IDriver driver, INoteService noteService, IFragrance
     [HttpDelete]
     public async Task<IActionResult> DeleteNote([FromBody] DeleteNoteDto note)
     {
-        var (isValid, errorMessage) = note.Validate();
-        if (!isValid)
-            return BadRequest(errorMessage);
-        
-        if (!await noteService.NoteExistsAsync(note.Name))
-            return NotFound($"Note {note.Name} not found!");
-        
-        await noteService.DeleteNoteAsync(note);
-        return Ok($"Note {note.Name} successfully deleted!");
+        try
+        {
+            if (!await noteService.NoteExistsAsync(note.Name!))
+                return NotFound($"Note {note.Name} not found!");
+
+            await noteService.DeleteNoteAsync(note);
+            return Ok($"Note {note.Name} successfully deleted!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }

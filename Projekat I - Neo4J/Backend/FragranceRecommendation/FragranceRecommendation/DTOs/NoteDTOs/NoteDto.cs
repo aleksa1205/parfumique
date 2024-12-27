@@ -2,18 +2,11 @@
 
 public class NoteDto
 {
-    public required string Name { get; set; }
-    public int TMB { get; set; }
+    [Required]
+    [StringLength(30, MinimumLength = 3)]
+    public string? Name { get; set; }
 
-    public (bool isValid, string errorMessage) Validate()
-    {
-        var (isValid, errorMessage) = MyUtils.IsValidString(Name, "Name");
-        if (!isValid)
-            return (false, errorMessage);
-
-        if (TMB < 0 || TMB > 2)
-            return (false, "TMB must be between 0 and 2!");
-        
-        return (true, string.Empty);
-    }
+    [Required]
+    [Range(0, 2)]
+    public int? TMB { get; set; }
 }

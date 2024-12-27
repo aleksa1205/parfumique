@@ -1,20 +1,13 @@
-﻿namespace FragranceRecommendation.DTOs.UserDTOs;
+﻿using FragranceRecommendation.Common.ValidationAttributes;
+
+namespace FragranceRecommendation.DTOs.UserDTOs;
 
 public class LoginDto
 {
-    public string Username { get; set; }
-    public string Password { get; set; }
+    [Required]
+    [StringLength(30, MinimumLength = 3)]
+    public string? Username { get; set; }
 
-    public (bool isValid, string ErrorMessage) Validate()
-    {
-        var (isValid, errorMessage) = MyUtils.IsValidString(Username, "Username");
-        if (!isValid)
-            return (false, errorMessage);
-
-        (isValid, errorMessage) = MyUtils.IsValidPassword(Password);
-        if (!isValid)
-            return (false, errorMessage);
-        
-        return (true, string.Empty);
-    }
+    [Password]
+    public string? Password { get; set; }
 }

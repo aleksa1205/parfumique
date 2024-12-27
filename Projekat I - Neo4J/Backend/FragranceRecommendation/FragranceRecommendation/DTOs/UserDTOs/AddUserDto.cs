@@ -1,36 +1,24 @@
-﻿namespace FragranceRecommendation.DTOs.UserDTOs;
+﻿using FragranceRecommendation.Common.ValidationAttributes;
+
+namespace FragranceRecommendation.DTOs.UserDTOs;
 
 public class AddUserDto
 {
     [Required]
-    public required string Name { get; set; }
-    public required string Surname { get; set; }
-    public required char Gender { get; set; }
-    public required string Username { get; set; }
-    public required string Password { get; set; }
+    [StringLength(30, MinimumLength = 3)]
+    public string? Name { get; set; }
 
-    public (bool IsValid, string ErrorMessage) Validate()
-    {
-        var (isValid, errorMessage) = MyUtils.IsValidString(Name, "Name");
-        if (!isValid)
-            return (false, errorMessage);
-        
-        (isValid, errorMessage) = MyUtils.IsValidString(Surname, "Surname");
-        if (!isValid)
-            return (false, errorMessage);
-        
-        (isValid, errorMessage) = MyUtils.IsValidString(Username, "Username");
-        if (!isValid)
-            return (false, errorMessage);
-        
-        (isValid, errorMessage) = MyUtils.IsValidPassword(Password);
-        if (!isValid)
-            return (false, errorMessage);
-        
-        (isValid, errorMessage) = MyUtils.IsValidGender(Gender);
-        if (!isValid)
-            return (false, errorMessage);
+    [Required]
+    [StringLength(30, MinimumLength = 3)]
+    public string? Surname { get; set; }
 
-        return (true, string.Empty);
-    }
+    [Gender]
+    public char? Gender { get; set; }
+
+    [Required]
+    [StringLength(30, MinimumLength = 3)]
+    public string? Username { get; set; }
+
+    [Password]
+    public string? Password { get; set; }
 }

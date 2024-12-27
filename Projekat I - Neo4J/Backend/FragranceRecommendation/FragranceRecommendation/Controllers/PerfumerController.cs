@@ -9,7 +9,14 @@ public class PerfumerController(IPerfumerService perfumerService, IFragranceServ
     [HttpGet]
     public async Task<IActionResult> GetAllPerfumers()
     {
-        return Ok(await perfumerService.GetPerfumersAsync());
+        try
+        {
+            return Ok(await perfumerService.GetPerfumersAsync());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -19,14 +26,21 @@ public class PerfumerController(IPerfumerService perfumerService, IFragranceServ
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPerfumerById(int id)
     {
-        if (id < 0)
-            return BadRequest("Perfumer ID must be a positive integer!");
-        
-        var perfumer = await perfumerService.GetPerfumerAsync(id);
-        if (perfumer is null)
-            return NotFound($"Perfumer with id {id} not found!");
-        
-        return Ok(perfumer);
+        try
+        {
+            if (id < 0)
+                return BadRequest("Perfumer ID must be a positive integer!");
+
+            var perfumer = await perfumerService.GetPerfumerAsync(id);
+            if (perfumer is null)
+                return NotFound($"Perfumer with id {id} not found!");
+
+            return Ok(perfumer);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -35,12 +49,15 @@ public class PerfumerController(IPerfumerService perfumerService, IFragranceServ
     [HttpPost]
     public async Task<IActionResult> AddPerfumer([FromBody]AddPerfumerDto perfumer)
     {
-        var (isValid, errorMessage) = perfumer.Validate();
-        if (!isValid)
-            return BadRequest(errorMessage);
-        
-        await perfumerService.AddPerfumerAsync(perfumer);
-        return Ok($"Perfumer {perfumer.Name} {perfumer.Surname} {perfumer.Gender} from {perfumer.Country} has been added!");
+        try
+        {
+            await perfumerService.AddPerfumerAsync(perfumer);
+            return Ok($"Perfumer {perfumer.Name} {perfumer.Surname} {perfumer.Gender} from {perfumer.Country} has been added!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -50,15 +67,18 @@ public class PerfumerController(IPerfumerService perfumerService, IFragranceServ
     [HttpPatch]
     public async Task<IActionResult> UpdatePerfumer([FromBody] UpdatePerfumerDto perfumer)
     {
-        var (isValid, errorMessage) = perfumer.Validate();
-        if (!isValid)
-            return BadRequest(errorMessage);
-        
-        if (!await perfumerService.PerfumerExistsAsync(perfumer.Id))
-            return NotFound($"Perfumer with id {perfumer.Id} was not found!");
-        
-        await perfumerService.UpdatePerfumerAsync(perfumer);
-        return Ok($"Perfumer with id {perfumer.Id} was successfully updated!");
+        try
+        {
+            if (!await perfumerService.PerfumerExistsAsync(perfumer.Id))
+                return NotFound($"Perfumer with id {perfumer.Id} was not found!");
+
+            await perfumerService.UpdatePerfumerAsync(perfumer);
+            return Ok($"Perfumer with id {perfumer.Id} was successfully updated!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -68,22 +88,25 @@ public class PerfumerController(IPerfumerService perfumerService, IFragranceServ
     [HttpPatch("add-fragrance-to-perfumer")]
     public async Task<IActionResult> AddFragranceAToPerfumer([FromBody] AddFragranceToPerfumer dto)
     {
-        var (isValid, errorMessage) = dto.Validate();
-        if (!isValid)
-            return BadRequest(errorMessage);
-        
-        if(!await perfumerService.PerfumerExistsAsync(dto.PerfumerId))
-            return NotFound($"Perfumer with id {dto.PerfumerId} was not found!");
+        try
+        {
+            if(!await perfumerService.PerfumerExistsAsync(dto.PerfumerId))
+                return NotFound($"Perfumer with id {dto.PerfumerId} was not found!");
 
-        if (!await fragranceService.FragranceExistsAsync(dto.FragranceId))
-            return NotFound($"Fragrance with id {dto.FragranceId} was not found!");
-        
-        if(await perfumerService.IsFragranceCreatedByPerfumer(dto.PerfumerId,dto.FragranceId))
-            return Conflict($"Perfumer with id {dto.PerfumerId} is already a creator of fragrance with id {dto.FragranceId}!");
+            if (!await fragranceService.FragranceExistsAsync(dto.FragranceId))
+                return NotFound($"Fragrance with id {dto.FragranceId} was not found!");
 
-        await perfumerService.AddFragranceToPerfumerAsync(dto);
-        return Ok(
-            $"Perfumer with id {dto.PerfumerId} has been successfully added as a creator for fragrance with id {dto.FragranceId}!");
+            if(await perfumerService.IsFragranceCreatedByPerfumer(dto.PerfumerId,dto.FragranceId))
+                return Conflict($"Perfumer with id {dto.PerfumerId} is already a creator of fragrance with id {dto.FragranceId}!");
+
+            await perfumerService.AddFragranceToPerfumerAsync(dto);
+            return Ok(
+                $"Perfumer with id {dto.PerfumerId} has been successfully added as a creator for fragrance with id {dto.FragranceId}!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -93,14 +116,17 @@ public class PerfumerController(IPerfumerService perfumerService, IFragranceServ
     [HttpDelete]
     public async Task<IActionResult> DeletePerfumer([FromBody] DeletePerfumerDto perfumer)
     {
-        var (isValid, errorMessage) = perfumer.Validate();
-        if(!isValid)
-            return BadRequest(errorMessage);
-        
-        if (!await perfumerService.PerfumerExistsAsync(perfumer.Id))
-            return NotFound($"Perfumer with id {perfumer.Id} not found!");
-        
-        await perfumerService.DeletePerfumerAsync(perfumer);
-        return Ok($"Perfumer with id {perfumer.Id} deleted!");
+        try
+        {
+            if (!await perfumerService.PerfumerExistsAsync(perfumer.Id))
+                return NotFound($"Perfumer with id {perfumer.Id} not found!");
+
+            await perfumerService.DeletePerfumerAsync(perfumer);
+            return Ok($"Perfumer with id {perfumer.Id} deleted!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }
