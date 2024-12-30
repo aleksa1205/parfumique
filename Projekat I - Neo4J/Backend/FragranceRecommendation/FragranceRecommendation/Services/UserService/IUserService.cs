@@ -10,6 +10,6 @@ public interface IUserService
     public Task<User?> GetUserWithoutFragrancesAsync(string username);
     public Task AddUserAsync(AddUserDto user);
     public Task UpdateUserAsync(string username, string name, string surname, char gender);
-    public Task AddFragranceToUserAsync(AddFragranceToUser dto);
-    public Task DeleteUserAsync(DeleteUserDto user);
+    public Task AddFragranceToUserAsync(string username, int fragranceId);
+    public Task DeleteUserAsync(string username);
 }

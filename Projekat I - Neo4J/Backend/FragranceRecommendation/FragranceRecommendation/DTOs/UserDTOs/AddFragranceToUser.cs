@@ -10,5 +10,5 @@ public class AddFragranceToUser
     public string? Username { get; set; }
 
     [Range(0, int.MaxValue)]
-    public int Id { get; set; }
+    public int FragranceId { get; set; }
 }

@@ -1,6 +1,6 @@
 ﻿using FragranceRecommendation.Common.ValidationAttributes;
 
-namespace FragranceRecommendation.DTOs.UserDTOs;
+namespace FragranceRecommendation.DTOs.UserDTOs.SelfDTOs;
 
 public class UpdateSelfDto
 {

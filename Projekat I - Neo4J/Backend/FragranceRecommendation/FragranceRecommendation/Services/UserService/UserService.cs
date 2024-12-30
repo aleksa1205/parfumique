@@ -133,7 +133,7 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
         });
     }
 
-    public async Task AddFragranceToUserAsync(AddFragranceToUser dto)
+    public async Task AddFragranceToUserAsync(string username, int fragranceId)
     {
         await using var session = driver.AsyncSession();
         await session.ExecuteWriteAsync(async tx =>
@@ -143,19 +143,19 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
                           CREATE (n) -[:OWNS]-> (f)";
             await tx.RunAsync(query, new
             {
-                username = dto.Username, id = dto.Id
+                username, id = fragranceId
             });
         });
     }
 
-    public async Task DeleteUserAsync(DeleteUserDto user)
+    public async Task DeleteUserAsync(string username)
     {
         await using var session = driver.AsyncSession();
         await session.ExecuteWriteAsync(async tx =>
         {
             var query = @"MATCH(n:USER {username: $username})
                           DETACH DELETE n";
-            await tx.RunAsync(query, new { username = user.Username });
+            await tx.RunAsync(query, new { username });
         });
     }
 }
