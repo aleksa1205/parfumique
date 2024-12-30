@@ -4,11 +4,12 @@ public interface IUserService
 {
     public Task<bool> UserExistsAsync(string username);
     public Task<bool> UserOwnsFragranceAsync(string username, int id);
-    public Task<IList<User>> GetUsersAsync();
+    public Task<IList<ReturnUserDto>> GetUsersAsync();
     public Task<User?> GetUserAsync(string username);
+    public Task<ReturnUserDto?> GetUserDtoAsync(string username);
     public Task<User?> GetUserWithoutFragrancesAsync(string username);
     public Task AddUserAsync(AddUserDto user);
-    public Task UpdateUserAsync(UpdateUserDto user);
+    public Task UpdateUserAsync(string username, string name, string surname, char gender);
     public Task AddFragranceToUserAsync(AddFragranceToUser dto);
     public Task DeleteUserAsync(DeleteUserDto user);
 }

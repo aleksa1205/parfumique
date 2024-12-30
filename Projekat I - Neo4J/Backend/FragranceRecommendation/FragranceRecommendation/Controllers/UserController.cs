@@ -7,8 +7,6 @@ namespace FragranceRecommendation.Controllers;
 [Route("[controller]")]
 public class UserController(IUserService userService, IFragranceService fragranceService, IConfiguration config) : ControllerBase
 {
-    // [Authorize]
-    // [RequiresRole(Roles.User)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [EndpointSummary("get all users")]
@@ -25,8 +23,6 @@ public class UserController(IUserService userService, IFragranceService fragranc
         }
     }
 
-    // [Authorize]
-    // [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -40,7 +36,7 @@ public class UserController(IUserService userService, IFragranceService fragranc
             if (!isValid)
                 return BadRequest(errorMessage);
 
-            var user = await userService.GetUserAsync(username);
+            var user = await userService.GetUserDtoAsync(username);
             if (user is null)
             {
                 return NotFound($"User {username} doesn't exists!");
@@ -82,26 +78,70 @@ public class UserController(IUserService userService, IFragranceService fragranc
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody]LoginDto login)
     {
-        var user = await userService.GetUserAsync(login.Username!);
-        if (user is null || !BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
-            return Unauthorized("Invalid username or password");
-        
-        var token = new JwtProvider(config).Generate(user);
-        return Ok(token);
+        try
+        {
+            var user = await userService.GetUserAsync(login.Username!);
+            if (user is null || !BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
+                return Unauthorized("Invalid username or password");
+
+            var token = new JwtProvider(config).Generate(user);
+            return Ok(token);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointSummary("update user")]
-    [HttpPatch]
+    [HttpPatch("update-user")]
     public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto user)
     {
-        if (!await userService.UserExistsAsync(user.Username!))
-            return NotFound($"User {user.Username} doesn't exists!");
-        
-        await userService.UpdateUserAsync(user);
-        return Ok($"User {user.Username} successfully updated!");
+        try
+        {
+            if (!await userService.UserExistsAsync(user.Username!))
+                return NotFound($"User {user.Username} doesn't exists!");
+
+            await userService.UpdateUserAsync(user.Username!, user.Name!, user.Surname!, user.Gender!.Value);
+            return Ok($"User {user.Username} successfully updated!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [Authorize]
+    [RequiresRole(Roles.User)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [EndpointSummary("update user that is currently logged in")]
+    [HttpPatch("update-self")]
+    public async Task<IActionResult> UpdateSelf([FromBody] UpdateSelfDto userDto)
+    {
+        try
+        {
+            var username = HttpContext.User.Identity?.Name;
+            if (username is null)
+                return Unauthorized();
+
+            if (!await userService.UserExistsAsync(username))
+                return NotFound($"User {username} doesn't exists!");
+
+            await userService.UpdateUserAsync(username, userDto.Name!, userDto.Surname!, userDto.Gender!.Value);
+            return Ok($"User {username} successfully updated!");
+        }
+        catch (Exception e)
+        {
+           return BadRequest(e.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]

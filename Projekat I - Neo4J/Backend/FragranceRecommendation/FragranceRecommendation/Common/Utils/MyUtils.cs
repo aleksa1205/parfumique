@@ -1,4 +1,4 @@
-﻿namespace FragranceRecommendation.Utils;
+﻿namespace FragranceRecommendation.Common.Utils;
 
 public static class MyUtils
 {
