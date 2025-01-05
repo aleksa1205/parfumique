@@ -28,16 +28,16 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
         });
     }
     
-    public async Task<IList<User>> GetUsersAsync()
+    public async Task<IList<ReturnUserDto>> GetUsersAsync()
     {
         await using var session = driver.AsyncSession();
         return await session.ExecuteReadAsync(async tx =>
         {
             var result = await tx.RunAsync("MATCH (n:USER) RETURN n");
-            var list = new List<User>();
+            var list = new List<ReturnUserDto>();
             await foreach (var record in result)
             {
-                list.Add(MyUtils.DeserializeNode<User>(record["n"].As<INode>()));
+                list.Add(MyUtils.DeserializeNode<ReturnUserDto>(record["n"].As<INode>()));
             }
             return list;
         });
@@ -58,6 +58,27 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
             
             var fragrances = MyUtils.DeserializeMap<List<Fragrance>>(record["fragrances"]);
             var user = MyUtils.DeserializeNode<User>(record["user"].As<INode>());
+
+            user!.Collection = fragrances!;
+            return user;
+        });
+    }
+
+    public async Task<ReturnUserDto?> GetUserDtoAsync(string username)
+    {
+        await using var session = driver.AsyncSession();
+        return await session.ExecuteReadAsync(async tx =>
+        {
+            var query = @"MATCH (n:USER {username: $username})
+                          OPTIONAL MATCH (n) -[:OWNS]-> (f:FRAGRANCE)
+                          RETURN n AS user, COLLECT(f{.*, id: id(f)}) AS fragrances";
+            var result = await tx.RunAsync(query, new { username });
+            var record = await result.PeekAsync();
+            if (record is null)
+                return null;
+
+            var fragrances = MyUtils.DeserializeMap<List<Fragrance>>(record["fragrances"]);
+            var user = MyUtils.DeserializeNode<ReturnUserDto>(record["user"].As<INode>());
 
             user!.Collection = fragrances!;
             return user;
@@ -100,7 +121,7 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
         });
     }
 
-    public async Task UpdateUserAsync(UpdateUserDto user)
+    public async Task UpdateUserAsync(string username, string name, string surname, char gender)
     {
         await using var session = driver.AsyncSession();
         await session.ExecuteWriteAsync(async tx =>
@@ -108,11 +129,11 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
             var query = @"MATCH (n:USER {username: $username})
                           SET n.name = $name, n.surname = $surname, n.gender = $gender";
             await tx.RunAsync(query,
-                new { username = user.Username, name = user.Name, surname = user.Surname, gender = user.Gender });
+                new { username, name, surname, gender });
         });
     }
 
-    public async Task AddFragranceToUserAsync(AddFragranceToUser dto)
+    public async Task AddFragranceToUserAsync(string username, int fragranceId)
     {
         await using var session = driver.AsyncSession();
         await session.ExecuteWriteAsync(async tx =>
@@ -122,19 +143,19 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
                           CREATE (n) -[:OWNS]-> (f)";
             await tx.RunAsync(query, new
             {
-                username = dto.Username, id = dto.Id
+                username, id = fragranceId
             });
         });
     }
 
-    public async Task DeleteUserAsync(DeleteUserDto user)
+    public async Task DeleteUserAsync(string username)
     {
         await using var session = driver.AsyncSession();
         await session.ExecuteWriteAsync(async tx =>
         {
             var query = @"MATCH(n:USER {username: $username})
                           DETACH DELETE n";
-            await tx.RunAsync(query, new { username = user.Username });
+            await tx.RunAsync(query, new { username });
         });
     }
 }

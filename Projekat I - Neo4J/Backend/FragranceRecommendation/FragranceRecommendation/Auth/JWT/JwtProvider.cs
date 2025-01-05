@@ -5,21 +5,16 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FragranceRecommendation.Auth.JWT;
 
-public class JwtProvider
+public class JwtProvider(IConfiguration config)
 {
-    private readonly JwtOptions _options;
-
-    public JwtProvider(IConfiguration config)
-    {
-        _options = new JwtOptions(config);
-    }
+    private readonly JwtOptions _options = new (config);
 
     public string Generate(User user)
     {
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new("username", user.Username),
+            new(ClaimTypes.Name, user.Username),
             //new("userId", user.Id.ToString()!),
             // Ovo da se obrise kasnije kad se dodaju admini
             new("Role", ((int)Roles.User).ToString())

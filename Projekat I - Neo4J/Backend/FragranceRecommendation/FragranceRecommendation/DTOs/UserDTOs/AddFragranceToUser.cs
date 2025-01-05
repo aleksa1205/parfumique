@@ -5,18 +5,10 @@ namespace FragranceRecommendation.DTOs.UserDTOs;
 
 public class AddFragranceToUser
 {
-    public string Username { get; set; }
-    public int Id { get; set; }
-    
-    public (bool isValid, string errorMessage) Validate()
-    {
-        var (isValid, errorMessage) = MyUtils.IsValidString(Username, "Username");
-        if (!isValid)
-            return (false, errorMessage);
+    [Required]
+    [StringLength(30, MinimumLength = 3)]
+    public string? Username { get; set; }
 
-        if (Id < 0)
-            return (false, "Fragrance ID must be a positive integer!");
-
-        return (true, string.Empty);
-    }
+    [Range(0, int.MaxValue)]
+    public int FragranceId { get; set; }
 }

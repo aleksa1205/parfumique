@@ -1,28 +1,19 @@
+using FragranceRecommendation.Common.ValidationAttributes;
+
 namespace FragranceRecommendation.DTOs.FragranceDTOs;
 
 public class UpdateFragranceDto
 {
+        [Range(0, int.MaxValue)]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public char Gender { get; set; }
-        public int BatchYear { get; set; }
 
-        public (bool isValid, string ErrorMessage) Validate()
-        {
-                var (isValid, errorMessage) = MyUtils.IsValidString(Name, "Name");
-                if (!isValid)
-                        return (false, errorMessage);
+        [Required]
+        [StringLength(30, MinimumLength = 3)]
+        public string? Name { get; set; }
 
-                (isValid, errorMessage) = MyUtils.IsValidGenderFragrance(Gender);
-                if (!isValid)
-                        return (false, errorMessage);
-                
-                if(BatchYear < 1)
-                        return (false, "Batch year must be a positive integer!");
-                        
-                if (Id < 0)
-                        return (false, "Fragrance ID must be a positive integer!");
+        [Gender]
+        public char? Gender { get; set; }
 
-                return (true, string.Empty);
-        }
+        [BatchYear]
+        public int? BatchYear { get; set; }
 }

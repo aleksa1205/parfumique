@@ -10,7 +10,7 @@ global using Newtonsoft.Json;
 global using System.ComponentModel.DataAnnotations;
 
 global using FragranceRecommendation.Models;
-global using FragranceRecommendation.Utils;
+global using FragranceRecommendation.Common.Utils;
 global using FragranceRecommendation.Auth.JWT;
 global using FragranceRecommendation.DTOs;
 global using FragranceRecommendation.DTOs.UserDTOs;

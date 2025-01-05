@@ -1,6 +1,6 @@
-﻿namespace FragranceRecommendation.DTOs.NoteDTOs;
+﻿namespace FragranceRecommendation.DTOs.ManufacturerDTOs;
 
-public class DeleteNoteDto
+public class AddManufacturerDto
 {
     [Required]
     [StringLength(30, MinimumLength = 3)]

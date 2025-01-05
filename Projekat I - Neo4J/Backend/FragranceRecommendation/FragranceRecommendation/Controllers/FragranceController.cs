@@ -1,6 +1,4 @@
-﻿using FragranceRecommendation.Services.NoteService;
-
-namespace FragranceRecommendation.Controllers;
+﻿namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -11,7 +9,14 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
     [HttpGet]
     public async Task<IActionResult> GetAllFragrances()
     {
-        return Ok(await fragranceService.GetFragrancesAsync());
+        try
+        {
+            return Ok(await fragranceService.GetFragrancesAsync());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     //will change after test on frontend
@@ -21,12 +26,19 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
     [HttpGet("{pageNumber}/{pageSize}")]
     public async Task<IActionResult> GetAllFragrancesWithPagination(int pageNumber, int pageSize)
     {
-        if (pageNumber < 1)
-            return BadRequest("Page number has to be greater than 1!");
-        if(pageSize < 1)
-            return BadRequest("Page size has to be greater than 1!");
-        
-        return Ok(await fragranceService.GetFragrancesAsyncPagination(pageNumber, pageSize));
+        try
+        {
+            if (pageNumber < 1)
+                return BadRequest("Page number has to be greater than 1!");
+            if(pageSize < 1)
+                return BadRequest("Page size has to be greater than 1!");
+
+            return Ok(await fragranceService.GetFragrancesAsyncPagination(pageNumber, pageSize));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
     
     [ProducesResponseType((StatusCodes.Status200OK))]
@@ -34,7 +46,14 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
     [HttpGet("without-manufacturer")]
     public async Task<IActionResult> GetAllFragrancesWithoutManufacturer()
     {
-        return Ok(await fragranceService.GetFragrancesWithouthManufacturerAsync());
+        try
+        {
+            return Ok(await fragranceService.GetFragrancesWithouthManufacturerAsync());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -44,14 +63,21 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
     [HttpGet("{id}")]
     public async Task<IActionResult> GetFragranceById(int id)
     {
-        if (id < 0)
-            return BadRequest("Fragrance ID must be a positive integer!");
+        try
+        {
+            if (id < 0)
+                return BadRequest("Fragrance ID must be a positive integer!");
 
-        var fragrance = await fragranceService.GetFragranceAsync(id);
-        if (fragrance is null)
-            return NotFound($"Fragrance with id {id} not found!");
-        
-        return Ok(fragrance);
+            var fragrance = await fragranceService.GetFragranceAsync(id);
+            if (fragrance is null)
+                return NotFound($"Fragrance with id {id} not found!");
+
+            return Ok(fragrance);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -60,12 +86,15 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
     [HttpPost]
     public async Task<IActionResult> AddFragrance([FromBody] AddFragranceDto fragrance)
     {
-        var (isValid, errorMessage) = fragrance.Validate();
-        if (!isValid)
-            return BadRequest(errorMessage);
-        
-        await fragranceService.AddFragranceAsync(fragrance);
-        return Ok($"Fragrance {fragrance.Name} ({fragrance.BatchYear}) for {fragrance.Gender} successfully added!");
+        try
+        {
+            await fragranceService.AddFragranceAsync(fragrance);
+            return Ok($"Fragrance {fragrance.Name} ({fragrance.BatchYear}) for {fragrance.Gender} successfully added!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -75,15 +104,18 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
     [HttpPatch]
     public async Task<IActionResult> UpdateFragrance([FromBody] UpdateFragranceDto fragrance)
     {
-        var (isValid, errorMessage) = fragrance.Validate();
-        if (!isValid)
-            return BadRequest(errorMessage);
-        
-        if (!await fragranceService.FragranceExistsAsync(fragrance.Id))
-            return NotFound($"Fragrance with id {fragrance.Id} not found!");
+        try
+        {
+            if (!await fragranceService.FragranceExistsAsync(fragrance.Id))
+                return NotFound($"Fragrance with id {fragrance.Id} not found!");
 
-        await fragranceService.UpdateFragranceAsync(fragrance);
-        return Ok($"Fragrance {fragrance.Id} updated!");
+            await fragranceService.UpdateFragranceAsync(fragrance);
+            return Ok($"Fragrance {fragrance.Id} updated!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
     
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -93,21 +125,24 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
     [HttpPatch("add-notes")]
     public async Task<IActionResult> AddNotesToFragrance([FromBody] NotesToFragranceDto dto)
     {
-        var (isValid, errorMessage) = dto.Validate();
-        if (!isValid)
-            return BadRequest(errorMessage);
-        
-        if(!await fragranceService.FragranceExistsAsync(dto.Id))
-            return NotFound($"Fragrance with id {dto.Id} does not exist!");
-
-        foreach (var note in dto.Notes)
+        try
         {
-            if (!await noteService.NoteExistsAsync(note.Name))
-                return NotFound($"Note {note.Name} not found!");
-        }
+            if(!await fragranceService.FragranceExistsAsync(dto.Id))
+                return NotFound($"Fragrance with id {dto.Id} does not exist!");
 
-        await fragranceService.AddNotesToFragrance(dto);
-        return Ok($"Added notes to fragrance with id {dto.Id}!");
+            foreach (var note in dto.Notes!)
+            {
+                if (!await noteService.NoteExistsAsync(note.Name!))
+                    return NotFound($"Note {note.Name} not found!");
+            }
+
+            await fragranceService.AddNotesToFragrance(dto);
+            return Ok($"Added notes to fragrance with id {dto.Id}!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
     
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -117,21 +152,24 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
     [HttpPatch("delete-notes")]
     public async Task<IActionResult> DeleteNotesFromFragrance([FromBody] NotesToFragranceDto dto)
     {
-        var (isValid, errorMessage) = dto.Validate();
-        if (!isValid)
-            return BadRequest(errorMessage);
-        
-        if(!await fragranceService.FragranceExistsAsync(dto.Id))
-            return NotFound($"Fragrance with id {dto.Id} does not exist!");
-
-        foreach (var note in dto.Notes)
+        try
         {
-            if (!await noteService.NoteExistsAsync(note.Name))
-                return NotFound($"Note {note.Name} not found!");
-        }
+            if(!await fragranceService.FragranceExistsAsync(dto.Id))
+                return NotFound($"Fragrance with id {dto.Id} does not exist!");
 
-        await fragranceService.DeleteNotesFromFragrance(dto);
-        return Ok($"Deleted notes from fragrance with id {dto.Id}!");
+            foreach (var note in dto.Notes!)
+            {
+                if (!await noteService.NoteExistsAsync(note.Name!))
+                    return NotFound($"Note {note.Name} not found!");
+            }
+
+            await fragranceService.DeleteNotesFromFragrance(dto);
+            return Ok($"Deleted notes from fragrance with id {dto.Id}!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -141,14 +179,17 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
     [HttpDelete]
     public async Task<IActionResult> DeleteUser([FromBody] DeleteFragranceDto fragrance)
     {
-        var(isValid, errorMessage) = fragrance.Validate();
-        if (!isValid)
-            return BadRequest(errorMessage);
-        
-        if (!await fragranceService.FragranceExistsAsync(fragrance.Id))
-            return NotFound($"Fragrance with id {fragrance.Id} not found!");
-        
-        await fragranceService.DeleteFragranceAsync(fragrance);
-        return Ok($"Fragrance with id {fragrance.Id} deleted!");
+        try
+        {
+            if (!await fragranceService.FragranceExistsAsync(fragrance.Id))
+                return NotFound($"Fragrance with id {fragrance.Id} not found!");
+
+            await fragranceService.DeleteFragranceAsync(fragrance);
+            return Ok($"Fragrance with id {fragrance.Id} deleted!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }

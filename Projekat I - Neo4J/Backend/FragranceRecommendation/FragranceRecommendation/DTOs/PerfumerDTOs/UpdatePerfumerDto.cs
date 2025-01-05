@@ -1,30 +1,24 @@
+using FragranceRecommendation.Common.ValidationAttributes;
+
 namespace FragranceRecommendation.DTOs.PerfumerDTOs;
 
 public class UpdatePerfumerDto
 {
-    public required int Id { get; set; }
-    public string Name { get; set; }
-    public string Surname { get; set; }
-    public char Gender { get; set; }
-    public string Country { get; set; }
-    
-    public (bool isValid, string ErrorMessage) Validate()
-    {
-        var (isValid, errorMessage) = MyUtils.IsValidString(Name, "Name");
-        if (!isValid)
-            return (false, errorMessage);
-        
-        (isValid, errorMessage) = MyUtils.IsValidString(Surname, "Surname");
-        if (!isValid)
-            return (false, errorMessage);
+    [Range(0, int.MaxValue)]
+    public int Id { get; set; }
 
-        (isValid, errorMessage) = MyUtils.IsValidGender(Gender);
-        if (!isValid)
-            return (false, errorMessage);
-                        
-        if (Id < 0)
-            return (false, "Perfumer ID must be a positive integer!");
+    [Required]
+    [StringLength(30, MinimumLength = 3)]
+    public string? Name { get; set; }
 
-        return (true, string.Empty);
-    }
+    [Required]
+    [StringLength(30, MinimumLength = 3)]
+    public string? Surname { get; set; }
+
+    [Gender]
+    public char? Gender { get; set; }
+
+    [Required]
+    [StringLength(30, MinimumLength = 3)]
+    public string? Country { get; set; }
 }

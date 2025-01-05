@@ -1,14 +1,13 @@
-﻿using FragranceRecommendation.Services.ManufacturerService;
+﻿using FragranceRecommendation.DTOs.ManufacturerDTOs;
+using FragranceRecommendation.Services.ManufacturerService;
 
 namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class ManufacturerController(
-    IDriver driver,
     IManufacturerService manufacturerService,
-    IFragranceService fragranceService,
-    IPerfumerService perfumerService) : ControllerBase
+    IFragranceService fragranceService) : ControllerBase
 {
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -56,10 +55,12 @@ public class ManufacturerController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointSummary("add manufacturer")]
     [HttpPost("{name}")]
-    public async Task<IActionResult> AddManufacturer(string name)
+    public async Task<IActionResult> AddManufacturer([FromBody] AddManufacturerDto manufacturerDto)
     {
         try
         {
+            var name = manufacturerDto.Name!;
+
             if (await manufacturerService.ManufacturerExistsAsync(name))
                 return NotFound($"Manufacturer {name} already exists.");
 
@@ -75,12 +76,16 @@ public class ManufacturerController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [EndpointSummary("add manufacturer to fragrance")]
     [HttpPatch("{manufacturerName}/{fragranceId}")]
-    public async Task<IActionResult> AddFragranceToManufacturer(string manufacturerName, int fragranceId)
+    public async Task<IActionResult> AddFragranceToManufacturer([FromBody] AddFragranceToManufacturerDto addFragranceToManufacturerDto)
     {
         try
         {
+            var manufacturerName = addFragranceToManufacturerDto.ManufacturerName!;
+            var fragranceId = addFragranceToManufacturerDto.FragranceId!;
+
             if (!await manufacturerService.ManufacturerExistsAsync(manufacturerName))
                 return NotFound($"Manufacturer {manufacturerName} doesn't exist!");
 
@@ -108,10 +113,12 @@ public class ManufacturerController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointSummary("delete manufacturer")]
     [HttpDelete("{name}")]
-    public async Task<IActionResult> DeleteManufacturer(string name)
+    public async Task<IActionResult> DeleteManufacturer([FromBody] DeleteManufacturerDto deleteDto)
     {
         try
         {
+            var name = deleteDto.Name!;
+
             if (!await manufacturerService.ManufacturerExistsAsync(name))
                 return NotFound($"Manufacturer {name} doesn't exist!");
 
