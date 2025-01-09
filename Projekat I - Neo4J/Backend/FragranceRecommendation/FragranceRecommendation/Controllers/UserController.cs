@@ -55,7 +55,7 @@ public class UserController(IUserService userService, IFragranceService fragranc
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [EndpointSummary("create/register user")]
-    [HttpPost]
+    [HttpPost("register")]
     public async Task<IActionResult> AddUser([FromBody] AddUserDto user)
     {
         try
@@ -77,7 +77,7 @@ public class UserController(IUserService userService, IFragranceService fragranc
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [EndpointSummary("generate JWT for login credentials")]
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody]LoginDto login)
+    public async Task<IActionResult> Login([FromBody] LoginDto login)
     {
         try
         {
@@ -86,7 +86,7 @@ public class UserController(IUserService userService, IFragranceService fragranc
                 return Unauthorized("Invalid username or password");
 
             var token = new JwtProvider(config).Generate(user);
-            return Ok(token);
+            return Ok(new {user.Username, token});
         }
         catch (Exception e)
         {

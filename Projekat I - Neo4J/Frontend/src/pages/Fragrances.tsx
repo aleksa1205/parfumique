@@ -26,10 +26,6 @@ const Fragrances = () => {
       </section>
     );
   }
-  {
-    console.log(response);
-  }
-  console.log(page);
   return (
     <section className="bg-gray-50 antialiased py-12">
       {" "}

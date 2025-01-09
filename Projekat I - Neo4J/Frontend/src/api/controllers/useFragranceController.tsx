@@ -55,10 +55,8 @@ export default function useFragranceController() {
     get: async function (page: number): Promise<ApiResponse> {
       try {
         const response = await client.get<ApiResponse>(
-          `/Fragrance/${page}/${1}`
+          `/Fragrance/${page}/${8}`
         );
-        console.log("mersh");
-        console.log(response.data);
         return response.data;
       } catch (error) {
         if (isAxiosError(error) && error.name === "CanceledError") {

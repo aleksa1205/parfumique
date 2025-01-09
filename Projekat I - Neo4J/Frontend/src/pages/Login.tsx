@@ -1,7 +1,13 @@
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.jpg";
+import useUserController, {
+  WrongCredentials,
+} from "../api/controllers/useUserController";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import UseAuth from "../hooks/useAuth";
 
 type User = {
   username: string;
@@ -11,10 +17,30 @@ type User = {
 const Login = () => {
   const form = useForm<User>();
   const { register, control, handleSubmit, formState } = form;
+  const { login } = useUserController();
   const { errors } = formState;
+  const [credentialError, setCredentialError] = useState<string | null>(null);
+  const { auth, setAuth } = UseAuth();
+  const navigate = useNavigate();
 
-  const onSubmit = (data: User) => {
-    console.log("Form submitted ", data);
+  const loginMutation = useMutation((user: User) => login(user), {
+    onSuccess: (response) => {
+      setAuth({ jwtToken: response.token, username: response.username });
+      setCredentialError(null);
+      //change to user profile
+      navigate("/");
+    },
+    onError: (error) => {
+      if (error instanceof WrongCredentials) {
+        setCredentialError("Invalid username or password!");
+      } else {
+        setCredentialError("Error 500");
+      }
+    },
+  });
+
+  const onSubmit = async (userData: User) => {
+    loginMutation.mutateAsync(userData);
   };
 
   return (
@@ -72,12 +98,25 @@ const Login = () => {
                   id="password"
                   {...register("password", {
                     required: "Please fill in the password field to proceed!",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 charachters long!",
+                    },
+                    pattern: {
+                      value: /^(?=.*\d).+$/,
+                      message: "Password must contain at least one number!",
+                    },
                   })}
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                 />
                 <p className="error">{errors.password?.message}</p>
+                {credentialError && (
+                  <div className="error text-sm font-medium pt-5">
+                    {credentialError}
+                  </div>
+                )}
               </div>
 
               <button

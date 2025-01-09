@@ -1,23 +1,23 @@
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.jpg";
-
-type User = {
-  name: string;
-  surname: string;
-  gender: string;
-  username: string;
-  password: string;
-};
+import useUserController, { User } from "../api/controllers/useUserController";
 
 const Register = () => {
   const form = useForm<User>();
   const { register, control, handleSubmit, formState } = form;
   const { errors } = formState;
+  const navigate = useNavigate();
+  const userController = useUserController();
 
-  const onSubmit = (data: User) => {
-    console.log("Form submitted ", data);
+  const onSubmit = async (data: User) => {
+    try {
+      await userController.registerUser(data);
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -94,8 +94,8 @@ const Register = () => {
                   {...register("gender")}
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 >
-                  <option value="1">M</option>
-                  <option value="2">Z</option>
+                  <option value="M">M</option>
+                  <option value="F">F</option>
                 </select>
               </div>
               <div className="pb-1">
@@ -129,6 +129,14 @@ const Register = () => {
                   id="password"
                   {...register("password", {
                     required: "Please fill in the password field to proceed!",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 charachters long!",
+                    },
+                    pattern: {
+                      value: /^(?=.*\d).+$/,
+                      message: "Password must contain at least one number!",
+                    },
                   })}
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"

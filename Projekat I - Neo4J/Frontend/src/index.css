@@ -8,6 +8,11 @@
   color: #fff;
 }
 
+.my-bg-light {
+  background-color: #f0fdf6;
+  color: #000;
+}
+
 button.my-bg-brand:hover,
 .my-active:hover {
   background-color: #015a48;
@@ -24,6 +29,11 @@ button.my-bg-brand:hover,
 .my-text-primary {
   color: #015a48;
 }
+
+.my-text-medium {
+  color: #0bb091;
+}
+
 .my-text-primary:hover {
   color: #0bb091;
 }
@@ -32,7 +42,6 @@ button.my-bg-brand:hover,
   margin-top: 5px;
   color: #e5212c;
   font-size: 14px;
-  position: absolute;
 }
 
 a.my-text-black:hover,
