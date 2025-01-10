@@ -2,7 +2,8 @@ import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.jpg";
-import useUserController, { User } from "../api/controllers/useUserController";
+import useUserController from "../api/controllers/useUserController";
+import { User } from "../dto-s/UserDto";
 
 const Register = () => {
   const form = useForm<User>();

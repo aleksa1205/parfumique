@@ -2,28 +2,23 @@ import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.jpg";
-import useUserController, {
-  WrongCredentials,
-} from "../api/controllers/useUserController";
+import useUserController from "../api/controllers/useUserController";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import UseAuth from "../hooks/useAuth";
-
-type User = {
-  username: string;
-  password: string;
-};
+import { UserLogin } from "../dto-s/UserDto";
+import { WrongCredentials } from "../dto-s/Errors";
 
 const Login = () => {
-  const form = useForm<User>();
+  const form = useForm<UserLogin>();
   const { register, control, handleSubmit, formState } = form;
   const { login } = useUserController();
   const { errors } = formState;
   const [credentialError, setCredentialError] = useState<string | null>(null);
-  const { auth, setAuth } = UseAuth();
+  const { setAuth } = UseAuth();
   const navigate = useNavigate();
 
-  const loginMutation = useMutation((user: User) => login(user), {
+  const loginMutation = useMutation((user: UserLogin) => login(user), {
     onSuccess: (response) => {
       setAuth({ jwtToken: response.token, username: response.username });
       setCredentialError(null);
@@ -39,7 +34,7 @@ const Login = () => {
     },
   });
 
-  const onSubmit = async (userData: User) => {
+  const onSubmit = async (userData: UserLogin) => {
     loginMutation.mutateAsync(userData);
   };
 

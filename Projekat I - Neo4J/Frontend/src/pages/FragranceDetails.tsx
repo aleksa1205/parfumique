@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { Loader } from "../components/loaders/Loader";
 import { base64ToUrl } from "../utils";
-import { NotFoundError } from "../api/controllers/useFragranceController";
 import useFragranceController from "../api/controllers/useFragranceController";
+import { NotFoundError } from "../dto-s/Errors";
 
 const FragranceDetails = () => {
   const { id } = useParams();
@@ -29,6 +29,7 @@ const FragranceDetails = () => {
   });
 
   const perfumers = fragrance?.perfumers.slice(0, 5);
+  const manufacturer = fragrance?.manufacturer;
   const top = fragrance?.top;
   const middle = fragrance?.middle;
   const base = fragrance?.base;
@@ -58,12 +59,14 @@ const FragranceDetails = () => {
             {fragrance.name} for {fragrance.gender}
           </h1>
           <div className="my-text-black">
-            <Link
-              to={`/manufacturers/${fragrance.manufacturer.name}`}
-              className="text-lg font-bold my-text-primary"
-            >
-              {fragrance.manufacturer.name}
-            </Link>
+            {manufacturer && (
+              <Link
+                to={`/manufacturers/${fragrance.manufacturer.name}`}
+                className="text-lg font-bold my-text-primary"
+              >
+                {fragrance.manufacturer.name}
+              </Link>
+            )}
             <p className="text-lg">Batch Year: {fragrance.batchYear}</p>
             <hr className="y-6 border-gray-200 mx-auto my-3" />
             {/* Perfumers display */}

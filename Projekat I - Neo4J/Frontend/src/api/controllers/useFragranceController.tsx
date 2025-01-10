@@ -1,60 +1,13 @@
 import { isAxiosError } from "axios";
 import { client } from "../axios";
-
-export class NotFoundError extends Error {
-  constructor(message?: string) {
-    super(message || "Not Found");
-    this.name = "NotFound";
-  }
-}
-
-interface Fragrance {
-  id: number;
-  image: string;
-  name: string;
-  batchYear: number;
-  gender: string;
-  manufacturer: {
-    name: string;
-  };
-  perfumers: {
-    id: number;
-    name: string;
-    surname: string;
-    image: string;
-  }[];
-  top: {
-    image: string;
-    name: string;
-  }[];
-  middle: {
-    image: string;
-    name: string;
-  }[];
-  base: {
-    image: string;
-    name: string;
-  }[];
-}
-
-interface BaseFragrance
-  extends Omit<
-    Fragrance,
-    "manufacturer" | "perfumers" | "top" | "middle" | "base"
-  > {}
-
-interface ApiResponse {
-  page: number;
-  size: number;
-  totalPages: number;
-  fragrances: Array<BaseFragrance>;
-}
+import { NotFoundError } from "../../dto-s/Errors";
+import { Fragrance, FragrancePagination } from "../../dto-s/FragranceDto";
 
 export default function useFragranceController() {
   const FragranceController = {
-    get: async function (page: number): Promise<ApiResponse> {
+    get: async function (page: number): Promise<FragrancePagination> {
       try {
-        const response = await client.get<ApiResponse>(
+        const response = await client.get<FragrancePagination>(
           `/Fragrance/${page}/${8}`
         );
         return response.data;

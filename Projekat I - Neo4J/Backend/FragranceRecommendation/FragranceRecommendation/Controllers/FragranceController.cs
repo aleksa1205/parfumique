@@ -19,7 +19,6 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
         }
     }
 
-    //will change after test on frontend
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [EndpointSummary("get all fragrances pagination")]
@@ -42,6 +41,7 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
     }
     
     [ProducesResponseType((StatusCodes.Status200OK))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [EndpointSummary("get all fragrances without manufacturer")]
     [HttpGet("without-manufacturer")]
     public async Task<IActionResult> GetAllFragrancesWithoutManufacturer()

@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { GetUserResponse } from "../dto-s/responseTypes";
+import { GetUserResponse } from "../dto-s/UserDto";
 import { useQuery } from "@tanstack/react-query";
 import useUserController from "../api/controllers/useUserController";
 import UseAuth from "../hooks/useAuth";

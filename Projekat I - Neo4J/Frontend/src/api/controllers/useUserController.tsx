@@ -1,38 +1,12 @@
 import { isAxiosError, isCancel } from "axios";
 import { client } from "../axios";
-import { GetUserResponse } from "../../dto-s/responseTypes";
-
-export class WrongCredentials extends Error {
-  constructor(message?: string) {
-    super(message || "Unauthorized");
-    this.name = "Unauthorized";
-  }
-}
-
-export class UsernameExists extends Error {
-  constructor(message?: string) {
-    super(message || "Username already in use!");
-    this.name = "UsernameExists";
-  }
-}
-
-export interface User {
-  name: string;
-  surname: string;
-  gender: string;
-  username: string;
-  password: string;
-}
-
-export interface UserLogin {
-  username: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  username: string;
-  token: string;
-}
+import {
+  GetUserResponse,
+  LoginResponse,
+  User,
+  UserLogin,
+} from "../../dto-s/UserDto";
+import { UsernameExists, WrongCredentials } from "../../dto-s/Errors";
 
 export default function useUserController() {
   const userController = {
