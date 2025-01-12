@@ -38,3 +38,9 @@ export type FragrancePagination = {
   totalPages: number;
   fragrances: Array<BaseFragrance>;
 };
+
+export type FragranceInfinitePagination = {
+  fragrances: BaseFragrance[];
+  currentPage: number;
+  nextPage: number | null;
+};

@@ -64,6 +64,28 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
         });
     }
 
+    public async Task<PaginationInfiniteResponseDto> GetUserFragrancesPaginationAsync(string username, int page)
+    {
+        await using var session = driver.AsyncSession();
+        return await session.ExecuteReadAsync(async tx =>
+        {
+            int limit = 8;
+            int skip = (page - 1) * limit;
+            var query = @"MATCH (n:USER {username: $username})
+                          OPTIONAL MATCH (n) -[:OWNS]-> (f:FRAGRANCE)
+                          RETURN f{.*, id: id(f)}
+                          SKIP $skip
+                          LIMIT $limit";
+            var result = await tx.RunAsync(query, new { username, skip, limit });
+            var fragrances = new List<Fragrance>();
+            await foreach (var record in result)
+            {
+                fragrances.Add(MyUtils.DeserializeMap<Fragrance>(record["f"]));
+            }
+            return new PaginationInfiniteResponseDto(fragrances, page, fragrances.Count == limit);
+        });
+    }
+
     public async Task<ReturnUserDto?> GetUserDtoAsync(string username)
     {
         await using var session = driver.AsyncSession();

@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthProvider from "./context/AuthProvider";
 import { CurrUserProvider } from "./context/CurrUserProvider";
+import UserFragrances from "./pages/UserFragrances";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -47,6 +48,7 @@ const router = createBrowserRouter([
         path: "/about-us",
         element: <AboutUs />,
       },
+      { path: "/user-fragrances", element: <UserFragrances /> },
     ],
   },
 ]);

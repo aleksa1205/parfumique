@@ -4,7 +4,7 @@ import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 const FirstBlock = () => {
   const isLoggedIn = useIsLoggedIn();
   return (
-    <div className="flex items-start justify-center bg-gradient-to-r my-text-black text-center p-6 font-roboto pt-12">
+    <div className="flex items-start justify-center bg-gradient-to-r my-text-black text-center p-6 font-roboto pt-12 ">
       <div className="flex md:flex-row flex-col items-center justify-center text-center w-full max-w-7xl p-6">
         <div className="flex-shrink-0 w-full md:w-1/3">
           <img
@@ -23,7 +23,7 @@ const FirstBlock = () => {
           </p>
           {!isLoggedIn && (
             <Link
-              to="register"
+              to="/register"
               className="inline-block px-6 py-2.5 text-xl font-semibold bg-white my-text-primary rounded-lg shadow-md hover:bg-gray-200 transition duration-300"
             >
               Join Us

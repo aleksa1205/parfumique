@@ -1,14 +1,8 @@
 import { Link } from "react-router-dom";
 import { base64ToUrl } from "../utils";
+import { FragranceCardProps } from "../dto-s/Props";
 
-interface FragraceCardProps {
-  id: string;
-  image: string;
-  name: string;
-  gender: string;
-}
-
-const FragranceCard: React.FC<FragraceCardProps> = ({
+const FragranceCard: React.FC<FragranceCardProps> = ({
   id,
   image,
   name,

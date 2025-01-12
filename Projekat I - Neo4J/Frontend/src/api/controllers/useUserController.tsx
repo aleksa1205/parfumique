@@ -7,10 +7,12 @@ import {
   UserLogin,
 } from "../../dto-s/UserDto";
 import { UsernameExists, WrongCredentials } from "../../dto-s/Errors";
+import { FragranceInfinitePagination } from "../../dto-s/FragranceDto";
 
 export default function useUserController() {
+  const LIMIT = 8;
   const userController = {
-    registerUser: async function (user: User): Promise<void> {
+    register: async function (user: User): Promise<void> {
       try {
         await client.post("/User/register", user);
       } catch (error) {
@@ -62,6 +64,31 @@ export default function useUserController() {
     get: async function (username: string): Promise<GetUserResponse> {
       try {
         const response = await client.get(`/User/${username}`);
+        return response.data;
+      } catch (error) {
+        if (isAxiosError(error) && error.name === "CanceledError") {
+          throw error;
+        } else if (error instanceof Error) {
+          throw Error("General Error: " + error.message);
+        } else {
+          throw Error("Unexpected Error: " + error);
+        }
+      }
+    },
+    getFragrances: async function ({
+      username,
+      pageParam,
+    }: {
+      username: string;
+      pageParam: number;
+    }): Promise<FragranceInfinitePagination> {
+      try {
+        const response = await client.get(
+          `/User/fragrances/${username}/${pageParam}`,
+          { headers: { "Content-Type": "application/json" } }
+        );
+        response.data.nextPage =
+          LIMIT == response.data.fragrances.length ? pageParam + 1 : null;
         return response.data;
       } catch (error) {
         if (isAxiosError(error) && error.name === "CanceledError") {

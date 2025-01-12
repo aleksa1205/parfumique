@@ -74,6 +74,26 @@ public class UserController(IUserService userService, IFragranceService fragranc
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointSummary("get fragrances that are owned by the user")]
+    [HttpGet("fragrances/{username}/{page}")]
+    public async Task<IActionResult> GetUserFragrances(string username, int page)
+    {
+        try
+        {
+            if (!await userService.UserExistsAsync(username))
+                return NotFound($"User {username} doesn't exist!");
+
+            return Ok(await userService.GetUserFragrancesPaginationAsync(username, page));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [EndpointSummary("generate JWT for login credentials")]
     [HttpPost("login")]

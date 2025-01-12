@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { CurrUserContext } from "../context/CurrUserProvider";
 import { CircleLoader } from "./loaders/CircleLoader";
 import useLogout from "../hooks/useLogout";
+import blankProfilePicture from "../assets/images/blank-profile-picture.webp";
 
 const navigation = [
   { name: "Homepage", link: "/" },
@@ -76,11 +77,7 @@ const Navbar = () => {
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200"
                 >
                   <img
-                    src={
-                      user?.image != ""
-                        ? user?.image
-                        : "https://via.placeholder.com/40"
-                    }
+                    src={user?.image != "" ? user?.image : blankProfilePicture}
                     alt="Profile"
                     className="rounded-full"
                   />
@@ -108,12 +105,12 @@ const Navbar = () => {
                         </a>
                       </li>
                       <li>
-                        <a
-                          href="#"
+                        <Link
+                          to="/user-fragrances"
                           className="block px-4 py-2 text-sm my-text-black"
                         >
                           Fragrances
-                        </a>
+                        </Link>
                       </li>
                       <li>
                         <a

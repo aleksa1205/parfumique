@@ -1,3 +1,5 @@
+import { BaseFragrance } from "./FragranceDto";
+
 export type UserLogin = {
   username: string;
   password: string;
@@ -22,4 +24,5 @@ export type GetUserResponse = {
   surname: string;
   gender: string;
   username: string;
+  collection: Array<BaseFragrance>;
 };
