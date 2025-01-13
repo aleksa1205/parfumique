@@ -6,17 +6,15 @@ const useLogout = () => {
   const { setAuth } = UseAuth();
   const navigate = useNavigate();
 
-  const LogoutUser = async function () {
+  const logoutUser = async function () {
     try {
       setAuth(emptyAuthValues);
-      setTimeout(() => {
-        navigate("/login");
-      }, 100);
+      navigate("/login");
     } catch (error) {
       console.log(error);
     }
   };
-  return LogoutUser;
+  return logoutUser;
 };
 
 export default useLogout;

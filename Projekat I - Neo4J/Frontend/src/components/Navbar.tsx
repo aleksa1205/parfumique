@@ -1,21 +1,17 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/images/logo.jpg";
 import useIsLoggedIn from "../hooks/useIsLoggedIn";
 import { useContext, useEffect, useState } from "react";
 import { CurrUserContext } from "../context/CurrUserProvider";
 import { CircleLoader } from "./loaders/CircleLoader";
 import useLogout from "../hooks/useLogout";
-import blankProfilePicture from "../assets/images/blank-profile-picture.webp";
-
-const navigation = [
-  { name: "Homepage", link: "/" },
-  { name: "Fragrances", link: "/fragrances" },
-  { name: "About us", link: "/about-us" },
-];
+import NavLinks from "./NavLinks";
+import UserImage from "./UserImage";
 
 const Navbar = () => {
   const isLoggedIn = useIsLoggedIn();
   const logout = useLogout();
+  const location = useLocation();
   const { user, isLoading } = useContext(CurrUserContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -24,6 +20,10 @@ const Navbar = () => {
       setDropdownOpen(false);
     }
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    setDropdownOpen(false);
+  }, [location]);
 
   const toggleDropdown = () => {
     setDropdownOpen((prevState) => !prevState);
@@ -47,28 +47,7 @@ const Navbar = () => {
           >
             <img src={logo} className="h-8 scale-150 rounded-2xl " alt="logo" />
           </Link>
-          <div
-            className="hidden w-full md:block md:w-auto "
-            id="navbar-default"
-          >
-            <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg  md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
-              {navigation.map((item) => (
-                <li key={item.name}>
-                  <NavLink
-                    to={item.link}
-                    className={({ isActive }) => {
-                      return (
-                        "rounded-md block py-2 px-5 " +
-                        (isActive ? "my-active" : "my-text-gray")
-                      );
-                    }}
-                  >
-                    {item.name}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <NavLinks />
           <div className="w-full md:block md:w-auto">
             {isLoggedIn ? (
               <>
@@ -76,11 +55,7 @@ const Navbar = () => {
                   onClick={toggleDropdown}
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200"
                 >
-                  <img
-                    src={user?.image != "" ? user?.image : blankProfilePicture}
-                    alt="Profile"
-                    className="rounded-full"
-                  />
+                  <UserImage />
                 </button>
                 {dropdownOpen && (
                   <div
@@ -97,12 +72,12 @@ const Navbar = () => {
                     </div>
                     <ul className="py-2" aria-labelledby="user-menu-button">
                       <li>
-                        <a
-                          href="#"
+                        <Link
+                          to="/user-profile"
                           className="block px-4 py-2 text-sm my-text-black"
                         >
                           Profile details
-                        </a>
+                        </Link>
                       </li>
                       <li>
                         <Link

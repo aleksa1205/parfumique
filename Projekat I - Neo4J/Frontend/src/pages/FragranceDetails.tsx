@@ -43,6 +43,7 @@ const FragranceDetails = () => {
   if (isError) {
     return <div>Error... {error.message}</div>;
   }
+
   return (
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto font-roboto">
       {isLoading && <Loader />}

@@ -1,13 +1,13 @@
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/images/logo.jpg";
-import useUserController from "../api/controllers/useUserController";
+import logo from "/src/assets/images/logo.jpg";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import UseAuth from "../hooks/useAuth";
-import { UserLogin } from "../dto-s/UserDto";
-import { WrongCredentials } from "../dto-s/Errors";
+import { UserLogin } from "../../dto-s/UserDto";
+import useUserController from "../../api/controllers/useUserController";
+import UseAuth from "../../hooks/useAuth";
+import { WrongCredentials } from "../../dto-s/Errors";
 
 const Login = () => {
   const form = useForm<UserLogin>();
@@ -22,8 +22,7 @@ const Login = () => {
     onSuccess: (response) => {
       setAuth({ jwtToken: response.token, username: response.username });
       setCredentialError(null);
-      //change to user profile
-      navigate("/");
+      navigate("/user-profile");
     },
     onError: (error) => {
       if (error instanceof WrongCredentials) {

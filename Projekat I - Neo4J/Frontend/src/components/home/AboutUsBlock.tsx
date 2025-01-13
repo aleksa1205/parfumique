@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const AboutUsBlock = () => {
   return (
-    <div className="flex items-start justify-center bg-gradient-to-r my-text-black text-center p-6 font-roboto pt-12">
+    <div className="flex items-start justify-center bg-gradient-to-r text-center p-6 font-roboto pt-12 my-bg-brand">
       <div className="flex md:flex-row flex-col items-center justify-center text-center w-full max-w-7xl p-6">
         <div className="flex-shrink-0 w-full md:w-1/3">
           <img
@@ -12,9 +12,7 @@ const AboutUsBlock = () => {
           />
         </div>
         <div className="ml-auto pl-20 w-full md:w-2/3 text-left">
-          <h2 className="my-4 font-bold text-3xl">
-            About <span className="my-text-medium">Us</span>
-          </h2>
+          <h2 className="my-4 font-bold text-3xl">About Us</h2>
           <p className="text-lg mb-6 max-w-lg w-2/3">
             Discover and curate your personal fragrance collection with ease.
             Add your favorite perfumes to your profile, explore new scents, and

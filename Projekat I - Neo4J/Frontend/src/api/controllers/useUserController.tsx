@@ -8,9 +8,11 @@ import {
 } from "../../dto-s/UserDto";
 import { UsernameExists, WrongCredentials } from "../../dto-s/Errors";
 import { FragranceInfinitePagination } from "../../dto-s/FragranceDto";
+import useAxiosAuth from "../../hooks/useAxiosPrivate";
 
 export default function useUserController() {
   const LIMIT = 8;
+  const axiosAuth = useAxiosAuth();
   const userController = {
     register: async function (user: User): Promise<void> {
       try {
@@ -83,9 +85,8 @@ export default function useUserController() {
       pageParam: number;
     }): Promise<FragranceInfinitePagination> {
       try {
-        const response = await client.get(
-          `/User/fragrances/${username}/${pageParam}`,
-          { headers: { "Content-Type": "application/json" } }
+        const response = await axiosAuth.get(
+          `/User/fragrances/${username}/${pageParam}`
         );
         response.data.nextPage =
           LIMIT == response.data.fragrances.length ? pageParam + 1 : null;

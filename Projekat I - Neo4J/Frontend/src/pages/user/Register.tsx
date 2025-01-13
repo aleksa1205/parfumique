@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/images/logo.jpg";
-import useUserController from "../api/controllers/useUserController";
-import { User } from "../dto-s/UserDto";
+import { User } from "../../dto-s/UserDto";
+import logo from "/src/assets/images/logo.jpg";
+import useUserController from "../../api/controllers/useUserController";
 
 const Register = () => {
   const form = useForm<User>();
@@ -14,7 +14,7 @@ const Register = () => {
 
   const onSubmit = async (data: User) => {
     try {
-      await userController.registerUser(data);
+      await userController.register(data);
       navigate("/login");
     } catch (error) {
       console.log(error);
