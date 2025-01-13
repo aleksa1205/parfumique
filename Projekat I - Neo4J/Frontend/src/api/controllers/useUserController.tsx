@@ -9,6 +9,7 @@ import {
 import { UsernameExists, WrongCredentials } from "../../dto-s/Errors";
 import { FragranceInfinitePagination } from "../../dto-s/FragranceDto";
 import useAxiosAuth from "../../hooks/useAxiosPrivate";
+import { FragranceActionsProps } from "../../dto-s/Props";
 
 export default function useUserController() {
   const LIMIT = 8;
@@ -91,6 +92,22 @@ export default function useUserController() {
         response.data.nextPage =
           LIMIT == response.data.fragrances.length ? pageParam + 1 : null;
         return response.data;
+      } catch (error) {
+        if (isAxiosError(error) && error.name === "CanceledError") {
+          throw error;
+        } else if (error instanceof Error) {
+          throw Error("General Error: " + error.message);
+        } else {
+          throw Error("Unexpected Error: " + error);
+        }
+      }
+    },
+    addFragrance: async function (props: FragranceActionsProps): Promise<void> {
+      try {
+        await axiosAuth.patch(
+          `https://localhost:8080/User/add-fragrance-to-self`,
+          { FragranceId: props.id }
+        );
       } catch (error) {
         if (isAxiosError(error) && error.name === "CanceledError") {
           throw error;

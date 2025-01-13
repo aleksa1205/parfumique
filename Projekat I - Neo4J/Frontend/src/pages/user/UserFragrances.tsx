@@ -76,6 +76,7 @@ const UserFragrances = () => {
                     image={fragrance.image ? fragrance.image : ""}
                     name={fragrance.name}
                     gender={fragrance.gender}
+                    onProfile={true}
                   />
                 </div>
               ))}

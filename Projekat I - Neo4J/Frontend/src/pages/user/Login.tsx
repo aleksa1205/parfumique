@@ -88,7 +88,7 @@ const Login = () => {
                   Password
                 </label>
                 <input
-                  type="text"
+                  type="password"
                   id="password"
                   {...register("password", {
                     required: "Please fill in the password field to proceed!",

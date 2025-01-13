@@ -7,7 +7,6 @@ const ProfilePage = () => {
   return (
     <div className="flex justify-center items-start bg-gray-100 py-8">
       {" "}
-      {/* Remove min-h-screen and adjust padding */}
       <div className="flex items-center space-x-4 p-6 bg-white border rounded-lg shadow-md">
         {/* User Image */}
         <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 xl:w-24 xl:h-24">

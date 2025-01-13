@@ -34,6 +34,10 @@ button.my-bg-brand:hover,
   color: #0bb091;
 }
 
+.my-text-blue {
+  color: #1d60eb;
+}
+
 .my-text-primary:hover {
   color: #0bb091;
 }

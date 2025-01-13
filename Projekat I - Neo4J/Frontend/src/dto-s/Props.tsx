@@ -10,4 +10,9 @@ export type FragranceCardProps = {
   image: string;
   name: string;
   gender: string;
+  onProfile: boolean;
+};
+
+export type FragranceActionsProps = {
+  id: number;
 };

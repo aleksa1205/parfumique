@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import { base64ToUrl } from "../utils";
 import { FragranceCardProps } from "../dto-s/Props";
+import FragranceActions from "./FragranceActions";
 
 const FragranceCard: React.FC<FragranceCardProps> = ({
   id,
   image,
   name,
   gender,
+  onProfile,
 }) => {
   return (
     <div className="grid gap-4 w-full">
@@ -29,6 +31,7 @@ const FragranceCard: React.FC<FragranceCardProps> = ({
             {`${name} for ${gender}`}
           </Link>
         </div>
+        {!onProfile && <FragranceActions id={Number(id)} />}
       </div>
     </div>
   );
