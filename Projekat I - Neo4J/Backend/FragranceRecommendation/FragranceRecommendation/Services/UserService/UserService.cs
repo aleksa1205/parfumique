@@ -22,7 +22,7 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
             var query = @"MATCH (n:USER {username: $username})
                           MATCH (f:FRAGRANCE) WHERE id(f) = $id
                           OPTIONAL MATCH (n) -[r:OWNS]-> (f)
-                          RETURN r IS NOT NULL AS exists";
+                          RETURN DISTINCT(r) IS NOT NULL AS exists";
             var result = await tx.RunAsync(query, new { username, id });
             return (await result.SingleAsync())["exists"].As<bool>();
         });
@@ -163,6 +163,22 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
             var query = @"MATCH (n:USER {username: $username})
                           MATCH (f:FRAGRANCE) WHERE id(f) = $id
                           CREATE (n) -[:OWNS]-> (f)";
+            await tx.RunAsync(query, new
+            {
+                username, id = fragranceId
+            });
+        });
+    }
+
+    public async Task DeleteFragranceFromUserAsync(string username, int fragranceId)
+    {
+        await using var session = driver.AsyncSession();
+        await session.ExecuteWriteAsync(async tx =>
+        {
+            var query = @"MATCH (n:USER {username: $username})
+                          MATCH (f:FRAGRANCE) WHERE id(f) = $id
+                          MATCH (n) -[r:OWNS]-> (f)
+                          DELETE r";
             await tx.RunAsync(query, new
             {
                 username, id = fragranceId

@@ -1,44 +1,26 @@
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "/src/assets/images/logo.jpg";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
 import { UserLogin } from "../../dto-s/UserDto";
-import useUserController from "../../api/controllers/useUserController";
-import UseAuth from "../../hooks/useAuth";
-import { WrongCredentials } from "../../dto-s/Errors";
+import useLoginMutation from "../../hooks/useLoginMutation";
+import PasswordField from "../../components/form-fields/PasswordField";
+import InputField from "../../components/form-fields/InputField";
+import { CircleLoader } from "../../components/loaders/CircleLoader";
 
 const Login = () => {
   const form = useForm<UserLogin>();
   const { register, control, handleSubmit, formState } = form;
-  const { login } = useUserController();
   const { errors } = formState;
-  const [credentialError, setCredentialError] = useState<string | null>(null);
-  const { setAuth } = UseAuth();
-  const navigate = useNavigate();
-
-  const loginMutation = useMutation((user: UserLogin) => login(user), {
-    onSuccess: (response) => {
-      setAuth({ jwtToken: response.token, username: response.username });
-      setCredentialError(null);
-      navigate("/user-profile");
-    },
-    onError: (error) => {
-      if (error instanceof WrongCredentials) {
-        setCredentialError("Invalid username or password!");
-      } else {
-        setCredentialError("Error 500");
-      }
-    },
-  });
+  const { loginMutation, credentialError } = useLoginMutation();
 
   const onSubmit = async (userData: UserLogin) => {
-    loginMutation.mutateAsync(userData);
+    await loginMutation.mutateAsync(userData);
   };
 
   return (
     <section className="bg-white font-roboto">
+      {loginMutation.isLoading && <CircleLoader />}
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto">
         <Link
           to="/"
@@ -61,57 +43,24 @@ const Login = () => {
               noValidate
               className="space-y-6"
             >
-              <div className="pb-1">
-                <label
-                  htmlFor="username"
-                  className="block mb-2 font-medium text-white"
-                >
-                  Username
-                </label>
-                <input
-                  type="text"
-                  id="username"
-                  {...register("username", {
-                    required: "Please fill in the username field to proceed!",
-                  })}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="peraperic"
-                  required
-                />
-                <p className="error">{errors.username?.message}</p>
-              </div>
-              <div className="pb-1">
-                <label
-                  htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-white"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  {...register("password", {
-                    required: "Please fill in the password field to proceed!",
-                    minLength: {
-                      value: 8,
-                      message: "Password must be at least 8 charachters long!",
-                    },
-                    pattern: {
-                      value: /^(?=.*\d).+$/,
-                      message: "Password must contain at least one number!",
-                    },
-                  })}
-                  placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required
-                />
-                <p className="error">{errors.password?.message}</p>
-                {credentialError && (
-                  <div className="error text-sm font-medium pt-5">
-                    {credentialError}
-                  </div>
-                )}
-              </div>
+              <InputField
+                register={register}
+                error={errors.username}
+                id="username"
+                label="Username"
+                placeholder="peraperic"
+                validationRules={{
+                  required: "Please fill in the username field to proceed!",
+                  minLength: {
+                    value: 3,
+                    message: "Username must be at least 3 characters long",
+                  },
+                }}
+              />
+              <PasswordField register={register} error={errors.password} />
+              {credentialError && (
+                <div className="error text-center"> {credentialError}</div>
+              )}
 
               <button
                 type="submit"

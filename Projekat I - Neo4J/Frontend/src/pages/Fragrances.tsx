@@ -20,11 +20,7 @@ const Fragrances = () => {
     },
   });
   if (isLoading || isFetching) {
-    return (
-      <section className="bg-gray-50 antialiased py-12 h-screen flex justify-center items-center">
-        <CircleLoader />
-      </section>
-    );
+    return <CircleLoader />;
   }
   return (
     <section className="bg-gray-50 antialiased py-12">

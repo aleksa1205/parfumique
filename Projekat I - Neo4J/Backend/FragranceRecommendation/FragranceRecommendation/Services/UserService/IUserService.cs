@@ -12,5 +12,6 @@ public interface IUserService
     public Task AddUserAsync(AddUserDto user);
     public Task UpdateUserAsync(string username, string name, string surname, char gender);
     public Task AddFragranceToUserAsync(string username, int fragranceId);
+    public Task DeleteFragranceFromUserAsync(string username, int fragranceId);
     public Task DeleteUserAsync(string username);
 }

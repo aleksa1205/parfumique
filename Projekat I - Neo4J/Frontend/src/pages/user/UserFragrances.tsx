@@ -33,7 +33,7 @@ const UserFragrances = () => {
     ["items", user?.username || ""],
     async ({ queryKey, pageParam = 1 }) => {
       const username = queryKey[1];
-      return getFragrances({ username, pageParam });
+      return await getFragrances({ username, pageParam });
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
@@ -48,11 +48,7 @@ const UserFragrances = () => {
   }, [fetchNextPage, inView, data]);
 
   if (isLoading || status === "loading") {
-    return (
-      <section className="bg-gray-50 antialiased py-12 h-screen flex justify-center items-center">
-        <CircleLoader />
-      </section>
-    );
+    return <CircleLoader />;
   }
 
   if (user?.collection.length == 0) return <EmptyCollection />;
@@ -95,10 +91,3 @@ const UserFragrances = () => {
 };
 
 export default UserFragrances;
-/*  if (isFetchingNextPage) {
-    return (
-      <section className="fixed bottom-0 bg-gray-50 antialiased py-12 h-screen flex justify-center items-center">
-        <CircleLoader />
-      </section>
-    );
-  }*/

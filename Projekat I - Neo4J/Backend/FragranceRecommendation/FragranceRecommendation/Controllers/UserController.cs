@@ -227,6 +227,39 @@ public class UserController(IUserService userService, IFragranceService fragranc
             return BadRequest(e.Message);
         }
     }
+    
+    [Authorize]
+    [RequiresRole(Roles.User)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointSummary("delete fragrance from logged in user")]
+    [HttpPatch("delete-fragrance-from-self")]
+    public async Task<IActionResult> DeleteFragranceFromSelf([FromBody] DeleteFragranceFromSelfDto dto)
+    {
+        try
+        {
+            var username = HttpContext.User.Identity?.Name;
+            if (username is null)
+                return Unauthorized();
+
+            if(!await userService.UserExistsAsync(username!))
+                return NotFound($"User {username} doesn't exists!");
+
+            if(!await fragranceService.FragranceExistsAsync(dto.FragranceId))
+                return NotFound($"Fragrance {dto.FragranceId} doesn't exists!");
+
+            if (!await userService.UserOwnsFragranceAsync(username!, dto.FragranceId))
+                return Conflict($"User {username} doesn't owns fragrance with id {dto.FragranceId}!");
+
+            await userService.DeleteFragranceFromUserAsync(username, dto.FragranceId);
+            return Ok($"Successfully deleted fragrance with id {dto.FragranceId} from user {username}!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 
     [Authorize]
     [RequiresRole(Roles.Admin)]
