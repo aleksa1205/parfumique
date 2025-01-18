@@ -192,4 +192,34 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
             return BadRequest(e.Message);
         }
     }
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointSummary("Recommend 5 fragrances for each input fragrance")]
+    [HttpGet("recommend-fragrances")]
+    public async Task<IActionResult> RecommendFragrances([FromQuery] List<int> fragranceIds)
+    {
+        if (fragranceIds.Count == 0 || fragranceIds.Count > 3)
+            return BadRequest("You must pass 1, 2 or 3 fragrances!");
+
+        var result = new List<List<FragranceRecommendationDto>>();
+        try
+        {
+            foreach (var fragranceId in fragranceIds)
+            {
+                if(!await fragranceService.FragranceExistsAsync(fragranceId))
+                    return NotFound($"Fragrance with id {fragranceId} does not exist!");
+
+                var recommendation = await fragranceService.RecommendFragrance(fragranceId);
+                result.Add(recommendation);
+            }
+
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 }

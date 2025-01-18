@@ -192,4 +192,49 @@ public class FragranceService(IDriver driver) : IFragranceService
             await tx.RunAsync(query, new { id = fragrance.Id });
         });
     }
+
+    public async Task<List<FragranceRecommendationDto>> RecommendFragrance(int fragranceId)
+    {
+        await using var session = driver.AsyncSession();
+        return await session.ExecuteReadAsync(async tx =>
+        {
+            var query =
+                @"MATCH (inputFrag:FRAGRANCE)-[:TOP|MIDDLE|BASE]->(n:NOTE)<-[r:TOP|MIDDLE|BASE]-(recommendedFrag:FRAGRANCE)
+                          WHERE id(inputFrag) = $fragranceId and inputFrag <> recommendedFrag and (inputFrag.gender = recommendedFrag.gender OR recommendedFrag.gender = 'U')
+                          WITH inputFrag, recommendedFrag, n, COLLECT(type(r)) as relationshipTypes
+                          WITH inputFrag, recommendedFrag,
+                            SUM(
+                                REDUCE(
+                                    acc = 0,
+                                    relType IN relationshipTypes |
+                                    acc + CASE
+                                        WHEN relType = 'BASE' THEN 3
+                                        WHEN relType = 'MIDDLE' THEN 2
+                                        WHEN relType = 'BASE' THEN 1
+                                        ELSE 0
+                                    END
+                                )
+                            ) as score
+                        ORDER BY score DESC
+                        LIMIT 5
+                        RETURN recommendedFrag, score";
+
+            var cursor = await tx.RunAsync(query, new {fragranceId});
+
+            var recommendedFragrances = new List<FragranceRecommendationDto>();
+            while (await cursor.FetchAsync())
+            {
+                var record = cursor.Current;
+                var fragrance = MyUtils.DeserializeNode<Fragrance>(record["recommendedFrag"].As<INode>());
+                var score = record["score"].As<double>();
+                recommendedFragrances.Add(new FragranceRecommendationDto
+                {
+                    Fragrance = fragrance,
+                    Score = score
+                });
+            }
+
+            return recommendedFragrances;
+        });
+    }
 }
