@@ -217,7 +217,7 @@ public class FragranceService(IDriver driver) : IFragranceService
                             ) as score
                         ORDER BY score DESC
                         LIMIT 5
-                        RETURN recommendedFrag, score";
+                        RETURN recommendedFrag{.*, id:id(recommendedFrag)}, score";
 
             var cursor = await tx.RunAsync(query, new {fragranceId});
 
@@ -225,7 +225,7 @@ public class FragranceService(IDriver driver) : IFragranceService
             while (await cursor.FetchAsync())
             {
                 var record = cursor.Current;
-                var fragrance = MyUtils.DeserializeNode<Fragrance>(record["recommendedFrag"].As<INode>());
+                var fragrance = MyUtils.DeserializeMap<Fragrance>(record["recommendedFrag"]);
                 var score = record["score"].As<double>();
                 recommendedFragrances.Add(new FragranceRecommendationDto
                 {

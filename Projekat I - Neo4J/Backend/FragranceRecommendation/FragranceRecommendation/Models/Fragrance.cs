@@ -39,4 +39,17 @@ public class Fragrance
         BatchYear = year;
     }
     #endregion
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is not Fragrance other)
+            return false;
+
+        return Id == other.Id;
+    }
+
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode();
+    }
 }

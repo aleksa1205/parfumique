@@ -1,4 +1,6 @@
-﻿namespace FragranceRecommendation.Controllers;
+﻿using System.Linq;
+
+namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -196,14 +198,17 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [EndpointSummary("Recommend 5 fragrances for each input fragrance")]
+    [EndpointSummary("Recommend 5 fragrances for input fragrances")]
     [HttpGet("recommend-fragrances")]
     public async Task<IActionResult> RecommendFragrances([FromQuery] List<int> fragranceIds)
     {
         if (fragranceIds.Count == 0 || fragranceIds.Count > 3)
             return BadRequest("You must pass 1, 2 or 3 fragrances!");
 
-        var result = new List<List<FragranceRecommendationDto>>();
+        if (fragranceIds.Distinct().ToList().Count != fragranceIds.Count)
+            return BadRequest("You can only select distinct fragrances!");
+
+        var recommendationGroups = new List<List<FragranceRecommendationDto>>();
         try
         {
             foreach (var fragranceId in fragranceIds)
@@ -212,8 +217,10 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
                     return NotFound($"Fragrance with id {fragranceId} does not exist!");
 
                 var recommendation = await fragranceService.RecommendFragrance(fragranceId);
-                result.Add(recommendation);
+                recommendationGroups.Add(recommendation);
             }
+
+            var result = GetTopRecommendation(recommendationGroups, fragranceIds);
 
             return Ok(result);
         }
@@ -221,5 +228,36 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
         {
             return BadRequest(e.Message);
         }
+    }
+
+    // Algorithm that gets 5 best fragrances from group of fragrances
+    private static List<FragranceRecommendationDto> GetTopRecommendation(List<List<FragranceRecommendationDto>> recommendationGroups, List<int> inputFragranceIds)
+    {
+        if (recommendationGroups.Count == 1)
+            return recommendationGroups[0];
+
+        var fragDict = new Dictionary<Fragrance, double>();
+
+        // If fragrance is already in result we sum the scores
+        // This is simple implementation, we need to make a better one when we add more fragrances in database
+        foreach (var group in recommendationGroups)
+        {
+            foreach (var recommendation in group)
+            {
+                if(!fragDict.ContainsKey(recommendation.Fragrance))
+                    fragDict[recommendation.Fragrance] = recommendation.Score;
+                else
+                    fragDict[recommendation.Fragrance] += recommendation.Score;
+            }
+        }
+
+        return (from element in fragDict
+            where !inputFragranceIds.Contains(element.Key.Id.Value)
+            orderby element.Value descending
+            select new FragranceRecommendationDto
+            {
+                Fragrance = element.Key,
+                Score = element.Value
+            }).Take(5).ToList();
     }
 }
