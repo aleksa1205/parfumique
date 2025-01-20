@@ -13,4 +13,5 @@ public interface IFragranceService
     public Task AddNotesToFragrance(NotesToFragranceDto dto);
     public Task DeleteNotesFromFragrance(NotesToFragranceDto dto);
     public Task DeleteFragranceAsync(DeleteFragranceDto fragrance);
+    public Task<List<FragranceRecommendationDto>> RecommendFragrance(int fragranceId);
 }

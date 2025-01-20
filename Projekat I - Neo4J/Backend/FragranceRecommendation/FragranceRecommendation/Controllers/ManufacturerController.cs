@@ -54,7 +54,7 @@ public class ManufacturerController(
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointSummary("add manufacturer")]
-    [HttpPost("{name}")]
+    [HttpPost]
     public async Task<IActionResult> AddManufacturer([FromBody] AddManufacturerDto manufacturerDto)
     {
         try
@@ -78,7 +78,7 @@ public class ManufacturerController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [EndpointSummary("add manufacturer to fragrance")]
-    [HttpPatch("{manufacturerName}/{fragranceId}")]
+    [HttpPatch]
     public async Task<IActionResult> AddFragranceToManufacturer([FromBody] AddFragranceToManufacturerDto addFragranceToManufacturerDto)
     {
         try
@@ -112,7 +112,7 @@ public class ManufacturerController(
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointSummary("delete manufacturer")]
-    [HttpDelete("{name}")]
+    [HttpDelete]
     public async Task<IActionResult> DeleteManufacturer([FromBody] DeleteManufacturerDto deleteDto)
     {
         try
