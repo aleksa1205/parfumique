@@ -1,3 +1,5 @@
+import { Roles } from "../api/Roles";
+
 export type UserLogin = {
   username: string;
   password: string;
@@ -14,6 +16,7 @@ export type User = {
 export type LoginResponse = {
   username: string;
   token: string;
+  role: Roles;
 };
 
 export type GetUserResponse = {

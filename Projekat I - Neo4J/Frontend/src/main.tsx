@@ -13,6 +13,8 @@ import NotFound from "./pages/NotFound";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthProvider from "./context/AuthProvider";
 import { CurrUserProvider } from "./context/CurrUserProvider";
+import AdminRequiredLayer from "./layers/AdminRequiredLayer";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -25,7 +27,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/",
-        element: <HomePage />,
+        element: <HomePage />
       },
       {
         path: "/register",
@@ -47,7 +49,16 @@ const router = createBrowserRouter([
         path: "/about-us",
         element: <AboutUs />,
       },
-    ],
+      {
+        element: <AdminRequiredLayer />,
+        children: [
+          {
+            path: "/admin-dashboard",
+            element: <AdminDashboard />
+          }
+        ]
+      }
+    ]
   },
 ]);
 

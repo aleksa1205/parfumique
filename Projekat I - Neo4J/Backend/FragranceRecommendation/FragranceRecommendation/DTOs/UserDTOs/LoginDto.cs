@@ -10,4 +10,6 @@ public class LoginDto
 
     [Password]
     public string? Password { get; set; }
+
+
 }

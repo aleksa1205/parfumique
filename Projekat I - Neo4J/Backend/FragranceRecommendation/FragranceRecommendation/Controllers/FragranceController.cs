@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using FragranceRecommendation.Auth;
 
 namespace FragranceRecommendation.Controllers;
 
@@ -82,6 +83,7 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
         }
     }
 
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [EndpointSummary("add fragrance")]
@@ -99,6 +101,7 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
         }
     }
 
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -119,7 +122,8 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
             return BadRequest(e.Message);
         }
     }
-    
+
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -146,7 +150,8 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
             return BadRequest(e.Message);
         }
     }
-    
+
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -174,6 +179,7 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
         }
     }
 
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -195,6 +201,7 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
         }
     }
 
+    [RequiresRole(Roles.User)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

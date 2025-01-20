@@ -20,7 +20,7 @@ const Login = () => {
 
   const loginMutation = useMutation((user: UserLogin) => login(user), {
     onSuccess: (response) => {
-      setAuth({ jwtToken: response.token, username: response.username });
+      setAuth({ jwtToken: response.token, username: response.username, role: response.role });
       setCredentialError(null);
       //change to user profile
       navigate("/");

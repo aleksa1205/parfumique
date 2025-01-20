@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { Roles } from "../api/Roles";
 
 type ContextValues = {
   auth: AuthValues;
@@ -8,11 +9,13 @@ type ContextValues = {
 export type AuthValues = {
   jwtToken: string;
   username: string;
+  role: Roles;
 };
 
 export const emptyAuthValues: AuthValues = {
   jwtToken: "",
   username: "",
+  role: Roles.Undefined
 };
 
 type PropsValue = {
