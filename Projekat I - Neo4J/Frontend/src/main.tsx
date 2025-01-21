@@ -14,7 +14,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthProvider from "./context/AuthProvider";
 import { CurrUserProvider } from "./context/CurrUserProvider";
 import AdminRequiredLayer from "./layers/AdminRequiredLayer";
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import AdminFragrance from "./pages/Admin/AdminFragrance";
+import { AdminNotes } from "./pages/Admin/AdminNote";
+import { AdminManufacturer } from "./pages/Admin/AdminManufacturer";
+import AdminParfumer from "./pages/Admin/AdminPafrumer";
+import AdminUser from "./pages/Admin/AdminUser";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -54,8 +59,28 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/admin-dashboard",
-            element: <AdminDashboard />
-          }
+            element: <AdminDashboard />,
+          },
+          {
+            path: "/admin-dashboard/fragrance",
+            element: <AdminFragrance />
+          },
+          {
+            path: "/admin-dashboard/note",
+            element: <AdminNotes />
+          },
+          {
+            path: "/admin-dashboard/manufacturer",
+            element: <AdminManufacturer />
+          },
+          {
+            path: "/admin-dashboard/parfumer",
+            element: <AdminParfumer />
+          },
+          {
+            path: "/admin-dashboard/user",
+            element: <AdminUser />
+          },
         ]
       }
     ]

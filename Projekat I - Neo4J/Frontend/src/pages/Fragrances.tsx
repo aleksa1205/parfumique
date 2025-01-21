@@ -21,13 +21,13 @@ const Fragrances = () => {
   });
   if (isLoading || isFetching) {
     return (
-      <section className="bg-gray-50 antialiased py-12 h-screen flex justify-center items-center">
+      <section className="bg-gray-50 antialiased py-12 h-screen flex justify-center items-center mt-16">
         <CircleLoader />
       </section>
     );
   }
   return (
-    <section className="bg-gray-50 antialiased py-12">
+    <section className="bg-gray-50 antialiased py-12 mt-16">
       {" "}
       <div className="mx-auto max-w-screen-xl px-4">
         <div className="mb-4 grid gap-4 sm:grid-cols-2 md:mb-8 lg:grid-cols-3 xl:grid-cols-4 w-full">

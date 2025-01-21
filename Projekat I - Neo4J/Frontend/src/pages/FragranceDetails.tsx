@@ -41,10 +41,10 @@ const FragranceDetails = () => {
   }, [notFound, navigate]);
 
   if (isError) {
-    return <div>Error... {error.message}</div>;
+    return <div className="mt-16">Error... {error.message}</div>;
   }
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto font-roboto">
+    <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto font-roboto mt-16">
       {isLoading && <Loader />}
       {!isLoading && !isError && fragrance && (
         <div className="w-full max-w-screen-xl text-center">

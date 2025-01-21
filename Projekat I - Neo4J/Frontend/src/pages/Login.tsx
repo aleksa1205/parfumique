@@ -39,7 +39,7 @@ const Login = () => {
   };
 
   return (
-    <section className="bg-white font-roboto">
+    <section className="bg-white font-roboto mt-16">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto">
         <Link
           to="/"

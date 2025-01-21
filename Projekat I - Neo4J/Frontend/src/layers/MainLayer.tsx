@@ -4,11 +4,11 @@ import Footer from "../components/Footer";
 
 const MainLayer = () => {
   return (
-    <>
+    <span className="font-roboto">
       <Navbar />
       <Outlet />
       <Footer />
-    </>
+    </span>
   );
 };
 
