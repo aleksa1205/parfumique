@@ -20,6 +20,16 @@ const Navbar = () => {
   const { user, isLoading } = useContext(CurrUserContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { auth } = UseAuth();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -40,7 +50,7 @@ const Navbar = () => {
   }
 
   return (
-    <header className="fixed z-50 top-0 bg-white w-full">
+    <header className={`fixed z-50 top-0 bg-white w-full border-b transition-all ${isScrolled ? 'border-neutral-400' : 'border-white'}`}>
       <nav className="border-gray-200 font-roboto max-w-screen-xl max-w-screen-xl mx-auto">
         <div className="flex flex-wrap items-center justify-between p-4">
           <Link

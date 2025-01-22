@@ -15,11 +15,11 @@ import AuthProvider from "./context/AuthProvider";
 import { CurrUserProvider } from "./context/CurrUserProvider";
 import AdminRequiredLayer from "./layers/AdminRequiredLayer";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
-import AdminFragrance from "./pages/Admin/AdminFragrance";
-import { AdminNotes } from "./pages/Admin/AdminNote";
-import { AdminManufacturer } from "./pages/Admin/AdminManufacturer";
-import AdminParfumer from "./pages/Admin/AdminPafrumer";
-import AdminUser from "./pages/Admin/AdminUser";
+import { AdminNotes } from "./pages/Admin/Admin Note Block/AdminNote";
+import { AdminManufacturer } from "./pages/Admin/Admin Manufacturer Block/AdminManufacturer";
+import AdminParfumer from "./pages/Admin/Admin Parfumer Block/AdminPafrumer";
+import AdminUser from "./pages/Admin/Admin User Block/AdminUser";
+import AdminFragrance from "./pages/Admin/Admin Fragrance Block/AdminFragrance";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([

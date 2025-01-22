@@ -6,7 +6,7 @@ type PropsValues = {
 export default function MainButton({onClick, children}: PropsValues) {
     return <button
     onClick={onClick}
-    className="block py-2 px-3 rounded-2xl my-active transition duration-100">
+    className="font-semibold px-4 py-2 rounded-md cursor-pointer my-active transition ease-in-out duration-100">
         {children}
     </button>
 }

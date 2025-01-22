@@ -185,7 +185,7 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointSummary("delete fragrance")]
     [HttpDelete]
-    public async Task<IActionResult> DeleteUser([FromBody] DeleteFragranceDto fragrance)
+    public async Task<IActionResult> DeleteFragrance([FromBody] DeleteFragranceDto fragrance)
     {
         try
         {
