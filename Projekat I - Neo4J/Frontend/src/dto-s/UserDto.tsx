@@ -1,4 +1,5 @@
 import { BaseFragrance } from "./FragranceDto";
+import { Roles } from "../api/Roles";
 
 export type UserLogin = {
   username: string;
@@ -16,6 +17,7 @@ export type User = {
 export type LoginResponse = {
   username: string;
   token: string;
+  role: Roles;
 };
 
 export type GetUserResponse = {

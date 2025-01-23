@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export const NotFound = () => {
   return (
-    <section className="bg-white font-roboto">
+    <section className="bg-white font-roboto mt-16">
       <div className="mx-auto max-w-screen-xl py-16 px-6">
         <div className="mx-auto  text-center">
           <h1 className="mb-4 font-extrabold text-9xl">404</h1>

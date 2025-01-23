@@ -3,6 +3,6 @@
 public enum Roles
 {
     Undefined = -1,
-    User,
-    Admin
+    User = 32,
+    Admin = 89
 }

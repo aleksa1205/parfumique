@@ -14,18 +14,13 @@ public class JwtProvider(IConfiguration config)
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            //mozda da se obrise
             new(ClaimTypes.Name, user.Username),
-            //new("userId", user.Id.ToString()!),
-            // Ovo da se obrise kasnije kad se dodaju admini
-            new("Role", ((int)Roles.User).ToString())
         };
 
-        // Potrebno za kasnije kad se dodaju admini
-        // if (user.admin)
-        //     claims.Add(new("Role",  ((int)Roles.Admin).ToString())
-        // else
-        //     claims.Add(new("Role", ((int)Roles.User).ToString());
+        if (user.Admin)
+            claims.Add(new("Role", ((int)Roles.Admin).ToString()));
+        else
+            claims.Add(new("Role", ((int)Roles.User).ToString()));
 
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(

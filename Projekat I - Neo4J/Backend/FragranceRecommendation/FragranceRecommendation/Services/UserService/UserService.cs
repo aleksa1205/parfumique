@@ -132,7 +132,7 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
         await session.ExecuteWriteAsync(async tx =>
         {
             var query =
-                @"CREATE (:USER {username: $username, password: $password, name: $name, surname: $surname, gender: $gender, image: ''})";
+                @"CREATE (:USER {username: $username, password: $password, name: $name, surname: $surname, gender: $gender, image: '', admin: false})";
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
             await tx.RunAsync(query,
                 new

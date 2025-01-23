@@ -107,7 +107,12 @@ public class UserController(IUserService userService, IFragranceService fragranc
                 return Unauthorized("Invalid username or password");
 
             var token = new JwtProvider(config).Generate(user);
-            return Ok(new {user.Username, token});
+            return Ok(new LoginResponseDto()
+            {
+                Role = user.Admin ? Roles.Admin : Roles.User,
+                Username = user.Username,
+                Token = token
+            });
         }
         catch (Exception e)
         {
