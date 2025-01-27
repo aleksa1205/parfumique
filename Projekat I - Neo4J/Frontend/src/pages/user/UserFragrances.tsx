@@ -60,6 +60,18 @@ const UserFragrances = () => {
         <h2 className="text-2xl font-bold mb-6 text-center my-text-medium">
           Your collection
         </h2>
+        <div className="flex justify-center mb-6">
+          <Link
+            to="/recommend"
+            type="button"
+            className="text-white bg-gradient-to-br from-green-400 to-blue-600 
+                   hover:bg-gradient-to-bl focus:ring-4 focus:outline-none 
+                   focus:ring-green-200 dark:focus:ring-green-800 
+                   font-medium rounded-lg text-lg px-8 py-4 text-center"
+          >
+            Recommend
+          </Link>
+        </div>
         {data?.pages?.map((page) => (
           <div key={page.currentPage}>
             <div className="mb-4 grid gap-4 sm:grid-cols-2 md:mb-8 lg:grid-cols-3 xl:grid-cols-4 w-full">

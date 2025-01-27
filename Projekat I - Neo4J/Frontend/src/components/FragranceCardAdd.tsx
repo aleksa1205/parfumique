@@ -36,10 +36,7 @@ const FragranceCardAdd: React.FC<FragranceCardProps> = (props) => {
             </div>
           ) : (
             <>
-              <MainButton onClick={() => onAdd()}>Add fragrance</MainButton>
-              {addFragranceError && (
-                <div className="error text-center">{addFragranceError}</div>
-              )}
+              <MainButton onClick={() => onAdd()}>Add</MainButton>
               {addFragranceError && (
                 <div className="error text-center">{addFragranceError}</div>
               )}

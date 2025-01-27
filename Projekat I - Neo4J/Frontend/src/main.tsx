@@ -22,6 +22,7 @@ import { AdminManufacturer } from "./pages/Admin/Admin Manufacturer Block/AdminM
 import AdminParfumer from "./pages/Admin/Admin Parfumer Block/AdminPafrumer";
 import AdminUser from "./pages/Admin/Admin User Block/AdminUser";
 import AdminFragrance from "./pages/Admin/Admin Fragrance Block/AdminFragrance";
+import Recommend from "./pages/user/Recommend";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -58,6 +59,7 @@ const router = createBrowserRouter([
       },
       { path: "/user-profile", element: <ProfilePage /> },
       { path: "/user-fragrances", element: <UserFragrances /> },
+      { path: "/recommend", element: <Recommend /> },
       {
         element: <AdminRequiredLayer />,
         children: [

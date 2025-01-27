@@ -14,10 +14,6 @@ export type FragranceCardProps = {
   gender: string;
 };
 
-export type FragranceActionsProps = {
-  id: number;
-};
-
 export type PasswordFieldProps = {
   register: any;
   error?: FieldError;
@@ -41,4 +37,9 @@ export type SelectFieldProps = {
 export type ButtonProps = {
   func: (key: string) => void;
   id: string;
+};
+
+export type SelectableFragranceCardProps = FragranceCardProps & {
+  onSelect: (id: string, selected: boolean) => void;
+  selected: boolean;
 };
