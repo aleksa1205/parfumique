@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import FragranceCard from "../components/FragranceCard";
 import useFragranceController from "../api/controllers/useFragranceController";
 import { CircleLoader } from "../components/loaders/CircleLoader";
 import { useState } from "react";
 import Pagination from "../components/Pagination";
+import FragranceCardAdd from "../components/FragranceCardAdd";
 
 const Fragrances = () => {
   const [page, setPage] = useState(1);
@@ -32,12 +32,11 @@ const Fragrances = () => {
               key={fragrance.id}
               className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm "
             >
-              <FragranceCard
+              <FragranceCardAdd
                 id={fragrance.id.toString()}
                 image={fragrance.image ? fragrance.image : ""}
                 name={fragrance.name}
                 gender={fragrance.gender}
-                onProfile={false}
               />
             </div>
           ))}

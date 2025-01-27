@@ -2,7 +2,7 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 const AboutUs = () => {
   return (
-    <section className="bg-gray-50 antialiased py-12">
+    <section className="bg-gray-50 antialiased py-12 mt-24">
       <div className="mx-auto max-w-screen-xl px-4 text-center">
         <h1 className="text-4xl font-bold mb-8">
           About <span className="my-text-medium">Us</span>

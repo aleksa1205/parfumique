@@ -5,7 +5,7 @@ import UserImage from "../../components/UserImage";
 const ProfilePage = () => {
   const { user } = useContext(CurrUserContext);
   return (
-    <div className="flex justify-center items-start bg-gray-100 py-8">
+    <div className="flex justify-center items-start bg-gray-100 py-8 mt-24">
       <div className="flex items-center space-x-4 p-6 bg-white border rounded-lg shadow-md">
         <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 xl:w-24 xl:h-24">
           <UserImage />

@@ -12,7 +12,6 @@ export type FragranceCardProps = {
   image: string;
   name: string;
   gender: string;
-  onProfile: boolean;
 };
 
 export type FragranceActionsProps = {
@@ -37,4 +36,9 @@ export type SelectFieldProps = {
   id: string;
   label: string;
   options: Array<string>;
+};
+
+export type ButtonProps = {
+  func: (key: string) => void;
+  id: string;
 };

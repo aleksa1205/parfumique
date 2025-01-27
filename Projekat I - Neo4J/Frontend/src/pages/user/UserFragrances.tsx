@@ -1,5 +1,4 @@
 import { useContext, useEffect } from "react";
-import FragranceCard from "../../components/FragranceCard";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
@@ -7,10 +6,11 @@ import useUserController from "../../api/controllers/useUserController";
 import { CurrUserContext } from "../../context/CurrUserProvider";
 import { CircleLoader } from "../../components/loaders/CircleLoader";
 import { Loader } from "../../components/loaders/Loader";
+import FragranceCardProfile from "../../components/FragranceCardProfile";
 
 const EmptyCollection = () => {
   return (
-    <div className="text-center">
+    <div className="text-center mt-24">
       <h2 className="text-2xl font-bold mb-6 my-text-medium">
         Your collection is empty. Add a fragrance to your collection.
       </h2>
@@ -28,18 +28,19 @@ const UserFragrances = () => {
   const { user, isLoading } = useContext(CurrUserContext);
   const { getFragrances } = useUserController();
   const { ref, inView } = useInView();
-  const { data, status, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
-    //should we do this to prevent getting error pop ups
-    ["items", user?.username || ""],
-    async ({ queryKey, pageParam = 1 }) => {
-      const username = queryKey[1];
-      return await getFragrances({ username, pageParam });
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
-      enabled: !!user?.username,
-    }
-  );
+  const { data, status, fetchNextPage, isFetchingNextPage, isFetching } =
+    useInfiniteQuery(
+      //should we do this to prevent getting error pop ups
+      ["items", user?.username || ""],
+      async ({ queryKey, pageParam = 1 }) => {
+        const username = queryKey[1];
+        return await getFragrances({ username, pageParam });
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextPage,
+        enabled: !!user?.username,
+      }
+    );
 
   useEffect(() => {
     if (inView && data?.pages[data.pages.length - 1].nextPage) {
@@ -47,7 +48,7 @@ const UserFragrances = () => {
     }
   }, [fetchNextPage, inView, data]);
 
-  if (isLoading || status === "loading") {
+  if (isLoading || status === "loading" || isFetching) {
     return <CircleLoader />;
   }
 
@@ -67,12 +68,11 @@ const UserFragrances = () => {
                   key={fragrance.id}
                   className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm "
                 >
-                  <FragranceCard
+                  <FragranceCardProfile
                     id={fragrance.id.toString()}
                     image={fragrance.image ? fragrance.image : ""}
                     name={fragrance.name}
                     gender={fragrance.gender}
-                    onProfile={true}
                   />
                 </div>
               ))}
