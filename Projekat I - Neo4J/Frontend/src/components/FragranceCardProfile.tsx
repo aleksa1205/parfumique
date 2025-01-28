@@ -9,8 +9,8 @@ const FragranceCardProfile: React.FC<FragranceCardProps> = (props) => {
   const { deleteUserFragranceMutation, deleteFragranceError } =
     useDeleteUserFragranceMutation();
 
-  const onSubmit = async (id: string) => {
-    await deleteUserFragranceMutation.mutateAsync({ id: Number(id) });
+  const onSubmit = async (id: number) => {
+    await deleteUserFragranceMutation.mutateAsync(id);
   };
 
   if (deleteUserFragranceMutation.isLoading) {
@@ -20,7 +20,7 @@ const FragranceCardProfile: React.FC<FragranceCardProps> = (props) => {
   return (
     <div className="relative grid gap-4 w-full">
       <FragranceCard {...props} />
-      <DeleteButton func={onSubmit} id={props.id} />
+      <DeleteButton onClick={() => onSubmit(props.id)} />
       {deleteFragranceError && (
         <div className="error text-center"> {deleteFragranceError}</div>
       )}

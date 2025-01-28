@@ -1,9 +1,11 @@
-import { ButtonProps } from "../../dto-s/Props";
+type PropsValue = {
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+};
 
-const DeleteButton: React.FC<ButtonProps> = ({ func, id }) => {
+const DeleteButton = ({ onClick }: PropsValue) => {
   return (
     <button
-      onClick={() => func(id)}
+      onClick={onClick}
       className="flex justify-center items-center mx-auto rounded-md py-2 px-5 my-error"
     >
       Delete

@@ -14,7 +14,6 @@ import {
 } from "../../dto-s/Errors";
 import { FragranceInfinitePagination } from "../../dto-s/FragranceDto";
 import useAxiosAuth from "../../hooks/useAxiosPrivate";
-import { FragranceActionsProps } from "../../dto-s/Props";
 
 export default function useUserController() {
   const LIMIT = 8;
@@ -121,11 +120,11 @@ export default function useUserController() {
         }
       }
     },
-    addFragrance: async function (props: FragranceActionsProps): Promise<void> {
+    addFragrance: async function (id: number): Promise<void> {
       try {
         await axiosAuth.patch(
           `https://localhost:8080/User/add-fragrance-to-self`,
-          { FragranceId: props.id }
+          { FragranceId: id }
         );
       } catch (error) {
         if (isAxiosError(error) && error.name === "CanceledError") {
@@ -146,13 +145,11 @@ export default function useUserController() {
         }
       }
     },
-    deleteFragrance: async function (
-      props: FragranceActionsProps
-    ): Promise<void> {
+    deleteFragrance: async function (id: number): Promise<void> {
       try {
         await axiosAuth.patch(
           `https://localhost:8080/User/delete-fragrance-from-self`,
-          { FragranceId: props.id }
+          { FragranceId: id }
         );
       } catch (error) {
         if (isAxiosError(error) && error.name === "CanceledError") {

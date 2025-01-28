@@ -1,23 +1,20 @@
 import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/images/logo.jpg";
 import useIsLoggedIn from "../hooks/useIsLoggedIn";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { CurrUserContext } from "../context/CurrUserProvider";
 import { CircleLoader } from "./loaders/CircleLoader";
 import useLogout from "../hooks/useLogout";
 import NavLinks from "./NavLinks";
 import UserImage from "./UserImage";
-import UseAuth from "../hooks/useAuth";
-import { Roles } from "../api/Roles";
-
 const Navbar = () => {
   const isLoggedIn = useIsLoggedIn();
   const logout = useLogout();
   const location = useLocation();
   const { user, isLoading } = useContext(CurrUserContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { auth } = UseAuth();
   const [isScrolled, setIsScrolled] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,6 +34,19 @@ const Navbar = () => {
   useEffect(() => {
     setDropdownOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const toggleDropdown = () => {
     setDropdownOpen((prevState) => !prevState);
@@ -63,7 +73,7 @@ const Navbar = () => {
           <NavLinks />
           <div className="w-full md:block md:w-auto">
             {isLoggedIn ? (
-              <>
+              <div className="relative">
                 <button
                   onClick={toggleDropdown}
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200"
@@ -72,7 +82,8 @@ const Navbar = () => {
                 </button>
                 {dropdownOpen && (
                   <div
-                    className="absolute mt-2 z-50 my-4 text-base list-none my-bg-light divide-y divide-gray-100 rounded-lg shadow"
+                    ref={dropdownRef}
+                    className="absolute mt-2 z-50 right-0 w-48 shadow-lg my-4 text-base list-none my-bg-light divide-y divide-gray-100 rounded-lg"
                     id="user-dropdown"
                   >
                     <div className="px-4 py-3">
@@ -112,7 +123,7 @@ const Navbar = () => {
                     </ul>
                   </div>
                 )}
-              </>
+              </div>
             ) : (
               <Link
                 to="/login"

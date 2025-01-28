@@ -8,7 +8,7 @@ export type PaginationProps = {
 };
 
 export type FragranceCardProps = {
-  id: string;
+  id: number;
   image: string;
   name: string;
   gender: string;
@@ -40,6 +40,6 @@ export type ButtonProps = {
 };
 
 export type SelectableFragranceCardProps = FragranceCardProps & {
-  onSelect: (id: string, selected: boolean) => void;
+  onSelect: (id: number, selected: boolean) => void;
   selected: boolean;
 };

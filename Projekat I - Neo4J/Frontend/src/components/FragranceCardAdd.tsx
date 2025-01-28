@@ -17,8 +17,7 @@ const FragranceCardAdd: React.FC<FragranceCardProps> = (props) => {
     (item) => item.id == Number(props.id)
   );
   const onAdd = async () => {
-    const id = Number(props.id);
-    await addFragranceToUserMutation.mutateAsync({ id });
+    await addFragranceToUserMutation.mutateAsync(props.id);
   };
 
   if (addFragranceToUserMutation.isLoading) {

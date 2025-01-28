@@ -6,14 +6,16 @@ import { CurrUserContext } from "../../context/CurrUserProvider";
 import { CircleLoader } from "../../components/loaders/CircleLoader";
 import { Loader } from "../../components/loaders/Loader";
 import SelectableFragranceCard from "../../components/SelectableFragranceCard";
+import WarningPopUp from "../../components/UiComponents/WarningPopUp";
 
 const Recommend = () => {
-  const [selectedFragrances, setSelectedFragrances] = useState<Set<string>>(
+  const [selectedFragrances, setSelectedFragrances] = useState<Set<number>>(
     new Set()
   );
   const { user, isLoading } = useContext(CurrUserContext);
   const { getFragrances } = useUserController();
   const { ref, inView } = useInView();
+  const [showWarning, setShowWarning] = useState(false);
   const { data, status, fetchNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery(
       //should we do this to prevent getting error pop ups
@@ -34,18 +36,23 @@ const Recommend = () => {
     }
   }, [fetchNextPage, inView, data]);
 
-  const handleSelect = (id: string, selected: boolean) => {
+  const handleSelect = (id: number, selected: boolean) => {
     setSelectedFragrances((prev) => {
       const newSelection = new Set(prev);
       if (selected) {
         if (newSelection.size >= 3) {
-          //pop up
+          setShowWarning(true);
+          setTimeout(() => {
+            setShowWarning(false);
+          }, 3000);
+          <WarningPopUp>You can't select more than 3 fragrances!</WarningPopUp>;
           return prev;
         }
         newSelection.add(id);
       } else {
         newSelection.delete(id);
       }
+      setShowWarning(false);
       return newSelection;
     });
   };
@@ -59,7 +66,13 @@ const Recommend = () => {
         <h2 className="text-2xl font-bold mb-6 text-center text-brand-500">
           Recommend
         </h2>
-
+        {showWarning && (
+          <div className="flex justify-center mb-4">
+            <WarningPopUp>
+              You can't select more than 3 fragrances!
+            </WarningPopUp>
+          </div>
+        )}
         <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
           {data?.pages?.map((page) =>
             page.fragrances.map((fragrance) => (
@@ -69,8 +82,8 @@ const Recommend = () => {
               >
                 <SelectableFragranceCard
                   {...fragrance}
-                  id={String(fragrance.id)}
-                  selected={selectedFragrances.has(String(fragrance.id))}
+                  id={fragrance.id}
+                  selected={selectedFragrances.has(fragrance.id)}
                   onSelect={handleSelect}
                 />
               </div>
