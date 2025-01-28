@@ -9,6 +9,7 @@ const useLogout = () => {
   const logoutUser = async function () {
     try {
       setAuth(emptyAuthValues);
+      localStorage.clear();
       navigate("/login");
     } catch (error) {
       console.log(error);

@@ -7,6 +7,7 @@ import { CircleLoader } from "../../components/loaders/CircleLoader";
 import { Loader } from "../../components/loaders/Loader";
 import SelectableFragranceCard from "../../components/SelectableFragranceCard";
 import WarningPopUp from "../../components/UiComponents/WarningPopUp";
+import { Link } from "react-router-dom";
 
 const Recommend = () => {
   const [selectedFragrances, setSelectedFragrances] = useState<Set<number>>(
@@ -36,6 +37,13 @@ const Recommend = () => {
     }
   }, [fetchNextPage, inView, data]);
 
+  useEffect(() => {
+    const storedFragrances = localStorage.getItem("selectedFragrances");
+    if (storedFragrances) {
+      setSelectedFragrances(new Set(JSON.parse(storedFragrances)));
+    }
+  }, []);
+
   const handleSelect = (id: number, selected: boolean) => {
     setSelectedFragrances((prev) => {
       const newSelection = new Set(prev);
@@ -53,6 +61,10 @@ const Recommend = () => {
         newSelection.delete(id);
       }
       setShowWarning(false);
+      localStorage.setItem(
+        "selectedFragrances",
+        JSON.stringify([...newSelection])
+      );
       return newSelection;
     });
   };
@@ -66,6 +78,18 @@ const Recommend = () => {
         <h2 className="text-2xl font-bold mb-6 text-center text-brand-500">
           Recommend
         </h2>
+        <div className="flex justify-center mb-6">
+          <Link
+            to="/recommend-fragrances"
+            type="button"
+            className="text-white bg-gradient-to-br from-green-400 to-blue-600 
+                           hover:bg-gradient-to-bl focus:ring-4 focus:outline-none 
+                           focus:ring-green-200 dark:focus:ring-green-800 
+                           font-medium rounded-lg text-lg px-8 py-4 text-center"
+          >
+            Recommend
+          </Link>
+        </div>
         {showWarning && (
           <div className="flex justify-center mb-4">
             <WarningPopUp>

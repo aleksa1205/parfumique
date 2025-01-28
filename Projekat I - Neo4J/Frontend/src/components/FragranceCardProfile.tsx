@@ -1,11 +1,10 @@
-import React from "react";
+import useDeleteUserFragranceMutation from "../hooks/useDeleteUserFragranceMutation";
+import { BaseFragrance } from "../dto-s/FragranceDto";
+import { CircleLoader } from "./loaders/CircleLoader";
 import FragranceCard from "./FragranceCard";
 import DeleteButton from "./UiComponents/DeleteButton";
-import useDeleteUserFragranceMutation from "../hooks/useDeleteUserFragranceMutation";
-import { FragranceCardProps } from "../dto-s/Props";
-import { CircleLoader } from "./loaders/CircleLoader";
 
-const FragranceCardProfile: React.FC<FragranceCardProps> = (props) => {
+const FragranceCardProfile = (props: BaseFragrance) => {
   const { deleteUserFragranceMutation, deleteFragranceError } =
     useDeleteUserFragranceMutation();
 

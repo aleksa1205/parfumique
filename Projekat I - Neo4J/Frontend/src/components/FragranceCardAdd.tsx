@@ -2,13 +2,13 @@ import { useContext } from "react";
 import { CurrUserContext } from "../context/CurrUserProvider";
 import useAddFragranceToUserMutation from "../hooks/useAddFragranceToUserMutation";
 import { CircleLoader } from "./loaders/CircleLoader";
-import { FragranceCardProps } from "../dto-s/Props";
 import FragranceCard from "./FragranceCard";
 import useIsLoggedIn from "../hooks/useIsLoggedIn";
 import { FaCircleInfo } from "react-icons/fa6";
 import MainButton from "./UiComponents/MainButton";
+import { BaseFragrance } from "../dto-s/FragranceDto";
 
-const FragranceCardAdd: React.FC<FragranceCardProps> = (props) => {
+const FragranceCardAdd = (props: BaseFragrance) => {
   const isLoggedIn = useIsLoggedIn();
   const { user } = useContext(CurrUserContext);
   const { addFragranceToUserMutation, addFragranceError } =

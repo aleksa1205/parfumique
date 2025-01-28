@@ -29,7 +29,7 @@ export type Fragrance = {
 
 export type BaseFragrance = Omit<
   Fragrance,
-  "manufacturer" | "perfumers" | "top" | "middle" | "base"
+  "manufacturer" | "perfumers" | "top" | "middle" | "base" | "batchYear"
 >;
 
 export type FragrancePagination = {

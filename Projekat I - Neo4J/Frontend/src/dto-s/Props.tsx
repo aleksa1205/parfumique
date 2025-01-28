@@ -1,4 +1,5 @@
 import { FieldError, RegisterOptions } from "react-hook-form";
+import { BaseFragrance } from "./FragranceDto";
 
 export type PaginationProps = {
   page: number;
@@ -34,12 +35,7 @@ export type SelectFieldProps = {
   options: Array<string>;
 };
 
-export type ButtonProps = {
-  func: (key: string) => void;
-  id: string;
-};
-
-export type SelectableFragranceCardProps = FragranceCardProps & {
+export type SelectableFragranceCardProps = BaseFragrance & {
   onSelect: (id: number, selected: boolean) => void;
   selected: boolean;
 };
