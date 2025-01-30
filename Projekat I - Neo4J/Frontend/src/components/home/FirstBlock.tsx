@@ -23,7 +23,7 @@ const FirstBlock = () => {
           </p>
           {!isLoggedIn && (
             <Link
-              to="register"
+              to="/register"
               className="inline-block px-6 py-2.5 text-xl font-semibold bg-white my-text-primary rounded-lg shadow-md hover:bg-gray-200 transition duration-300"
             >
               Join Us

@@ -72,6 +72,27 @@ public class UserController(IUserService userService, IFragranceService fragranc
         }
     }
 
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointSummary("get fragrances that are owned by the user")]
+    [HttpGet("fragrances/{username}/{page}")]
+    public async Task<IActionResult> GetUserFragrances(string username, int page)
+    {
+        try
+        {
+            if (!await userService.UserExistsAsync(username))
+                return NotFound($"User {username} doesn't exist!");
+
+            return Ok(await userService.GetUserFragrancesPaginationAsync(username, page));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -205,6 +226,39 @@ public class UserController(IUserService userService, IFragranceService fragranc
 
             await userService.AddFragranceToUserAsync(username, dto.FragranceId);
             return Ok($"Successfully added fragrance with id {dto.FragranceId} to user {username}!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [Authorize]
+    [RequiresRole(Roles.User)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointSummary("delete fragrance from logged in user")]
+    [HttpPatch("delete-fragrance-from-self")]
+    public async Task<IActionResult> DeleteFragranceFromSelf([FromBody] DeleteFragranceFromSelfDto dto)
+    {
+        try
+        {
+            var username = HttpContext.User.Identity?.Name;
+            if (username is null)
+                return Unauthorized();
+
+            if(!await userService.UserExistsAsync(username!))
+                return NotFound($"User {username} doesn't exists!");
+
+            if(!await fragranceService.FragranceExistsAsync(dto.FragranceId))
+                return NotFound($"Fragrance {dto.FragranceId} doesn't exists!");
+
+            if (!await userService.UserOwnsFragranceAsync(username!, dto.FragranceId))
+                return Conflict($"User {username} doesn't owns fragrance with id {dto.FragranceId}!");
+
+            await userService.DeleteFragranceFromUserAsync(username, dto.FragranceId);
+            return Ok($"Successfully deleted fragrance with id {dto.FragranceId} from user {username}!");
         }
         catch (Exception e)
         {

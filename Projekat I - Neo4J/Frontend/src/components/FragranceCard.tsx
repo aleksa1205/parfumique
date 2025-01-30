@@ -1,21 +1,10 @@
 import { Link } from "react-router-dom";
 import { base64ToUrl } from "../utils";
+import { BaseFragrance } from "../dto-s/FragranceDto";
 
-interface FragraceCardProps {
-  id: string;
-  image: string;
-  name: string;
-  gender: string;
-}
-
-const FragranceCard: React.FC<FragraceCardProps> = ({
-  id,
-  image,
-  name,
-  gender,
-}) => {
+const FragranceCard = ({ id, name, image, gender }: BaseFragrance) => {
   return (
-    <div className="grid gap-4 w-full">
+    <div className="relative grid gap-4 w-full">
       <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
         <div className="h-56">
           <a href="#">

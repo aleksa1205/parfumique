@@ -1,3 +1,4 @@
+import { BaseFragrance } from "./FragranceDto";
 import { Roles } from "../api/Roles";
 
 export type UserLogin = {
@@ -25,4 +26,5 @@ export type GetUserResponse = {
   surname: string;
   gender: string;
   username: string;
+  collection: Array<BaseFragrance>;
 };

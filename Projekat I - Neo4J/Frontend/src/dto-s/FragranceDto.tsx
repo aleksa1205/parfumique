@@ -29,7 +29,7 @@ export type Fragrance = {
 
 export type BaseFragrance = Omit<
   Fragrance,
-  "manufacturer" | "perfumers" | "top" | "middle" | "base"
+  "manufacturer" | "perfumers" | "top" | "middle" | "base" | "batchYear"
 >;
 
 export type FragrancePagination = {
@@ -37,4 +37,10 @@ export type FragrancePagination = {
   size: number;
   totalPages: number;
   fragrances: Array<BaseFragrance>;
+};
+
+export type FragranceInfinitePagination = {
+  fragrances: BaseFragrance[];
+  currentPage: number;
+  nextPage: number | null;
 };

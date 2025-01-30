@@ -4,15 +4,17 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayer from "./layers/MainLayer";
 import HomePage from "./pages/HomePage";
-import Login from "./pages/Login";
+import Login from "./pages/user/Login";
 import Fragrances from "./pages/Fragrances";
 import FragranceDetails from "./pages/FragranceDetails";
 import AboutUs from "./pages/AboutUs";
-import Register from "./pages/Register";
+import Register from "./pages/user/Register";
 import NotFound from "./pages/NotFound";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthProvider from "./context/AuthProvider";
 import { CurrUserProvider } from "./context/CurrUserProvider";
+import UserFragrances from "./pages/user/UserFragrances";
+import ProfilePage from "./pages/user/ProfilePage";
 import AdminRequiredLayer from "./layers/AdminRequiredLayer";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import { AdminNotes } from "./pages/Admin/Admin Note Block/AdminNote";
@@ -20,6 +22,8 @@ import { AdminManufacturer } from "./pages/Admin/Admin Manufacturer Block/AdminM
 import AdminParfumer from "./pages/Admin/Admin Parfumer Block/AdminPafrumer";
 import AdminUser from "./pages/Admin/Admin User Block/AdminUser";
 import AdminFragrance from "./pages/Admin/Admin Fragrance Block/AdminFragrance";
+import Recommend from "./pages/user/Recommend";
+import RecommendedFragrances from "./pages/user/RecommendedFragrances";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -32,7 +36,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/",
-        element: <HomePage />
+        element: <HomePage />,
       },
       {
         path: "/register",
@@ -54,6 +58,10 @@ const router = createBrowserRouter([
         path: "/about-us",
         element: <AboutUs />,
       },
+      { path: "/user-profile", element: <ProfilePage /> },
+      { path: "/user-fragrances", element: <UserFragrances /> },
+      { path: "/recommend", element: <Recommend /> },
+      { path: "/recommend-fragrances", element: <RecommendedFragrances /> },
       {
         element: <AdminRequiredLayer />,
         children: [
@@ -63,27 +71,27 @@ const router = createBrowserRouter([
           },
           {
             path: "/admin-dashboard/fragrance",
-            element: <AdminFragrance />
+            element: <AdminFragrance />,
           },
           {
             path: "/admin-dashboard/note",
-            element: <AdminNotes />
+            element: <AdminNotes />,
           },
           {
             path: "/admin-dashboard/manufacturer",
-            element: <AdminManufacturer />
+            element: <AdminManufacturer />,
           },
           {
             path: "/admin-dashboard/parfumer",
-            element: <AdminParfumer />
+            element: <AdminParfumer />,
           },
           {
             path: "/admin-dashboard/user",
-            element: <AdminUser />
+            element: <AdminUser />,
           },
-        ]
-      }
-    ]
+        ],
+      },
+    ],
   },
 ]);
 

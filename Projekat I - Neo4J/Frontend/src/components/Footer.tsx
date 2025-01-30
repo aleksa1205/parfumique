@@ -62,7 +62,7 @@ const Footer = () => {
             </div>
             <div>
               <h2 className="mb-6 text-sm font-semibold uppercase text-black">
-                Pravo
+                Policies
               </h2>
               <ul className="font-medium">
                 <li className="mb-4">

@@ -6,7 +6,7 @@ public interface IFragranceService
     public Task<bool> FragranceExistsAsync(string name);
     public Task<bool> FragranceHasManufacturerAsync(int id);
     public Task<IList<Fragrance>> GetFragrancesAsync();
-    public Task<PagintaionResponseDto> GetFragrancesAsyncPagination(int pageNumber, int pageSize);
+    public Task<PaginationResponseDto> GetFragrancesAsyncPagination(int pageNumber, int pageSize);
     public Task<IList<Fragrance>> GetFragrancesWithouthManufacturerAsync();
     public Task<Fragrance?> GetFragranceAsync(int id);
     public Task AddFragranceAsync(AddFragranceDto fragrance);

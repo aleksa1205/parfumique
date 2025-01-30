@@ -22,7 +22,7 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
             var query = @"MATCH (n:USER {username: $username})
                           MATCH (f:FRAGRANCE) WHERE id(f) = $id
                           OPTIONAL MATCH (n) -[r:OWNS]-> (f)
-                          RETURN r IS NOT NULL AS exists";
+                          RETURN DISTINCT(r) IS NOT NULL AS exists";
             var result = await tx.RunAsync(query, new { username, id });
             return (await result.SingleAsync())["exists"].As<bool>();
         });
@@ -61,6 +61,28 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
 
             user!.Collection = fragrances!;
             return user;
+        });
+    }
+
+    public async Task<PaginationInfiniteResponseDto> GetUserFragrancesPaginationAsync(string username, int page)
+    {
+        await using var session = driver.AsyncSession();
+        return await session.ExecuteReadAsync(async tx =>
+        {
+            int limit = 8;
+            int skip = (page - 1) * limit;
+            var query = @"MATCH (n:USER {username: $username})
+                          OPTIONAL MATCH (n) -[:OWNS]-> (f:FRAGRANCE)
+                          RETURN f{.*, id: id(f)}
+                          SKIP $skip
+                          LIMIT $limit";
+            var result = await tx.RunAsync(query, new { username, skip, limit });
+            var fragrances = new List<Fragrance>();
+            await foreach (var record in result)
+            {
+                fragrances.Add(MyUtils.DeserializeMap<Fragrance>(record["f"]));
+            }
+            return new PaginationInfiniteResponseDto(fragrances, page, fragrances.Count == limit);
         });
     }
 
@@ -141,6 +163,22 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
             var query = @"MATCH (n:USER {username: $username})
                           MATCH (f:FRAGRANCE) WHERE id(f) = $id
                           CREATE (n) -[:OWNS]-> (f)";
+            await tx.RunAsync(query, new
+            {
+                username, id = fragranceId
+            });
+        });
+    }
+
+    public async Task DeleteFragranceFromUserAsync(string username, int fragranceId)
+    {
+        await using var session = driver.AsyncSession();
+        await session.ExecuteWriteAsync(async tx =>
+        {
+            var query = @"MATCH (n:USER {username: $username})
+                          MATCH (f:FRAGRANCE) WHERE id(f) = $id
+                          MATCH (n) -[r:OWNS]-> (f)
+                          DELETE r";
             await tx.RunAsync(query, new
             {
                 username, id = fragranceId

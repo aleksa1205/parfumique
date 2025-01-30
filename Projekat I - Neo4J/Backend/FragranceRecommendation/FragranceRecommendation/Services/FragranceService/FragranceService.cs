@@ -56,7 +56,7 @@ public class FragranceService(IDriver driver) : IFragranceService
         });
     }
     
-    public async Task<PagintaionResponseDto> GetFragrancesAsyncPagination(int pageNumber, int pageSize)
+    public async Task<PaginationResponseDto> GetFragrancesAsyncPagination(int pageNumber, int pageSize)
     {
         await using var session = driver.AsyncSession();
         int skip = pageSize * (pageNumber - 1);

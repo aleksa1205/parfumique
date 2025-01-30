@@ -13,6 +13,11 @@
   color: #000;
 }
 
+.my-error {
+  background-color: #e5212c;
+  color: #fff;
+}
+
 button.my-bg-brand:hover,
 .my-active:hover {
   background-color: #015a48;
@@ -34,12 +39,15 @@ button.my-bg-brand:hover,
   color: #0bb091;
 }
 
+.my-text-blue {
+  color: #1d60eb;
+}
+
 .my-text-primary:hover {
   color: #0bb091;
 }
 
 .error {
-  margin-top: 5px;
   color: #e5212c;
   font-size: 14px;
 }

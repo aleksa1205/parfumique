@@ -1,9 +1,4 @@
-interface PaginationProps {
-  page: number;
-  setPage: (page: number) => void;
-  numberOfPages: number;
-  isPreviousData: boolean;
-}
+import { PaginationProps } from "../dto-s/Props";
 
 const Pagination: React.FC<PaginationProps> = ({
   page,
