@@ -1,5 +1,8 @@
+import { AdminActionCardContainer } from "../../../components/Admin/AdminActionCardContainer";
+import { adminFragranceCardsData } from "../Admin Fragrance Block/AdminFragranceCardsData";
+
 export function AdminManufacturer() {
     return (
-        <h3>Manufacturer</h3>
+        <AdminActionCardContainer data={adminFragranceCardsData} />
     )
 }

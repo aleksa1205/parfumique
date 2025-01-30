@@ -12,6 +12,7 @@ public class UpdateSelfDto
     [StringLength(30, MinimumLength = 3)]
     public string? Surname { get; set; }
 
+    [Required]
     [Gender]
     public char? Gender { get; set; }
 }
