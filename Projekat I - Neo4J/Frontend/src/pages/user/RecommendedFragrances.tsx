@@ -79,6 +79,7 @@ const RecommendedFragrances = () => {
   }
 
   if (data?.length == 0) {
+    console.log("bris")
     localStorage.removeItem("selectedFragrances");
     return <NoReccomendation />;
   }

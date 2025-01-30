@@ -4,6 +4,7 @@ import { Roles } from "../api/Roles";
 export type UserLogin = {
   username: string;
   password: string;
+  role: Roles;
 };
 
 export type User = {

@@ -1,17 +1,14 @@
 import { axiosAuth } from "../api/axios";
 import { useEffect } from "react";
 import UseAuth from "./useAuth";
-import { emptyAuthValues } from "../context/AuthProvider";
-// Ovo je react hook, kada se pozove on procita context iz auth i na osnovu njega
-// konfigurise axiosAuth instancu
-function useAxiosAuth() {
-  const { auth, setAuth } = UseAuth();
+import useLogout from "./useLogout";
 
-  //const logout = useLogout2();
+function useAxiosAuth() {
+  const { auth } = UseAuth();
+
+  const logout = useLogout();
 
   useEffect(() => {
-    // Inicijalni request, on treba da jwt (koji se nalazi u authContext) upise u secure
-    // cookie i tako ga posalje serveru, jer server jedino tako proverava tokene
     const requestIntercept = axiosAuth.interceptors.request.use(
       (config) => {
         if (!config.headers["Authorization"]) {
@@ -22,10 +19,6 @@ function useAxiosAuth() {
       (error) => Promise.reject(error)
     );
 
-    // Intrceptor za refreshovanje tokena, znaci ako request ne uspe i vrati nam nazad
-    // 401 (Unauthorized) onda pozivamo refresh funkciju koja zove refresh endpoint
-    // E sad verovatno moze da dodje do problema jer 401 kod moze da se vrati ako
-    // uopste nemamo token
     const responseIntercept = axiosAuth.interceptors.response.use(
       (response) => response,
       async (error) => {
@@ -33,9 +26,9 @@ function useAxiosAuth() {
         if (error?.response?.status === 401 && !prevRequest?.sent) {
           prevRequest.sent = true;
           try {
-            setAuth(emptyAuthValues);
-            //redirect na login
+            logout();
           } catch (refreshError) {
+            logout();
             return Promise.reject(refreshError);
           }
         }
@@ -44,7 +37,6 @@ function useAxiosAuth() {
       }
     );
 
-    //cleanup za useEffect
     return () => {
       axiosAuth.interceptors.request.eject(requestIntercept);
       axiosAuth.interceptors.response.eject(responseIntercept);

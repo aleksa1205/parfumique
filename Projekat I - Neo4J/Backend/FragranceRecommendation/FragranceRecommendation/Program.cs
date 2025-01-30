@@ -28,9 +28,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
-            ValidateIssuerSigningKey = true
+            ValidateIssuerSigningKey = true,
 
-            // ClockSkew = TimeSpan.Zero
+            ClockSkew = TimeSpan.Zero
         };
     });
 

@@ -7,6 +7,7 @@ import { AxiosResponse, isAxiosError } from "axios"
 import useAxiosAuth from "../../../../hooks/useAxiosPrivate"
 import { MdErrorOutline } from "react-icons/md"
 import { AdminActionCardImageInput } from "./AdminActionCardImageInput"
+import useLogout from "../../../../hooks/useLogout"
 
 export default function Input({active, setActiveActionCard, inputValue, setInputValue, httpMethod, endpointAdress, setOutputValue, outputValue, pathParams, imageInput}: {
     active: boolean,
@@ -27,6 +28,7 @@ export default function Input({active, setActiveActionCard, inputValue, setInput
     const [pathParamsValues, setPathParamsValues] = useState<string[]>(new Array(pathParams?.length).fill(''));
     const [isFetching, setIsFetching] = useState<boolean>(false);
     const [imageValue, setImageValue] = useState<string>('');
+    const logout = useLogout();
 
     useEffect(() => {
         if (isFetching && outputValue)
@@ -62,12 +64,17 @@ export default function Input({active, setActiveActionCard, inputValue, setInput
     async function onClickHandler() {
         try {
             setIsFetching(true);
-
+            let url = endpointAdress;
             let result : AxiosResponse<any, any> | null = null;
 
             switch (httpMethod) {
                 case HttpMethods.GET.label:
-                    result = await client.get(endpointAdress);
+                    if (pathParams) {
+                        pathParamsValues.forEach(param => {
+                            url += `/${param}`
+                        })
+                    }
+                    result = await client.get(url);
                     break;
                 case HttpMethods.PATCH.label:
                     result = await client.patch(endpointAdress,
@@ -91,7 +98,7 @@ export default function Input({active, setActiveActionCard, inputValue, setInput
                     if (!pathParams)
                         throw new Error("Delete method must have at least one path parameter. If there is no text input showing up please contact developer");
                     
-                    let url = endpointAdress;
+                    url = endpointAdress;
                     pathParamsValues.forEach(param => {
                         url += `/${param}`
                     });
@@ -113,8 +120,11 @@ export default function Input({active, setActiveActionCard, inputValue, setInput
         } catch (error) {
             let errorMessage = 'An unknown error occured.'
 
-            if (isAxiosError(error) && error.response != null)
-                    errorMessage = `Status Code: ${error.status}\n\n${JSON.stringify(error.response.data, null, 2)}`
+            if (isAxiosError(error) && error.response != null) {
+                if (error.response.status === 401)
+                    logout();
+                errorMessage = `Status Code: ${error.status}\n\n${JSON.stringify(error.response.data, null, 2)}`
+            }
             else if (error instanceof Error)
                 errorMessage = error.message 
 

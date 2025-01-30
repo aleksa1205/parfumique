@@ -9,5 +9,5 @@ public interface IPerfumerService
     public Task AddPerfumerAsync(AddPerfumerDto perfumer);
     public Task UpdatePerfumerAsync(UpdatePerfumerDto perfumer);
     public Task AddFragranceToPerfumerAsync(AddFragranceToPerfumer dto);
-    public Task DeletePerfumerAsync(DeletePerfumerDto perfumer);
+    public Task DeletePerfumerAsync(int id);
 }

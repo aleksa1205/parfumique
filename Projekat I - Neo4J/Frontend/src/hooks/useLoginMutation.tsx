@@ -14,7 +14,7 @@ const useLoginMutation = () => {
 
   const loginMutation = useMutation(login, {
     onSuccess: (response) => {
-      setAuth({ jwtToken: response.token, username: response.username });
+      setAuth({ jwtToken: response.token, username: response.username, role: response.role });
       setCredentialError(null);
       queryClient.invalidateQueries();
       navigate("/user-profile");

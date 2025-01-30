@@ -13,6 +13,13 @@ export const adminFragranceCardsData : AdminActionCardDataType = [
     title: 'Get Fragrances without Manufacturer', 
     description: `Returns all fragrances that don't have manufacturer.`, 
 },
+{
+  title: 'Get Fragrance by ID',
+  description: 'Returns one fragrance by ID.',
+  endpointAdress: '/fragrance',
+  httpMethod: 'GET',
+  pathParams: ['Id']
+},
 { 
     httpMethod: 'POST', 
     endpointAdress: '/fragrance',
@@ -78,6 +85,6 @@ export const adminFragranceCardsData : AdminActionCardDataType = [
     endpointAdress: '/fragrance/delete',
     description: 'Deletes fragrance from database.', 
     endpointRequirements: ['Authorization', 'Admin'],
-    pathParams: ['id']
+    pathParams: ['Id']
 },
 ]

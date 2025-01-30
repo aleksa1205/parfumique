@@ -12,14 +12,13 @@ import Register from "./pages/user/Register";
 import NotFound from "./pages/NotFound";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthProvider from "./context/AuthProvider";
-import { CurrUserProvider } from "./context/CurrUserProvider";
 import UserFragrances from "./pages/user/UserFragrances";
 import ProfilePage from "./pages/user/ProfilePage";
 import AdminRequiredLayer from "./layers/AdminRequiredLayer";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import { AdminNotes } from "./pages/Admin/Admin Note Block/AdminNote";
 import { AdminManufacturer } from "./pages/Admin/Admin Manufacturer Block/AdminManufacturer";
-import AdminParfumer from "./pages/Admin/Admin Parfumer Block/AdminPafrumer";
+import AdminPerfumer from "./pages/Admin/Admin Perfumer Block/AdminPefrumer";
 import AdminUser from "./pages/Admin/Admin User Block/AdminUser";
 import AdminFragrance from "./pages/Admin/Admin Fragrance Block/AdminFragrance";
 import Recommend from "./pages/user/Recommend";
@@ -82,8 +81,8 @@ const router = createBrowserRouter([
             element: <AdminManufacturer />,
           },
           {
-            path: "/admin-dashboard/parfumer",
-            element: <AdminParfumer />,
+            path: "/admin-dashboard/perfumer",
+            element: <AdminPerfumer />,
           },
           {
             path: "/admin-dashboard/user",
@@ -99,9 +98,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <CurrUserProvider>
-          <RouterProvider router={router} />
-        </CurrUserProvider>
+        <RouterProvider router={router} />
       </AuthProvider>
     </QueryClientProvider>
   </StrictMode>
