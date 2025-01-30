@@ -3,11 +3,9 @@ import { AdminPages } from "../../layers/AdminRequiredLayer"
 
 type PropValues = {
     activeAdminPage: AdminPages,
-    setActiveAdminPage: React.Dispatch<React.SetStateAction<AdminPages>>
 }
 
-export default function AdminFirstBlock({ activeAdminPage, setActiveAdminPage}: PropValues) {
-
+export default function AdminFirstBlock({ activeAdminPage}: PropValues) {
     let activePageComponent = null;
     if (activeAdminPage === AdminPages.Dashboard)
             activePageComponent = <span className="font-semibold text-brand-600"> Admin Dashboard</span>
@@ -31,17 +29,16 @@ export default function AdminFirstBlock({ activeAdminPage, setActiveAdminPage}: 
                 {AdminPages[activeAdminPage]}
             </h2>
 
-            <AdminPagesButtonGroup activeAdminPage={activeAdminPage} setActiveAdminPage={setActiveAdminPage} />
+            <AdminPagesButtonGroup activeAdminPage={activeAdminPage} />
         </div>
     )
 }
 
 type AdminPagesButtonGroupProps = {
     activeAdminPage: AdminPages;
-    setActiveAdminPage: React.Dispatch<React.SetStateAction<AdminPages>>
 }
 
-function AdminPagesButtonGroup({activeAdminPage, setActiveAdminPage} : AdminPagesButtonGroupProps) {
+function AdminPagesButtonGroup({activeAdminPage} : AdminPagesButtonGroupProps) {
     const adminPagesArray = Object.values(AdminPages)
                             .filter((value): value is keyof typeof AdminPages => typeof value === "string");
     return (
@@ -52,8 +49,7 @@ function AdminPagesButtonGroup({activeAdminPage, setActiveAdminPage} : AdminPage
                         <AdminPagesButton 
                             key={value} 
                             text={value} 
-                            activeAdminPage={activeAdminPage} 
-                            setActiveAdminPage={setActiveAdminPage} 
+                            activeAdminPage={activeAdminPage}
                             linkTo={`/admin-dashboard/${value === AdminPages[AdminPages.Dashboard]
                                     ? ''
                                     : value
@@ -69,15 +65,13 @@ function AdminPagesButtonGroup({activeAdminPage, setActiveAdminPage} : AdminPage
 type AdminPagesButtonProps = {
     text: keyof typeof AdminPages;
     activeAdminPage: AdminPages;
-    setActiveAdminPage: React.Dispatch<React.SetStateAction<AdminPages>>;
     linkTo: string;
 }
 
-function AdminPagesButton({text, activeAdminPage, setActiveAdminPage, linkTo}: AdminPagesButtonProps) {
+function AdminPagesButton({text, activeAdminPage, linkTo}: AdminPagesButtonProps) {
     const active = text === AdminPages[activeAdminPage];
     return (
             <Link to={linkTo}
-            onClick={() => setActiveAdminPage(AdminPages[text])}
             className={`px-4 py-2 rounded-md cursor-pointer
                         ${active
                         ? 'bg-brand-600 text-white hover:bg-brand-800' 

@@ -5,7 +5,7 @@ public class BatchYearAttribute : ValidationAttribute
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         if (value is null)
-            return new ValidationResult("Batch year field is required.");
+            return ValidationResult.Success;
 
         var currValue = (int)value;
         var currYear = DateTime.Now.Year;

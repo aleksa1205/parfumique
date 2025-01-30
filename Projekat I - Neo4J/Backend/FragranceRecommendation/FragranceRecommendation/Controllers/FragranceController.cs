@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using FragranceRecommendation.Auth;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FragranceRecommendation.Controllers;
 
@@ -83,6 +84,7 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
         }
     }
 
+    [Authorize]
     [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -101,7 +103,6 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
         }
     }
 
-    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -123,6 +124,7 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
         }
     }
 
+    [Authorize]
     [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -151,6 +153,7 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
         }
     }
 
+    [Authorize]
     [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -179,21 +182,22 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
         }
     }
 
+    [Authorize]
     [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointSummary("delete fragrance")]
-    [HttpDelete]
-    public async Task<IActionResult> DeleteFragrance([FromBody] DeleteFragranceDto fragrance)
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> DeleteFragrance(int id)
     {
         try
         {
-            if (!await fragranceService.FragranceExistsAsync(fragrance.Id))
-                return NotFound($"Fragrance with id {fragrance.Id} not found!");
+            if (!await fragranceService.FragranceExistsAsync(id))
+                return NotFound($"Fragrance with id {id} not found!");
 
-            await fragranceService.DeleteFragranceAsync(fragrance);
-            return Ok($"Fragrance with id {fragrance.Id} deleted!");
+            await fragranceService.DeleteFragranceAsync(id);
+            return Ok($"Fragrance with id {id} deleted!");
         }
         catch (Exception e)
         {
@@ -201,6 +205,7 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
         }
     }
 
+    [Authorize]
     [RequiresRole(Roles.User)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

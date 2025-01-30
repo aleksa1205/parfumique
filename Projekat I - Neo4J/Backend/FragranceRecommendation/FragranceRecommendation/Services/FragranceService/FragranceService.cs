@@ -15,6 +15,19 @@ public class FragranceService(IDriver driver) : IFragranceService
         });
     }
 
+    public async Task<bool> FragranceExistsAsync(string name)
+    {
+        await using var session = driver.AsyncSession();
+        return await session.ExecuteReadAsync(async tx =>
+        {
+            var query = @"OPTIONAL MATCH (n:FRAGRANCE)
+                          WHERE n.name = $name
+                          RETURN n IS NOT NULL AS exists";
+            var result = await tx.RunAsync(query, new { name });
+            return (await result.SingleAsync())["exists"].As<bool>();
+        });
+    }
+
     public async Task<bool> FragranceHasManufacturerAsync(int id)
     {
         await using var session = driver.AsyncSession();
@@ -138,11 +151,35 @@ public class FragranceService(IDriver driver) : IFragranceService
         await using var session = driver.AsyncSession();
         await session.ExecuteWriteAsync(async tx =>
         {
-            var query = @"MATCH (n:FRAGRANCE)
-                          WHERE id(n) = $id
-                          SET n.name = $name, n.year = $year, n.gender = $gender";
-            await tx.RunAsync(query,
-                new { id=fragrance.Id, name = fragrance.Name, year = fragrance.BatchYear, gender = fragrance.Gender });
+            var updates = new List<string>();
+            var parameters = new Dictionary<string, object> { { "id", fragrance.Id } };
+
+            if (!string.IsNullOrEmpty(fragrance.Name))
+            {
+                updates.Add("n.name = $name");
+                parameters["name"] = fragrance.Name;
+            }
+
+            if (fragrance.Gender is not null)
+            {
+                updates.Add("n.gender = $gender");
+                parameters["gender"] = fragrance.Gender;
+            }
+
+            if (fragrance.BatchYear is not null)
+            {
+                updates.Add("n.year = $year");
+                parameters["year"] = fragrance.BatchYear;
+            }
+
+            if (fragrance.Image is not null)
+            {
+                updates.Add("n.image = $image");
+                parameters["image"] = fragrance.Image;
+            }
+
+        var query = $"MATCH (n:FRAGRANCE) WHERE id(n) = $id SET {string.Join(", ", updates)}";
+            await tx.RunAsync(query, parameters);
         });
     }
     
@@ -181,7 +218,7 @@ public class FragranceService(IDriver driver) : IFragranceService
         });
     }
 
-    public async Task DeleteFragranceAsync(DeleteFragranceDto fragrance)
+    public async Task DeleteFragranceAsync(int id)
     {
         await using var session = driver.AsyncSession();
         await session.ExecuteWriteAsync(async tx =>
@@ -189,7 +226,7 @@ public class FragranceService(IDriver driver) : IFragranceService
             var query = @"MATCH (n:FRAGRANCE)
                         WHERE id(n) = $id
                         DETACH DELETE (n)";
-            await tx.RunAsync(query, new { id = fragrance.Id });
+            await tx.RunAsync(query, new { id });
         });
     }
 

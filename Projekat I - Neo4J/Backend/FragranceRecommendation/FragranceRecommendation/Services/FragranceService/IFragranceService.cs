@@ -3,6 +3,7 @@
 public interface IFragranceService
 {
     public Task<bool> FragranceExistsAsync(int id);
+    public Task<bool> FragranceExistsAsync(string name);
     public Task<bool> FragranceHasManufacturerAsync(int id);
     public Task<IList<Fragrance>> GetFragrancesAsync();
     public Task<PagintaionResponseDto> GetFragrancesAsyncPagination(int pageNumber, int pageSize);
@@ -12,6 +13,6 @@ public interface IFragranceService
     public Task UpdateFragranceAsync(UpdateFragranceDto fragrance);
     public Task AddNotesToFragrance(NotesToFragranceDto dto);
     public Task DeleteNotesFromFragrance(NotesToFragranceDto dto);
-    public Task DeleteFragranceAsync(DeleteFragranceDto fragrance);
+    public Task DeleteFragranceAsync(int id);
     public Task<List<FragranceRecommendationDto>> RecommendFragrance(int fragranceId);
 }
