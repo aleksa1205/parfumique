@@ -8,5 +8,6 @@ public interface IManufacturerService
     public Task<Manufacturer?> GetManufacturerAsync(string name);
     public Task AddManufacturerAsync(string name);
     public Task AddFragranceToManufacturerAsync(int fragranceId, string name);
+    public Task UpdateManufacturer(string name, string image);
     public Task DeleteManufacturerAsync(string name);
 }

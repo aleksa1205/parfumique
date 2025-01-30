@@ -88,15 +88,41 @@ public class PerfumerService(IDriver driver) : IPerfumerService
         await using var session = driver.AsyncSession();
         await session.ExecuteWriteAsync(async tx =>
         {
-            var query = @"MATCH (n:PERFUMER)
-                          WHERE id(n) = $id
-                          SET n.name = $name, n.surname = $surname, n.gender = $gender, n.country = $country";
-            await tx.RunAsync(query,
-                new
-                {
-                    id = perfumer.Id, name = perfumer.Name, surname = perfumer.Surname, gender = perfumer.Gender,
-                    country = perfumer.Country
-                });
+            var updates = new List<string>();
+            var parameters = new Dictionary<string, object> { { "id", perfumer.Id } };
+
+            if (!string.IsNullOrEmpty(perfumer.Name))
+            {
+                updates.Add("n.name = $name");
+                parameters["name"] = perfumer.Name;
+            }
+
+            if (!string.IsNullOrEmpty(perfumer.Surname))
+            {
+                updates.Add("n.surname = $surname");
+                parameters["surname"] = perfumer.Surname;
+            }
+
+            if (perfumer.Gender is not null)
+            {
+                updates.Add("n.gender = $gender");
+                parameters["gender"] = perfumer.Gender;
+            }
+
+            if (perfumer.Image is not null)
+            {
+                updates.Add("n.image = $image");
+                parameters["image"] = perfumer.Image;
+            }
+
+            if (perfumer.Country is not null)
+            {
+                updates.Add("n.country = $country");
+                parameters["country"] = perfumer.Country;
+            }
+
+            var query = $"MATCH (n:PERFUMER) WHERE id(n) = $id SET {string.Join(", ", updates)}";
+            await tx.RunAsync(query, parameters);
         });
     }
 
@@ -112,7 +138,7 @@ public class PerfumerService(IDriver driver) : IPerfumerService
         });
     }
 
-    public async Task DeletePerfumerAsync(DeletePerfumerDto perfumer)
+    public async Task DeletePerfumerAsync(int id)
     {
         await using var session = driver.AsyncSession();
         await session.ExecuteWriteAsync(async tx =>
@@ -120,7 +146,7 @@ public class PerfumerService(IDriver driver) : IPerfumerService
             var query = @"MATCH(n:PERFUMER)
                           WHERE id(n) = $id
                           DETACH DELETE n";
-            await tx.RunAsync(query, new { id = perfumer.Id });
+            await tx.RunAsync(query, new { id });
         });
     }
 }

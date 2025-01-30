@@ -90,6 +90,17 @@ public class ManufacturerService(IDriver driver) : IManufacturerService
         });
     }
 
+    public async Task UpdateManufacturer(string name, string image)
+    {
+        await using var session = driver.AsyncSession();
+        await session.ExecuteWriteAsync(async tx =>
+        {
+            var query = @"MATCH (m:MANUFACTURER) WHERE m.name = $name
+                          SET m.image = $image";
+            await tx.RunAsync(query, new { name, image });
+        });
+    }
+
     public async Task DeleteManufacturerAsync(string name)
     {
         await using var session = driver.AsyncSession();

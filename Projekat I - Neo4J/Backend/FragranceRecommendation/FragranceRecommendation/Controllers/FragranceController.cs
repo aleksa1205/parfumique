@@ -103,11 +103,13 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
         }
     }
 
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [EndpointSummary("update fragrance")]
-    [HttpPatch]
+    [EndpointSummary("Update fragrance")]
+    [HttpPatch("update")]
     public async Task<IActionResult> UpdateFragrance([FromBody] UpdateFragranceDto fragrance)
     {
         try
@@ -214,6 +216,10 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
     [HttpGet("recommend-fragrances")]
     public async Task<IActionResult> RecommendFragrances([FromQuery] List<int> fragranceIds)
     {
+        var username = HttpContext.User.Identity?.Name;
+        if (username is null)
+            return Unauthorized();
+
         if (fragranceIds.Count == 0 || fragranceIds.Count > 3)
             return BadRequest("You must pass 1, 2 or 3 fragrances!");
 
@@ -228,7 +234,7 @@ public class  FragranceController(IFragranceService fragranceService, INoteServi
                 if(!await fragranceService.FragranceExistsAsync(fragranceId))
                     return NotFound($"Fragrance with id {fragranceId} does not exist!");
 
-                var recommendation = await fragranceService.RecommendFragrance(fragranceId);
+                var recommendation = await fragranceService.RecommendFragrance(fragranceId, username);
                 recommendationGroups.Add(recommendation);
             }
 

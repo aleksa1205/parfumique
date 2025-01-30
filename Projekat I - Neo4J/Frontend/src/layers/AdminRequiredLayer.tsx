@@ -11,7 +11,7 @@ export enum AdminPages {
     Fragrance,
     Note,
     Manufacturer,
-    Parfumer,
+    Perfumer,
     User
 }
 

@@ -1,4 +1,7 @@
-﻿namespace FragranceRecommendation.Controllers;
+﻿using FragranceRecommendation.Auth;
+using Microsoft.AspNetCore.Authorization;
+
+namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -43,6 +46,8 @@ public class PerfumerController(IPerfumerService perfumerService, IFragranceServ
         }
     }
 
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [EndpointSummary("create perfumer")]
@@ -60,6 +65,8 @@ public class PerfumerController(IPerfumerService perfumerService, IFragranceServ
         }
     }
 
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -81,6 +88,8 @@ public class PerfumerController(IPerfumerService perfumerService, IFragranceServ
         }
     }
 
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -109,20 +118,22 @@ public class PerfumerController(IPerfumerService perfumerService, IFragranceServ
         }
     }
 
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointSummary("delete perfumer")]
-    [HttpDelete]
-    public async Task<IActionResult> DeletePerfumer([FromBody] DeletePerfumerDto perfumer)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletePerfumer(int Id)
     {
         try
         {
-            if (!await perfumerService.PerfumerExistsAsync(perfumer.Id))
-                return NotFound($"Perfumer with id {perfumer.Id} not found!");
+            if (!await perfumerService.PerfumerExistsAsync(Id))
+                return NotFound($"Perfumer with id {Id} not found!");
 
-            await perfumerService.DeletePerfumerAsync(perfumer);
-            return Ok($"Perfumer with id {perfumer.Id} deleted!");
+            await perfumerService.DeletePerfumerAsync(Id);
+            return Ok($"Perfumer with id {Id} deleted!");
         }
         catch (Exception e)
         {

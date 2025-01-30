@@ -17,7 +17,7 @@ const Recommend = () => {
   const { getFragrances } = useUserController();
   const { ref, inView } = useInView();
   const [showWarning, setShowWarning] = useState(false);
-  const { data, status, fetchNextPage, isFetchingNextPage, isFetching } =
+  const { data, status, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery(
       //should we do this to prevent getting error pop ups
       ["items", user?.username || ""],
@@ -69,7 +69,7 @@ const Recommend = () => {
     });
   };
 
-  if (isLoading || status === "loading" || isFetching) {
+  if (isLoading || status === "loading") {
     return <CircleLoader />;
   }
   return (

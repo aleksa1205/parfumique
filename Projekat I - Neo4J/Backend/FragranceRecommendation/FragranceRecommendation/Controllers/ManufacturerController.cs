@@ -1,5 +1,7 @@
-﻿using FragranceRecommendation.DTOs.ManufacturerDTOs;
+﻿using FragranceRecommendation.Auth;
+using FragranceRecommendation.DTOs.ManufacturerDTOs;
 using FragranceRecommendation.Services.ManufacturerService;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FragranceRecommendation.Controllers;
 
@@ -50,6 +52,8 @@ public class ManufacturerController(
     }
 
 
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -73,6 +77,8 @@ public class ManufacturerController(
         }
     }
 
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -108,17 +114,44 @@ public class ManufacturerController(
         }
     }
 
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [EndpointSummary("Update manufacturer")]
+    [HttpPatch("update")]
+    public async Task<IActionResult> UpdateManufacturer(UpdateManufacturerDto dto)
+    {
+        try
+        {
+            var name = dto.Name!;
+            var image = dto.Image!;
+
+            if (!await manufacturerService.ManufacturerExistsAsync(name))
+                return NotFound($"Manufacturer {name} doesn't exist!");
+
+            await manufacturerService.UpdateManufacturer(name, image);
+            return Ok($"Successfully updated fragrance {name}!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointSummary("delete manufacturer")]
-    [HttpDelete]
-    public async Task<IActionResult> DeleteManufacturer([FromBody] DeleteManufacturerDto deleteDto)
+    [HttpDelete("{name}")]
+    public async Task<IActionResult> DeleteManufacturer(string name)
     {
         try
         {
-            var name = deleteDto.Name!;
-
             if (!await manufacturerService.ManufacturerExistsAsync(name))
                 return NotFound($"Manufacturer {name} doesn't exist!");
 
