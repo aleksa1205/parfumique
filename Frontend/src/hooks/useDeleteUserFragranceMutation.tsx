@@ -13,7 +13,7 @@ const useDeleteUserFragranceMutation = () => {
   const deleteUserFragranceMutation = useMutation(deleteFragrance, {
     onSuccess: () => {
       setDeleteFragranceError(null);
-      queryClient.invalidateQueries();
+      queryClient.refetchQueries();
     },
     onError: (error) => {
       if (error instanceof NotFoundError) {

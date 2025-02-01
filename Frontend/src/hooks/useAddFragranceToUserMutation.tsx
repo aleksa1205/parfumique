@@ -13,7 +13,7 @@ const useAddFragranceToUserMutation = () => {
   const addFragranceToUserMutation = useMutation(addFragrance, {
     onSuccess: () => {
       setAddFragranceError(null);
-      queryClient.invalidateQueries();
+      queryClient.refetchQueries();
     },
     onError: (error) => {
       if (error instanceof NotFoundError) {
