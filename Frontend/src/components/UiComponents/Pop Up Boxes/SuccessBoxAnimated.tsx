@@ -24,7 +24,7 @@ export default function SuccessBoxAnimated({ children, style, closeMessage, dont
 
     return (
         <animated.div style={style}
-            className="rounded-lg py-3 px-4 flex items-center gap-4 fixed left-1/2 z-999 [&>svg]:shrink-0 [&>svg]grow-0 pr-12
+            className="rounded-lg py-3 px-4 flex items-center gap-4 fixed left-1/2 z-[999] [&>svg]:shrink-0 [&>svg]grow-0 pr-12
                        bg-green-500 text-white"
         >
             <FaCircleCheck size='1.25rem'/>

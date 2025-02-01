@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import logo from "../assets/images/logo.jpg";
+import logo from "../assets/images/Parfumique logo.png";
 import useIsLoggedIn from "../hooks/useIsLoggedIn";
 import { useContext, useEffect, useRef, useState } from "react";
 import { CurrUserContext } from "../context/CurrUserProvider";
@@ -68,7 +68,7 @@ const Navbar = () => {
             to="/"
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
-            <img src={logo} className="h-8 scale-150 rounded-2xl " alt="logo" />
+            <img src={logo} className="h-11 scale-150 rounded-2xl " alt="logo" />
           </Link>
           <NavLinks />
           <div className="w-full md:block md:w-auto">

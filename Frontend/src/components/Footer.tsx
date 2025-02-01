@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
-import logo from "../assets/images/logo.jpg";
+import logo from "../assets/images/Parfumique logo.png";
 
 const Footer = () => {
   return (
@@ -9,16 +9,12 @@ const Footer = () => {
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
             <div className="flex items-center">
+              <Link to='/'>
               <img
                 src={logo}
-                className="h-8 me-3 scale-150 mr-5"
+                className="h-12 me-3 scale-150 mr-5"
                 alt="Fragrance Recommendation"
               />
-              <Link
-                to="/"
-                className="self-center text-xl font-semibold whitespace-nowrap my-text-black"
-              >
-                Fragrance Recommendation
               </Link>
             </div>
           </div>

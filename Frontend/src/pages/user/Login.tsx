@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { Link, Navigate, useLoaderData } from "react-router-dom";
-import logo from "/src/assets/images/logo.jpg";
+import logo from "/src/assets/images/Parfumique logo.png";
 import { UserLogin } from "../../dto-s/UserDto";
 import useLoginMutation from "../../hooks/useLoginMutation";
 import PasswordField from "../../components/form-fields/PasswordField";
@@ -46,7 +46,7 @@ const Login = () => {
   return (
     <>
     <PopUpComponent />
-    <section className="bg-white font-roboto">
+    <section className="bg-white font-roboto mt-14">
       {loginMutation.isLoading && <CircleLoader />}
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto">
         <Link
@@ -54,11 +54,10 @@ const Login = () => {
           className="flex items-center mb-6 text-2xl font-semibold my-text-black"
         >
           <img
-            className="w-8 h-8 mr-5 rounded-2xl scale-150"
+            className="h-12 mr-5 rounded-2xl scale-150"
             src={logo}
             alt="logo"
           />
-          Fragrance Recommendation
         </Link>
         <div className="w-full bg-black text-white rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
