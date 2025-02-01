@@ -26,9 +26,9 @@ function useAxiosAuth() {
         if (error?.response?.status === 401 && !prevRequest?.sent) {
           prevRequest.sent = true;
           try {
-            logout();
+            logout("Session expired, please log in again.");
           } catch (refreshError) {
-            logout();
+            logout("Error occurred with authorization, please log in again.");
             return Promise.reject(refreshError);
           }
         }

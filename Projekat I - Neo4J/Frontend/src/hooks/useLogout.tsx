@@ -7,11 +7,14 @@ function useLogout() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const logoutUser = async function () {
+  const logoutUser = async function (message?: string) {
     try {
+      let urlMessage = "";
+      if (message)
+        urlMessage = "?message=" + message;
+
       setAuth(emptyAuthValues);
-      //localStorage.clear();
-      navigate("/login", { state: {from: location, replace: true}});
+      navigate("/login" + urlMessage, { state: {from: location, replace: true}});
     } catch (error) {
       console.log(error);
     }

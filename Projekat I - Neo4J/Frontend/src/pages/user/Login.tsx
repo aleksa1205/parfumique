@@ -1,24 +1,51 @@
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useLoaderData } from "react-router-dom";
 import logo from "/src/assets/images/logo.jpg";
 import { UserLogin } from "../../dto-s/UserDto";
 import useLoginMutation from "../../hooks/useLoginMutation";
 import PasswordField from "../../components/form-fields/PasswordField";
 import InputField from "../../components/form-fields/InputField";
 import { CircleLoader } from "../../components/loaders/CircleLoader";
+import UseAuth from "../../hooks/useAuth";
+import usePopUpMessage from "../../hooks/usePopUpMessage";
+import { useEffect } from "react";
+
+export function loader({request}: any) {
+  const url = new URL(request.url);
+  return url.searchParams.get("message")
+}
 
 const Login = () => {
+
   const form = useForm<UserLogin>();
   const { register, control, handleSubmit, formState } = form;
   const { errors } = formState;
   const { loginMutation, credentialError } = useLoginMutation();
+  const { auth } = UseAuth();
+
+  const message = useLoaderData();
+  const { PopUpComponent, setPopUpMessage } = usePopUpMessage();
+
+  useEffect(() => {
+    if(typeof message === 'string') {
+      setPopUpMessage({
+        message,
+        type: 'info'
+      })
+    }
+  }, [])
+
+  if (auth.jwtToken !== '')
+    return <Navigate to='/' replace />
 
   const onSubmit = async (userData: UserLogin) => {
     await loginMutation.mutateAsync(userData);
   };
 
   return (
+    <>
+    <PopUpComponent />
     <section className="bg-white font-roboto">
       {loginMutation.isLoading && <CircleLoader />}
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto">
@@ -80,6 +107,7 @@ const Login = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 

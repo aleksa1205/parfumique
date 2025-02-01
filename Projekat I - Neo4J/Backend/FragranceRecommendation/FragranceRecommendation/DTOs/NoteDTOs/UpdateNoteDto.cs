@@ -6,7 +6,8 @@ public class UpdateNoteDto
     [StringLength(30, MinimumLength = 3)]
     public string? Name { get; set; }
 
-    [Required]
     [StringLength(30, MinimumLength = 3)]
     public string? Type { get; set; }
+
+    public string? Image { get; set; }
 }

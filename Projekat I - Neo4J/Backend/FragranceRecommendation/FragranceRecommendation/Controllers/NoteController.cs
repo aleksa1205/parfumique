@@ -1,4 +1,7 @@
-﻿namespace FragranceRecommendation.Controllers;
+﻿using FragranceRecommendation.Auth;
+using Microsoft.AspNetCore.Authorization;
+
+namespace FragranceRecommendation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -41,6 +44,8 @@ public class NoteController(INoteService noteService) : ControllerBase
         }
     }
 
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -62,6 +67,8 @@ public class NoteController(INoteService noteService) : ControllerBase
         }
     }
 
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -82,21 +89,23 @@ public class NoteController(INoteService noteService) : ControllerBase
             return BadRequest(e.Message);
         }
     }
-    
+
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointSummary("delete note")]
-    [HttpDelete]
-    public async Task<IActionResult> DeleteNote([FromBody] DeleteNoteDto note)
+    [HttpDelete("{name}")]
+    public async Task<IActionResult> DeleteNote(string name)
     {
         try
         {
-            if (!await noteService.NoteExistsAsync(note.Name!))
-                return NotFound($"Note {note.Name} not found!");
+            if (!await noteService.NoteExistsAsync(name))
+                return NotFound($"Note {name} not found!");
 
-            await noteService.DeleteNoteAsync(note);
-            return Ok($"Note {note.Name} successfully deleted!");
+            await noteService.DeleteNoteAsync(name);
+            return Ok($"Note {name} successfully deleted!");
         }
         catch (Exception e)
         {

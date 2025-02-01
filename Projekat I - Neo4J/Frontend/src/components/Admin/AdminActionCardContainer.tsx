@@ -13,20 +13,6 @@ export function AdminActionCardContainer({data}:
             <div className="grid grid-cols-1 gap-x-5 gap-y-10">
             {data.map((item, index) => {
                 return (
-                    // <AdminActionCard
-                    //     key={item.title}
-                    //     httpMethod={item.httpMethod}
-                    //     title={item.title}
-                    //     description={item.description}
-                    //     endpointRequirements={item.endpointRequirements}
-                    //     active={activeActionCard === item.title}
-                    //     setActiveActionCard={setActiveActionCard}
-                    //     endpointAdress={item.endpointAdress}
-                    //     {...hasBody(item)
-                    //         ? { inputExample: item.inputExample }
-                    //         : { pathParams: item.pathParams, queryParams: item.queryParams }
-                    //     }
-                    // />
                     <AdminActionCard 
                         key={index}
                         data={item}

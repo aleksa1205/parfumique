@@ -7,5 +7,5 @@ public interface INoteService
     public Task<Note?> GetNoteAsync(string name);
     public Task AddNoteAsync(AddNoteDto note);
     public Task UpdateNoteAsync(UpdateNoteDto note);
-    public Task DeleteNoteAsync(DeleteNoteDto note);
+    public Task DeleteNoteAsync(string name);
 }

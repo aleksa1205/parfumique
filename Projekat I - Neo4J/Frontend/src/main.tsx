@@ -23,6 +23,7 @@ import AdminUser from "./pages/Admin/Admin User Block/AdminUser";
 import AdminFragrance from "./pages/Admin/Admin Fragrance Block/AdminFragrance";
 import Recommend from "./pages/user/Recommend";
 import RecommendedFragrances from "./pages/user/RecommendedFragrances";
+import { loader as loginLoader } from "./pages/user/Login";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
+        loader: loginLoader
       },
       {
         path: "/fragrances",

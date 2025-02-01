@@ -24,15 +24,12 @@ type PropsValue = {
 export function CurrUserProvider({ children }: PropsValue) {
   const { get } = useUserController();
   const { auth } = UseAuth();
-  const username = auth?.username;
-  if (!username) {
-    console.log("Username not found in auth!");
-  }
+
   const { data: userData, isLoading } = useQuery(
-    ["user", username],
-    () => get(username),
+    ["user", auth.username],
+    () => get(),
     {
-      enabled: !!username,
+      enabled: !!auth.jwtToken,
       retry: false,
       onError: (error) => {
         console.log("Error while fetching user data: ", error);
