@@ -79,10 +79,17 @@ const RecommendedFragrances = () => {
   }
 
   if (data?.length == 0) {
-    console.log("bris")
     localStorage.removeItem("selectedFragrances");
     return <NoReccomendation />;
   }
+
+  const getGridCols = (length: number) => {
+    if (length === 1) return "grid-cols-1"; // One item, full width, centered
+    if (length === 2) return "grid-cols-2"; // Two items, 2 columns
+    if (length === 3) return "grid-cols-3"; // Three items, 3 columns
+    if (length === 4) return "grid-cols-4"; // Four items, 4 columns
+    return "grid-cols-5"; // Five items, 5 columns
+  };
 
   //change it later to make better ui
   return (
@@ -91,7 +98,11 @@ const RecommendedFragrances = () => {
         <h1 className="text-brand-500 text-3xl font-semibold mb-6 text-center">
           Recommended Fragrances
         </h1>
-        <div className="mb-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 w-full">
+        <div
+          className={`mb-4 grid gap-4 w-full ${getGridCols(data!.length)} 
+                      ${data!.length === 1 ? "justify-center" : ""}`} // Center the single item
+        >
+          {" "}
           {data?.map((fragrance) => (
             <div
               key={fragrance.id}

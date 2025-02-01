@@ -9,7 +9,7 @@ const FragranceCard = ({ id, name, image, gender }: BaseFragrance) => {
         <div className="h-56">
           <a href="#">
             <img
-              className="mx-auto h-full rounded-xl"
+              className="mx-auto h-full rounded-xl object-cover"
               src={base64ToUrl(image)}
               alt={`${name} image`}
             />

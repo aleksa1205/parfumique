@@ -12,12 +12,14 @@ const SelectableFragranceCard: React.FC<SelectableFragranceCardProps> = ({
 }) => {
   return (
     <div
-      className={`rounded-lg border p-6 shadow-sm cursor-pointer transition-all duration-200 
-    ${selected ? "border-brand-500 bg-brand-100" : "border-gray-200 bg-white"}
-  `}
+      className={`rounded-lg border p-4 shadow-sm cursor-pointer transition-all duration-200 
+      ${selected ? "border-brand-500 bg-brand-100" : "border-gray-200 bg-white"}
+    `}
       onClick={() => onSelect(id, !selected)}
     >
-      <FragranceCard id={id} image={image} name={name} gender={gender} />
+      <div className="relative">
+        <FragranceCard id={id} image={image} name={name} gender={gender} />
+      </div>
     </div>
   );
 };
