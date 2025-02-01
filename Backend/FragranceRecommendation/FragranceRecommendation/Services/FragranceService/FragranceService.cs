@@ -251,7 +251,7 @@ public class FragranceService(IDriver driver) : IFragranceService
                                     acc + CASE
                                         WHEN relType = 'BASE' THEN 3
                                         WHEN relType = 'MIDDLE' THEN 2
-                                        WHEN relType = 'BASE' THEN 1
+                                        WHEN relType = 'TOP' THEN 1
                                         ELSE 0
                                     END
                                 )

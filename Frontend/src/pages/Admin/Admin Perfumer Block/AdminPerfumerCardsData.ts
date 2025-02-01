@@ -39,6 +39,17 @@ export const adminPerfumerCardsData : AdminActionCardDataType = [
         endpointRequirements: ['Authorization', 'Admin'],
     },
     {
+        title: 'Remove Fragrance from Perfumer',
+        description: 'Removes connection between fragrance and perfumer.',
+        endpointAdress: '/perfumer/remove-fragrance-to-perfumer',
+        httpMethod: 'PATCH',
+        inputExample: `{
+  "perfumerId": 2147483647,
+  "fragranceId": 2147483647
+}`,
+        endpointRequirements: ['Authorization', 'Admin'],
+    },
+    {
         title: 'Update Perfumer',
         description: 'Updates the perfumer.',
         endpointAdress: '/perfumer',

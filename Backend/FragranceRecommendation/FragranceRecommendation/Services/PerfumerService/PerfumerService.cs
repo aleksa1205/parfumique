@@ -138,6 +138,18 @@ public class PerfumerService(IDriver driver) : IPerfumerService
         });
     }
 
+    public async Task RemoveFragranceToPerfumerAsync(AddFragranceToPerfumer dto)
+    {
+        await using var session = driver.AsyncSession();
+        await session.ExecuteWriteAsync(async tx =>
+        {
+            var query = @"MATCH (n:PERFUMER)-[r:CREATES]->(m:FRAGRANCE)
+                          WHERE id(n) = $perfumerId AND id(m) = $fragranceId
+                          DELETE r";
+            await tx.RunAsync(query, new { perfumerId = dto.PerfumerId, fragranceId = dto.FragranceId });
+        });
+    }
+
     public async Task DeletePerfumerAsync(int id)
     {
         await using var session = driver.AsyncSession();

@@ -71,7 +71,7 @@ const FragranceDetails = () => {
             <p className="text-lg">Batch Year: {fragrance.batchYear}</p>
             <hr className="y-6 border-gray-200 mx-auto my-3" />
             {/* Perfumers display */}
-            <h3 className="text-xl font-bold mb-2">Perfumers</h3>
+            <h3 className="text-2xl font-bold mb-4">Perfumers</h3>
             <div className="flex justify-evenly gap-4">
               {perfumers?.map((perfumer) => (
                 <div key={perfumer.id} className="flex flex-col items-center">
@@ -91,11 +91,11 @@ const FragranceDetails = () => {
             </div>
             <hr className="y-6 border-gray-200 mx-auto my-3" />
             {/* Notes pyramid */}
-            <h3 className="text-xl font-bold mb-2">Fragrance pyramid</h3>
-            <h2 className="text-lg mb-2">Top notes</h2>
+            <h3 className="text-2xl font-bold mb-8">Fragrance pyramid</h3>
+            <h2 className="text-lg mb-5 font-bold">Top notes</h2>
             <div className="flex justify-center gap-3">
               {top?.map((note) => (
-                <div key={note.name} className="flex flex-col">
+                <div key={note.name} className="flex flex-col items-center justify-center">
                   <img
                     src={base64ToUrl(note.image)}
                     alt={`image`}
@@ -105,10 +105,10 @@ const FragranceDetails = () => {
                 </div>
               ))}
             </div>
-            <h2 className="text-lg m-2">Middle notes</h2>
+            <h2 className="text-lg mt-3 mb-5 font-bold">Middle notes</h2>
             <div className="flex justify-center gap-3">
               {middle?.map((note) => (
-                <div key={note.name} className="flex flex-col">
+                <div key={note.name} className="flex flex-col items-center justify-center">
                   <img
                     src={base64ToUrl(note.image)}
                     alt={`image`}
@@ -118,10 +118,10 @@ const FragranceDetails = () => {
                 </div>
               ))}
             </div>
-            <h2 className="text-lg m-2">Base notes</h2>
+            <h2 className="text-lg mt-3 mb-5 font-bold">Base notes</h2>
             <div className="flex justify-center gap-3">
               {base?.map((note) => (
-                <div key={note.name} className="flex flex-col">
+                <div key={note.name} className="flex flex-col items-center justify-center">
                   <img
                     src={base64ToUrl(note.image)}
                     alt={`image`}

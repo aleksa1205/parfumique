@@ -123,6 +123,36 @@ public class PerfumerController(IPerfumerService perfumerService, IFragranceServ
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointSummary("remove fragrance to perfumer")]
+    [HttpPatch("remove-fragrance-to-perfumer")]
+    public async Task<IActionResult> RemoveFragranceAToPerfumer([FromBody] AddFragranceToPerfumer dto)
+    {
+        try
+        {
+            if(!await perfumerService.PerfumerExistsAsync(dto.PerfumerId))
+                return NotFound($"Perfumer with id {dto.PerfumerId} was not found!");
+
+            if (!await fragranceService.FragranceExistsAsync(dto.FragranceId))
+                return NotFound($"Fragrance with id {dto.FragranceId} was not found!");
+
+            if(!await perfumerService.IsFragranceCreatedByPerfumer(dto.PerfumerId,dto.FragranceId))
+                return Conflict($"Perfumer with id {dto.PerfumerId} is not a creator of fragrance with id {dto.FragranceId}!");
+
+            await perfumerService.RemoveFragranceToPerfumerAsync(dto);
+            return Ok(
+                $"Perfumer with id {dto.PerfumerId} has been successfully removed as a creator from fragrance with id {dto.FragranceId}!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointSummary("delete perfumer")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletePerfumer(int Id)

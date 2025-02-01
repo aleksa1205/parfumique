@@ -67,7 +67,7 @@ export const adminFragranceCardsData : AdminActionCardDataType = [
 { 
     httpMethod: 'PATCH', 
     title: 'Update Fragrance', 
-    endpointAdress: '/fragrance',
+    endpointAdress: '/fragrance/update',
     description: 'Updates one fragrance by ID.', 
     endpointRequirements: ['Authorization', 'Admin'],
     imageInput: true,

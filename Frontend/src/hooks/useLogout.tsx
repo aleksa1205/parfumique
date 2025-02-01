@@ -14,6 +14,7 @@ function useLogout() {
         urlMessage = "?message=" + message;
 
       setAuth(emptyAuthValues);
+      localStorage.clear();
       navigate("/login" + urlMessage, { state: {from: location, replace: true}});
     } catch (error) {
       console.log(error);

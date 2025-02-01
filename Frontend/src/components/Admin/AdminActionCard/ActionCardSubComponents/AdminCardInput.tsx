@@ -9,6 +9,20 @@ import { MdErrorOutline } from "react-icons/md"
 import { AdminActionCardImageInput } from "./AdminActionCardImageInput"
 import useLogout from "../../../../hooks/useLogout"
 
+function removeImages(obj: any) {
+    if (typeof obj !== "object" || obj === null) return; 
+
+    if ("image" in obj) {
+        delete obj.image;
+    }
+
+    for (const key in obj) {
+        if (typeof obj[key] === "object") {
+            removeImages(obj[key]);
+        }
+    }
+}
+
 export default function Input({active, setActiveActionCard, inputValue, setInputValue, httpMethod, endpointAdress, setOutputValue, outputValue, pathParams, imageInput}: {
     active: boolean,
     setActiveActionCard: React.Dispatch<React.SetStateAction<string>>,
@@ -111,8 +125,10 @@ export default function Input({active, setActiveActionCard, inputValue, setInput
                     throw new Error(`Unsupported HTTP method:  ${httpMethod}`)
             }      
             
-            if (result)
+            if (result) {
+                removeImages(result.data)
                 setOutputValue(JSON.stringify(result.data, null, 2))
+            }
             else
                 setOutputValue("There was an error while calling server endpoint.");
 
