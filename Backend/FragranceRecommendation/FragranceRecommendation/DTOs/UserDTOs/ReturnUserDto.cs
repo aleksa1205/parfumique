@@ -17,8 +17,8 @@ public class ReturnUserDto
     [JsonProperty("username")]
     public required string Username { get; set; }
 
-    [JsonProperty("admin")]
-    public required bool Admin { get; set; }
+    // [JsonProperty("admin")]
+    // public required bool Admin { get; set; }
 
     //doesn't have to be property because get is not used anywhere
     public IList<Fragrance> Collection { get; set; } = new List<Fragrance>();

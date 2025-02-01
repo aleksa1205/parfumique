@@ -24,6 +24,8 @@ public class UserController(IUserService userService, IFragranceService fragranc
         }
     }
 
+    [Authorize]
+    [RequiresRole(Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -33,6 +35,39 @@ public class UserController(IUserService userService, IFragranceService fragranc
     {
         try
         {
+            var (isValid, errorMessage) = MyUtils.IsValidString(username, "Username");
+            if (!isValid)
+                return BadRequest(errorMessage);
+
+            var user = await userService.GetUserDtoAsync(username);
+            if (user is null)
+            {
+                return NotFound($"User {username} doesn't exists!");
+            }
+
+            return Ok(user);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [Authorize]
+    [RequiresRole(Roles.User)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EndpointSummary("Get user info using jwt token")]
+    [HttpGet("get-self")]
+    public async Task<IActionResult> GetSelf()
+    {
+        try
+        {
+            var username = HttpContext.User.Identity?.Name;
+            if (string.IsNullOrEmpty(username))
+                return Unauthorized();
+
             var (isValid, errorMessage) = MyUtils.IsValidString(username, "Username");
             if (!isValid)
                 return BadRequest(errorMessage);
@@ -73,6 +108,7 @@ public class UserController(IUserService userService, IFragranceService fragranc
     }
 
     [Authorize]
+    [RequiresRole(Roles.User)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -134,7 +170,7 @@ public class UserController(IUserService userService, IFragranceService fragranc
             if (!await userService.UserExistsAsync(user.Username!))
                 return NotFound($"User {user.Username} doesn't exists!");
 
-            await userService.UpdateUserAsync(user.Username!, user.Name!, user.Surname!, user.Gender!.Value);
+            await userService.UpdateUserAsync(user);
             return Ok($"User {user.Username} successfully updated!");
         }
         catch (Exception e)
@@ -162,7 +198,14 @@ public class UserController(IUserService userService, IFragranceService fragranc
             if (!await userService.UserExistsAsync(username))
                 return NotFound($"User {username} doesn't exists!");
 
-            await userService.UpdateUserAsync(username, userDto.Name!, userDto.Surname!, userDto.Gender!.Value);
+            await userService.UpdateUserAsync(new UpdateUserDto
+            {
+                Username = username,
+                    Name = userDto.Name,
+                    Surname = userDto.Surname,
+                    Image = userDto.Image,
+                    Gender = userDto.Gender
+            });
             return Ok($"User {username} successfully updated!");
         }
         catch (Exception e)
@@ -272,16 +315,16 @@ public class UserController(IUserService userService, IFragranceService fragranc
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [EndpointSummary("delete user")]
-    [HttpDelete("delete-user")]
-    public async Task<IActionResult> DeleteUser([FromBody] DeleteUserDto user)
+    [HttpDelete("delete-user/{username}")]
+    public async Task<IActionResult> DeleteUser(string username)
     {
         try
         {
-            if (!await userService.UserExistsAsync(user.Username!))
-                return Conflict($"User {user.Username} doesn't exists!");
+            if (!await userService.UserExistsAsync(username!))
+                return Conflict($"User {username} doesn't exists!");
 
-            await userService.DeleteUserAsync(user.Username!);
-            return Ok($"User {user.Username} successfully deleted!");
+            await userService.DeleteUserAsync(username!);
+            return Ok($"User {username} successfully deleted!");
         }
         catch (Exception e)
         {

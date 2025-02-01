@@ -68,9 +68,9 @@ export default function useUserController() {
         }
       }
     },
-    get: async function (username: string): Promise<GetUserResponse> {
+    get: async function (): Promise<GetUserResponse> {
       try {
-        const response = await client.get(`/User/${username}`);
+        const response = await axiosAuth.get("/User/get-self");
         return response.data;
       } catch (error) {
         if (isAxiosError(error) && error.name === "CanceledError") {

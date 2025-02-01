@@ -122,7 +122,7 @@ export default function Input({active, setActiveActionCard, inputValue, setInput
 
             if (isAxiosError(error) && error.response != null) {
                 if (error.response.status === 401)
-                    logout();
+                    logout("Session expired, please log in again.");
                 errorMessage = `Status Code: ${error.status}\n\n${JSON.stringify(error.response.data, null, 2)}`
             }
             else if (error instanceof Error)

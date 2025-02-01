@@ -115,7 +115,7 @@ const Navbar = () => {
                         <a
                           href="#"
                           className="block px-4 py-2 text-sm my-text-black"
-                          onClick={logout}
+                          onClick={() => logout()}
                         >
                           Log out
                         </a>

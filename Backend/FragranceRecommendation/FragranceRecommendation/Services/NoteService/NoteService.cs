@@ -55,19 +55,35 @@ public class NoteService(IDriver driver) : INoteService
         await using var session = driver.AsyncSession();
         await session.ExecuteWriteAsync(async tx =>
         {
-            await tx.RunAsync("MATCH (n:NOTE {name: $name}) SET n.type = $type",
-                new { name = note.Name, type = note.Type });
+            var updates = new List<string>();
+            var parameters = new Dictionary<string, object> { { "name", note.Name! } };
+
+            if (!string.IsNullOrEmpty(note.Type))
+            {
+                updates.Add("n.type = $type");
+                parameters["type"] = note.Type;
+            }
+
+            if (note.Image is not null)
+            {
+                updates.Add("n.image = $image");
+                parameters["image"] = note.Image;
+            }
+
+            var query = $"MATCH (n:NOTE) WHERE n.name = $name SET {string.Join(", ", updates)}";
+
+            return await tx.RunAsync(query, parameters);
         });
     }
 
-    public async Task DeleteNoteAsync(DeleteNoteDto note)
+    public async Task DeleteNoteAsync(string name)
     {
         await using var session = driver.AsyncSession();
         await session.ExecuteWriteAsync(async tx =>
         {
             var query = @"MATCH (n:NOTE {name: $name})
                           DETACH DELETE n";
-            await tx.RunAsync(query, new { name = note.Name });
+            await tx.RunAsync(query, new { name });
         });
     }
 }

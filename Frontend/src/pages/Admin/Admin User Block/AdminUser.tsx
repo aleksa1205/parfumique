@@ -1,5 +1,8 @@
+import { AdminActionCardContainer } from "../../../components/Admin/AdminActionCardContainer";
+import { adminUserCardsData } from "./AdminUserCardsData";
+
 export default function AdminUser() {
     return (
-        <h3>User</h3>
+        <AdminActionCardContainer data={adminUserCardsData} />
     )
 }

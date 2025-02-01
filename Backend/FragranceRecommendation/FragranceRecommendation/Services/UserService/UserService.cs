@@ -143,15 +143,34 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
         });
     }
 
-    public async Task UpdateUserAsync(string username, string name, string surname, char gender)
+    public async Task UpdateUserAsync(UpdateUserDto user)
     {
         await using var session = driver.AsyncSession();
         await session.ExecuteWriteAsync(async tx =>
         {
-            var query = @"MATCH (n:USER {username: $username})
-                          SET n.name = $name, n.surname = $surname, n.gender = $gender";
-            await tx.RunAsync(query,
-                new { username, name, surname, gender });
+            var updates = new List<string>();
+            var parameters = new Dictionary<string, object> { { "username", user.Username! } };
+
+            if (!string.IsNullOrEmpty(user.Name))
+            {
+                updates.Add("n.name = $name");
+                parameters["name"] = user.Name;
+            }
+
+            if (!string.IsNullOrEmpty(user.Surname))
+            {
+                updates.Add("n.surname = $surname");
+                parameters["surname"] = user.Surname;
+            }
+
+            if (user.Gender is not null)
+            {
+                updates.Add("n.gender = $gender");
+                parameters["gender"] = user.Gender;
+            }
+
+            var query = $"MATCH (n:USER) WHERE n.username = $username SET {string.Join(", ", updates)}";
+            await tx.RunAsync(query, parameters);
         });
     }
 
