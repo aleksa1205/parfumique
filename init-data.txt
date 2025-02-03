@@ -13,11 +13,12 @@ CREATE (:MANUFACTURER {name: "Versace", image: ''})
 CREATE (:MANUFACTURER {name: "Dior", image: ''})
 
 //KORISNIK
-CREATE (:USER {username: "aleksa02", password: "tmp123", name: "Aleksa", surname: "Perić", gender: "M", image: ''})
+//User-i su obrisani pa registrovani direktno u aplikaciji zbog kriptovanja šifri
+CREATE (:USER {username: "aleksa02", password: "sifra123", name: "Aleksa", surname: "Perić", gender: "M", image: ''})
 CREATE (:USER {username: "jovanc", password: "sifra123", name: "Jovan", surname: "Cvetković", gender: "M", image: ''})
-CREATE (:USER {username: "bigMilance", password: "milance123", name: "Milan", surname: "Ponjević", gender: "M", image: ''})
-CREATE (:USER {username: "dragance", password: "dragance123", name: "Dragan", surname: "Milošević", gender: "M", image: ''})
-CREATE (:USER {username: "milenica", password: "123456", name: "Milena", surname: "Novaković", gender: "F", image: ''})
+CREATE (:USER {username: "bigMilance", password: "sifra123", name: "Milan", surname: "Ponjević", gender: "M", image: ''})
+CREATE (:USER {username: "dragance", password: "sifra123", name: "Dragan", surname: "Milošević", gender: "M", image: ''})
+CREATE (:USER {username: "milenica", password: "sifra123", name: "Milena", surname: "Novaković", gender: "F", image: ''})
 
 //PARFEM
 CREATE (:FRAGRANCE {name: "Versace Pour Homme", year: 2008, gender: "M", image: ''})

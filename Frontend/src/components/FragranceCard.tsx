@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { base64ToUrl } from "../utils";
 import { BaseFragrance } from "../dto-s/FragranceDto";
 
 const FragranceCard = ({ id, name, image, gender }: BaseFragrance) => {
+  const [searchParams] = useSearchParams();
+  const currentPage = searchParams.get("page") || "0";
   return (
     <div className="relative grid gap-4 w-full">
       <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
@@ -18,7 +20,7 @@ const FragranceCard = ({ id, name, image, gender }: BaseFragrance) => {
 
         <div className="flex items-center h-12 justify-center">
           <Link
-            to={`/fragrances/${id}`}
+            to={`/fragrances/${id}?page=${currentPage}`}
             className="text-lg text-center font-semibold leading-tight my-text-black"
           >
             {`${name} for ${gender}`}

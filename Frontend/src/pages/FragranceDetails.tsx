@@ -71,31 +71,42 @@ const FragranceDetails = () => {
             <p className="text-lg">Batch Year: {fragrance.batchYear}</p>
             <hr className="y-6 border-gray-200 mx-auto my-3" />
             {/* Perfumers display */}
-            <h3 className="text-2xl font-bold mb-4">Perfumers</h3>
-            <div className="flex justify-evenly gap-4">
-              {perfumers?.map((perfumer) => (
-                <div key={perfumer.id} className="flex flex-col items-center">
-                  <img
-                    src={base64ToUrl(perfumer.image)}
-                    alt={`${perfumer.name} ${perfumer.surname} image`}
-                    className="h-24 w-24 rounded-full"
-                  />
-                  <Link
-                    to={`/perfumers/${perfumer.id}`}
-                    className="text-lg mt-4 my-text-primary"
-                  >
-                    {perfumer.name} {perfumer.surname}
-                  </Link>
+            {perfumers?.length != 0 && (
+              <>
+                {" "}
+                <h3 className="text-2xl font-bold mb-4">Perfumers</h3>
+                <div className="flex justify-evenly gap-4">
+                  {perfumers?.map((perfumer) => (
+                    <div
+                      key={perfumer.id}
+                      className="flex flex-col items-center"
+                    >
+                      <img
+                        src={base64ToUrl(perfumer.image)}
+                        alt={`${perfumer.name} ${perfumer.surname} image`}
+                        className="h-24 w-24 rounded-full"
+                      />
+                      <Link
+                        to={`/perfumers/${perfumer.id}`}
+                        className="text-lg mt-4 my-text-primary"
+                      >
+                        {perfumer.name} {perfumer.surname}
+                      </Link>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <hr className="y-6 border-gray-200 mx-auto my-3" />
+                <hr className="y-6 border-gray-200 mx-auto my-3" />
+              </>
+            )}
             {/* Notes pyramid */}
             <h3 className="text-2xl font-bold mb-8">Fragrance pyramid</h3>
             <h2 className="text-lg mb-5 font-bold">Top notes</h2>
             <div className="flex justify-center gap-3">
               {top?.map((note) => (
-                <div key={note.name} className="flex flex-col items-center justify-center">
+                <div
+                  key={note.name}
+                  className="flex flex-col items-center justify-center"
+                >
                   <img
                     src={base64ToUrl(note.image)}
                     alt={`image`}
@@ -108,7 +119,10 @@ const FragranceDetails = () => {
             <h2 className="text-lg mt-3 mb-5 font-bold">Middle notes</h2>
             <div className="flex justify-center gap-3">
               {middle?.map((note) => (
-                <div key={note.name} className="flex flex-col items-center justify-center">
+                <div
+                  key={note.name}
+                  className="flex flex-col items-center justify-center"
+                >
                   <img
                     src={base64ToUrl(note.image)}
                     alt={`image`}
@@ -121,7 +135,10 @@ const FragranceDetails = () => {
             <h2 className="text-lg mt-3 mb-5 font-bold">Base notes</h2>
             <div className="flex justify-center gap-3">
               {base?.map((note) => (
-                <div key={note.name} className="flex flex-col items-center justify-center">
+                <div
+                  key={note.name}
+                  className="flex flex-col items-center justify-center"
+                >
                   <img
                     src={base64ToUrl(note.image)}
                     alt={`image`}
