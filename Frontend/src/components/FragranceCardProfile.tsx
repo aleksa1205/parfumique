@@ -2,7 +2,7 @@ import useDeleteUserFragranceMutation from "../hooks/useDeleteUserFragranceMutat
 import { BaseFragrance } from "../dto-s/FragranceDto";
 import { CircleLoader } from "./loaders/CircleLoader";
 import FragranceCard from "./FragranceCard";
-import DeleteButton from "./UiComponents/DeleteButton";
+import DeleteButton from "./UiComponents/Buttons/DeleteButton";
 
 const FragranceCardProfile = (props: BaseFragrance) => {
   const { deleteUserFragranceMutation, deleteFragranceError } =

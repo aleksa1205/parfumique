@@ -4,7 +4,7 @@ import { base64ToUrl, crop, formatBase64 } from "../../../../utils";
 import { Loader } from "../../../loaders/Loader";
 import { MdErrorOutline, MdFileUpload } from "react-icons/md";
 import InfoBox from "../../../UiComponents/Boxes/InfoBox";
-import MainButton from "../../../UiComponents/MainButton";
+import MainButton from "../../../UiComponents/Buttons/MainButton";
 
 type FromValues = {
     value: FileList;

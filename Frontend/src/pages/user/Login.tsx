@@ -8,7 +8,7 @@ import PasswordField from "../../components/form-fields/PasswordField";
 import InputField from "../../components/form-fields/InputField";
 import { CircleLoader } from "../../components/loaders/CircleLoader";
 import UseAuth from "../../hooks/useAuth";
-import usePopUpMessage from "../../hooks/usePopUpMessage";
+import usePopUpMessage from "../../hooks/Animated Components/usePopUpMessage";
 import { useEffect } from "react";
 
 export function loader({request}: any) {

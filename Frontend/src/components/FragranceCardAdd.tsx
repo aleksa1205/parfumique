@@ -5,7 +5,7 @@ import { CircleLoader } from "./loaders/CircleLoader";
 import FragranceCard from "./FragranceCard";
 import useIsLoggedIn from "../hooks/useIsLoggedIn";
 import { FaCircleInfo } from "react-icons/fa6";
-import MainButton from "./UiComponents/MainButton";
+import MainButton from "./UiComponents/Buttons/MainButton";
 import { BaseFragrance } from "../dto-s/FragranceDto";
 
 const FragranceCardAdd = (props: BaseFragrance) => {

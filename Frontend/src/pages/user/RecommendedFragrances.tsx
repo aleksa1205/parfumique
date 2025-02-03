@@ -3,7 +3,7 @@ import useFragranceController from "../../api/controllers/useFragranceController
 import { useQuery } from "@tanstack/react-query";
 import { CircleLoader } from "../../components/loaders/CircleLoader";
 import FragranceCardAdd from "../../components/FragranceCardAdd";
-import MainButton from "../../components/UiComponents/MainButton";
+import MainButton from "../../components/UiComponents/Buttons/MainButton";
 
 const EmptyRecommendFragrances = () => {
   return (

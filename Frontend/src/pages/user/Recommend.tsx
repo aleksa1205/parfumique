@@ -7,7 +7,7 @@ import { CircleLoader } from "../../components/loaders/CircleLoader";
 import { Loader } from "../../components/loaders/Loader";
 import SelectableFragranceCard from "../../components/SelectableFragranceCard";
 import { useNavigate } from "react-router-dom";
-import usePopUpMessage from "../../hooks/usePopUpMessage";
+import usePopUpMessage from "../../hooks/Animated Components/usePopUpMessage";
 
 const Recommend = () => {
   const [selectedFragrances, setSelectedFragrances] = useState<Set<number>>(

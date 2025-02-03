@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import usePopUpAnimation from "./usePopUpAnimation";
-import SuccessBoxAnimated from "../components/UiComponents/Pop Up Boxes/SuccessBoxAnimated";
-import InfoBoxAnimated from "../components/UiComponents/Pop Up Boxes/InfoBoxAnimated";
-import ErrorBoxAnimated from "../components/UiComponents/Pop Up Boxes/ErrorBoxAnimated";
-import WarningBoxAnimated from "../components/UiComponents/Pop Up Boxes/WarningBoxAnimated";
+import usePopUpAnimation from "../Animations/usePopUpAnimation";
+import SuccessBoxAnimated from "../../components/UiComponents/Pop Up Boxes/SuccessBoxAnimated";
+import InfoBoxAnimated from "../../components/UiComponents/Pop Up Boxes/InfoBoxAnimated";
+import ErrorBoxAnimated from "../../components/UiComponents/Pop Up Boxes/ErrorBoxAnimated";
+import WarningBoxAnimated from "../../components/UiComponents/Pop Up Boxes/WarningBoxAnimated";
 
 export type PopUpMessage = {
   type: "success" | "error" | "warning" | "info";

@@ -1,6 +1,6 @@
 import image from '../../../assets/images/forbidden.png';
 import { Link } from 'react-router-dom';
-import MainButton from '../../UiComponents/MainButton';
+import MainButton from '../../UiComponents/Buttons/MainButton';
 
 export default function Forbidden() {
     return (

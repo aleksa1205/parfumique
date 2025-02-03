@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import MainButton from "../../../UiComponents/MainButton"
-import SecButton from "../../../UiComponents/SecButton"
+import MainButton from "../../../UiComponents/Buttons/MainButton"
+import SecButton from "../../../UiComponents/Buttons/SecButton"
 import { HttpMethods } from "../../AdminActionCardTypes"
 import { SpinnerBlade } from "../../../loaders/SpnnerBlade"
 import { AxiosResponse, isAxiosError } from "axios"
