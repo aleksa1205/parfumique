@@ -7,11 +7,13 @@ import UseAuth from "../hooks/useAuth";
 type CurrUserContextType = {
   user?: GetUserResponse;
   isLoading: boolean;
+  refetch:() => void;
 };
 
 export const emptyUserContext: CurrUserContextType = {
   user: undefined,
   isLoading: true,
+  refetch: () => {}
 };
 
 export const CurrUserContext =
@@ -25,7 +27,7 @@ export function CurrUserProvider({ children }: PropsValue) {
   const { get } = useUserController();
   const { auth } = UseAuth();
 
-  const { data: userData, isLoading } = useQuery(
+  const { data: userData, isLoading, refetch } = useQuery(
     ["user", auth.username],
     () => get(),
     {
@@ -39,6 +41,7 @@ export function CurrUserProvider({ children }: PropsValue) {
   const contextValue: CurrUserContextType = {
     user: userData,
     isLoading: isLoading,
+    refetch
   };
   return (
     <CurrUserContext.Provider value={contextValue}>

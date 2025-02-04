@@ -3,6 +3,7 @@ import { client } from "../axios";
 import {
   GetUserResponse,
   LoginResponse,
+  UpdateSelfDto,
   User,
   UserLogin,
 } from "../../dto-s/UserDto";
@@ -170,6 +171,35 @@ export default function useUserController() {
         }
       }
     },
+
+    updateSelf: async function(updateSelfDto: UpdateSelfDto): Promise<true> {
+      try {
+        await axiosAuth.patch(
+          "/user/update-self",
+          JSON.stringify(updateSelfDto),
+          { headers: {'Content-Type': 'application/json'} }
+        );
+
+        return true;
+      } catch (error) {
+        if (isAxiosError(error) && error.name === "CanceledError") {
+          throw Error("Request was canceled!");
+        } else if (isAxiosError(error) && error.response?.status != null) {
+          switch (error.response.status) {
+            case 404:
+              throw new NotFoundError();
+            case 409:
+              throw new ConflictError();
+            default:
+              throw Error("Axios Error: " + error.message);
+          }
+        } else if (error instanceof Error) {
+          throw Error("General Error: " + error.message);
+        } else {
+          throw Error("Unexpected Error: " + error);
+        }
+      }
+    }
   };
   
   return userController;

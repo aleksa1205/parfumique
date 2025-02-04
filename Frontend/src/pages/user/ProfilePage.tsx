@@ -1,68 +1,138 @@
-import { useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { CurrUserContext } from "../../context/CurrUserProvider";
-import UserImage from "../../components/UserImage";
+import { GetUserResponse } from "../../dto-s/UserDto";
 import useAnimatedModal from "../../hooks/Animated Components/useAnimatedModal";
-import ModalForm from "../../components/UiComponents/Form/ModalForm";
-import { useForm } from "react-hook-form";
+import EditNameForm from "../../components/User/EditUserForms/EditNameForm";
+import InfoBox from "../../components/UiComponents/Boxes/InfoBox";
+import EditSurnameForm from "../../components/User/EditUserForms/EditSurnameForm";
+import EditGenderForm from "../../components/User/EditUserForms/EditGenderForm";
+import EditPictureForm from "../../components/User/EditUserForms/EditPicture";
+import { Loader } from "../../components/loaders/Loader";
+import usePopUpMessage, { PopUpMessage } from "../../hooks/Animated Components/usePopUpMessage";
+import MainContainer from "./ProfilePageElements/MainContainer";
+import ProfileCardContainer from "./ProfilePageElements/ProfileCardContainer";
+import GridContainer from "./ProfilePageElements/GridContainer";
+import Header from "./ProfilePageElements/Header";
+import ProfilePicture from "./ProfilePageElements/ProfilePicture";
+import Name from "./ProfilePageElements/Name";
+import Surname from "./ProfilePageElements/Surname";
+import Gender from "./ProfilePageElements/Gender";
+import SaveResetButtons from "./ProfilePageElements/SaveResetButtons";
+
+type ProfilePageContextValue = {
+  userChanged?: GetUserResponse;
+  user?: GetUserResponse;
+  setUserChanged: React.Dispatch<React.SetStateAction<GetUserResponse | undefined>>;
+  closeModal: () => void;
+  selectForm: (form: ProfilePageForms) => void;
+  isChanged: boolean;
+  isUserDataLoading: boolean;
+  refetch: () => void;
+  setPopUpMessage: React.Dispatch<React.SetStateAction<PopUpMessage | null>>;
+}
+
+export const ProfilePageContext = createContext<ProfilePageContextValue | null>(null)
+
+export enum ProfilePageForms {
+  None,
+  Name,
+  Surname,
+  Gender,
+  Picture
+}
 
 const ProfilePage = () => {
-  const { user } = useContext(CurrUserContext);
+  const { user, isLoading, refetch } = useContext(CurrUserContext);
+  const [isChanged, setIsChanged] = useState(false);
+  const [userChanged, setUserChanged] = useState<GetUserResponse | undefined>(user);
 
-  const { register, handleSubmit, formState } = useForm<{name: string}>();
-  const { errors, isSubmitting } = formState;
+  const { AnimatedModal, closeModal, openModal } = useAnimatedModal();
 
-  const { AnimatedModal, openModal, closeModal } = useAnimatedModal()
+  const [selectedForm, setSelectedForm] = useState<ProfilePageForms>(ProfilePageForms.None);
+  
+  const { PopUpComponent, setPopUpMessage } = usePopUpMessage();
 
-  function onSubmit(formValues: {name: string}) {
-    const { name } = formValues;
-    console.log(name)
+  useEffect(() => {
+    setUserChanged(user);
+  }, [user]);
+
+  useEffect(() => {
+    setIsChanged(JSON.stringify(user) !== JSON.stringify(userChanged))
+  }, [userChanged])
+
+  let selectedFormComponent;
+  switch (selectedForm) {
+    case ProfilePageForms.Name:
+      selectedFormComponent = <EditNameForm />
+      break;
+    case ProfilePageForms.Surname:
+      selectedFormComponent = <EditSurnameForm />
+      break;
+    case ProfilePageForms.Gender:
+      selectedFormComponent = <EditGenderForm />
+      break;
+    case ProfilePageForms.Picture:
+      selectedFormComponent = <EditPictureForm />
+      break;
+    default:
+      selectedFormComponent = null;
+      break;
   }
 
+  function selectForm(form: ProfilePageForms) {
+    setSelectedForm(form);
+    openModal();
+  }
+
+  if (isLoading) return <Loader />
+
   return (
-    <>
+    <ProfilePageContext.Provider value={{userChanged, user: user!, setUserChanged, closeModal, selectForm, isChanged, isUserDataLoading: isLoading, refetch, setPopUpMessage}}>
+      <PopUpComponent />
+      <AnimatedModal>
+        {selectedFormComponent}
+      </AnimatedModal>
 
-    <AnimatedModal>
-      <ModalForm onSubmit={handleSubmit(onSubmit)}>
-        <ModalForm.Header closeModal={closeModal} text="Header" />
-        <ModalForm.Description text="description" />
-        <ModalForm.TextInput<{name: string}> errors={errors} labelText="name" name="name" placeholder="name" register={register} />
-        <ModalForm.ButtonGroup closeModal={closeModal} isSubmitting={isSubmitting} />
-      </ModalForm>
-    </AnimatedModal>
+      <ProfilePage.MainContainer>
 
-    <div className="flex justify-center items-start bg-gray-100 py-8 mt-24">
-      <button onClick={() => openModal()}>open</button>
-      <div className="flex items-center space-x-4 p-6 bg-white border rounded-lg shadow-md">
-        <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 xl:w-24 xl:h-24">
-          <UserImage />
-        </div>
-
-        <div className="flex flex-col space-y-6">
-          <h1 className="text-3xl font-semibold text-gray-900 mb-4">
-            {user?.username}
-          </h1>
-
-          <div className="flex items-center space-x-2 mb-2">
-            <span className="text-sm font-medium text-gray-600">Name:</span>
-            <span className="text-lg text-gray-900">{user?.name}</span>
+        {(isChanged) && (
+          <div className="max-w-xs mx-auto mb-4">
+            <InfoBox>
+              You have unsaved changes.
+            </InfoBox>
           </div>
+        )}
 
-          <div className="flex items-center space-x-2 mb-2">
-            <span className="text-sm font-medium text-gray-600">Surname:</span>
-            <span className="text-lg text-gray-900">{user?.surname}</span>
-          </div>
+        <ProfilePage.ProfileCardContainer>
 
-          <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium text-gray-600">Gender:</span>
-            <span className="text-lg text-gray-900">
-              {user?.gender ? user.gender : "Not specified"}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    </>
+          <ProfilePage.Header />
+          
+          <ProfilePage.GridContainer>
+            <ProfilePage.ProfilePicture />
+            <div className="flex flex-col space-y-6">
+              <ProfilePage.Name />
+              <ProfilePage.Surname />
+              <ProfilePage.Gender />
+            </div>
+          </ProfilePage.GridContainer>
+
+          <ProfilePage.SaveResetButtons />
+
+        </ProfilePage.ProfileCardContainer>
+      </ProfilePage.MainContainer>
+
+    </ProfilePageContext.Provider>
   );
 };
 
 export default ProfilePage;
+
+ProfilePage.MainContainer = MainContainer;
+ProfilePage.ProfileCardContainer = ProfileCardContainer;
+ProfilePage.GridContainer = GridContainer;
+ProfilePage.Header = Header;
+ProfilePage.ProfilePicture = ProfilePicture; 
+ProfilePage.Name = Name;
+ProfilePage.Surname = Surname;
+ProfilePage.Gender = Gender
+ProfilePage.SaveResetButtons = SaveResetButtons;

@@ -169,6 +169,12 @@ public class UserService(IDriver driver, IConfiguration config) : IUserService
                 parameters["gender"] = user.Gender;
             }
 
+            if (user.Image is not null)
+            {
+                updates.Add("n.image = $image");
+                parameters["image"] = user.Image;
+            }
+
             var query = $"MATCH (n:USER) WHERE n.username = $username SET {string.Join(", ", updates)}";
             await tx.RunAsync(query, parameters);
         });

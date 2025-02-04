@@ -3,7 +3,7 @@
 public class ReturnUserDto
 {
     [JsonProperty("image")]
-    public string? Image { get; set; } = String.Empty;
+    public string? Image { get; set; }
 
     [JsonProperty("name")]
     public required string Name { get; set; }

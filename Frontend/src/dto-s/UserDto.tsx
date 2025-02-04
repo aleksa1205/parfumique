@@ -29,3 +29,10 @@ export type GetUserResponse = {
   username: string;
   collection: Array<BaseFragrance>;
 };
+
+export type UpdateSelfDto = {
+  name: string;
+  surname: string;
+  gender: string;
+  image: string;
+}
