@@ -19,8 +19,8 @@ public class Perfumer
     
     [JsonProperty("country")]
     public string? Country { get; set; }
-    
-    public IList<Fragrance> CreatedFragrances  = new List<Fragrance>();
+
+    public IList<Fragrance> Fragrances { get; set; } = new List<Fragrance>();
 
     #region Constructors
     public Perfumer() {}

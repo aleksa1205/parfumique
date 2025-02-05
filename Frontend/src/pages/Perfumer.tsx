@@ -1,18 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import useManufacturerController from "../api/controllers/useManufacturerController";
 import { useParams } from "react-router-dom";
 import { CircleLoader } from "../components/loaders/CircleLoader";
 import { base64ToUrl } from "../utils";
+import usePerfumerController from "../api/controllers/usePerfumerController";
 import FragranceCard from "../components/FragranceCard";
 
-const Manufacturer = () => {
-  const { name } = useParams();
-  const { get } = useManufacturerController();
+const Perfumer = () => {
+  const { id } = useParams();
+  const perfumerId = parseInt(id ?? "", 10);
+  const { get } = usePerfumerController();
   const { data, isLoading, isFetching } = useQuery(
-    ["manufacturer", name],
-    () => get(name || ""),
+    ["perfumer", perfumerId],
+    () => get(perfumerId),
     {
-      enabled: !!name,
       onError: (err: Error) => {
         console.log(err.message);
       },
@@ -28,7 +28,7 @@ const Manufacturer = () => {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto font-roboto mt-16">
       <h1 className="text-4xl font-extrabold text-gray-800 mb-4 tracking-wide">
-        {data?.name}
+        {data?.name} {data?.surname}
       </h1>
       {data?.image && (
         <div className="w-60 h-60 overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 hover:scale-105">
@@ -58,4 +58,4 @@ const Manufacturer = () => {
   );
 };
 
-export default Manufacturer;
+export default Perfumer;

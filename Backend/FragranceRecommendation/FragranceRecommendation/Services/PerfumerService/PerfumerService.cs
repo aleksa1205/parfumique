@@ -59,11 +59,10 @@ public class PerfumerService(IDriver driver) : IPerfumerService
             var record = await result.PeekAsync();
             if(record is null)
                 return null;
-            
-            var fragrances =
-                JsonConvert.DeserializeObject<List<Fragrance>>(JsonConvert.SerializeObject(record["fragrances"]));
-            var perfumer = JsonConvert.DeserializeObject<Perfumer>(JsonConvert.SerializeObject(record["perfumer"]));
-            perfumer!.CreatedFragrances = fragrances!;
+
+            var fragrances = MyUtils.DeserializeMap<List<Fragrance>>(record["fragrances"]);
+            var perfumer = MyUtils.DeserializeMap<Perfumer>(record["perfumer"]);
+            perfumer!.Fragrances = fragrances!;
             return perfumer;
         });
     }

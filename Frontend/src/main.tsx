@@ -25,6 +25,7 @@ import Recommend from "./pages/user/Recommend";
 import RecommendedFragrances from "./pages/user/RecommendedFragrances";
 import { loader as loginLoader } from "./pages/user/Login";
 import Manufacturer from "./pages/Manufacturer";
+import Perfumer from "./pages/Perfumer";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: "/manufacturers/:name",
         element: <Manufacturer />,
+      },
+      {
+        path: "/perfumers/:id",
+        element: <Perfumer />,
       },
       {
         path: "/about-us",
