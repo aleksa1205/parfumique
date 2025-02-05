@@ -63,4 +63,5 @@ The application should now be running successfully.
 ## Authors
 
 👤 [Aleksa Perić](https://github.com/aleksa1205)
+
 👤 [Jovan Cvetković](https://github.com/CJovan02)
