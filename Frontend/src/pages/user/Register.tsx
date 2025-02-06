@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { User } from "../../dto-s/UserDto";
 import logo from "/src/assets/images/Parfumique logo.png";
 import PasswordField from "../../components/form-fields/PasswordField";
@@ -8,12 +8,20 @@ import InputField from "../../components/form-fields/InputField";
 import SelectField from "../../components/form-fields/SelectField";
 import useUserRegisterMutation from "../../hooks/useUserRegisterMutation";
 import { CircleLoader } from "../../components/loaders/CircleLoader";
+import useIsLoggedIn from "../../hooks/useIsLoggedIn";
+import { useEffect } from "react";
 
 const Register = () => {
   const form = useForm<User>();
   const { registerMutation, registerError } = useUserRegisterMutation();
   const { register, control, handleSubmit, formState } = form;
   const { errors } = formState;
+  const loggedIn = useIsLoggedIn();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (loggedIn) navigate('/user-profile', { replace: true })
+  }, [])
 
   const onSubmit = async (user: User) => {
     await registerMutation.mutateAsync(user);

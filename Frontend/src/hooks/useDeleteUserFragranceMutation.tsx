@@ -11,8 +11,30 @@ const useDeleteUserFragranceMutation = () => {
   const queryClient = useQueryClient();
 
   const deleteUserFragranceMutation = useMutation(deleteFragrance, {
-    onSuccess: () => {
+    onSuccess: (_, id) => {
       setDeleteFragranceError(null);
+      const storedFragrances = localStorage.getItem("selectedFragrances");
+      const selectedFragrances = storedFragrances
+        ? JSON.parse(storedFragrances) as Array<string>
+        : [];
+
+      if (selectedFragrances) {
+        let fragIndex = -1;
+        selectedFragrances.forEach((element, index) => {
+          if (Number(element) == id) {
+            fragIndex = index;
+            return;
+          }
+        })
+
+        if (fragIndex !== -1) {
+          selectedFragrances.splice(fragIndex, 1);
+          localStorage.setItem("selectedFragrances", JSON.stringify(selectedFragrances))
+        }
+      }
+
+      
+        
       queryClient.refetchQueries();
     },
     onError: (error) => {

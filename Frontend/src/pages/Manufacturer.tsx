@@ -51,7 +51,7 @@ const Manufacturer = () => {
   `}
       >
         {data?.fragrances?.map((fragrance) => (
-          <FragranceCard {...fragrance} />
+          <FragranceCard key={fragrance.id} {...fragrance} />
         ))}
       </div>
     </div>
