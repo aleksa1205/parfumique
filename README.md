@@ -2,6 +2,9 @@
 
 Parfumique was developed as a university project for the **Advanced Database Systems (Napredne baze podataka)** course, with a strong emphasis on utilizing Neo4j as the primary database. The project explores graph-based data modeling to efficiently store and query fragrance relationships, leveraging Cypher to implement complex queries for personalized fragrance recommendations.
 
+## Video Demo
+https://github.com/user-attachments/assets/d064ec74-0e34-41b7-8a5c-b91cf9c05800
+
 ## Features
 
 - **User Registration & Authentication**: Secure login and registration using JWT.
