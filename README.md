@@ -48,7 +48,7 @@ https://github.com/user-attachments/assets/d064ec74-0e34-41b7-8a5c-b91cf9c05800
 2. **Run the backend:**
 
 ```bash
-cd Backend
+cd Backend/FragranceRecommendation
 dotnet restore
 dotnet run
 ```
